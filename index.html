@@ -1,12 +1,85 @@
 <!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="UTF-8">
-    <title>Test by yln99517</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">    
-  </head>
-  <body>
-    <div> hello yln </div>
-  
-  </body>
+
+
+<html >
+
+<head>
+    
+    <title> my first app </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script type="text/javascript" src='app.js'>
+         
+    </script>
+    <style>
+          #MainContainer{
+           width:200px;
+           height: 200px;
+           background-color: blue;   
+          }
+          #parent{
+              position:relative;
+              height: 300px;
+              overflow: scroll;
+          }
+          #parent > div{
+              height: 200px;
+              border: 1px solid black;
+              display: none;              
+          }
+          #parent:not(.blue_show):not(.red_show):not(.green_show) > div{
+              display: none;
+          }
+          .blue_show{
+              display: block;
+          }
+          .blue_show > .blue{
+              background-color: blue;
+              display: block !important;
+          }
+          .red_show>.red{
+              background-color: red;
+              display: block !important;
+          }
+          .green_show > .green{
+              background-color: green;
+              display: block !important;
+          }
+          
+          
+          
+          
+          
+          
+          
+    </style>
+    
+</head>
+
+<body>
+    <div id="MainContainer">
+    <input type="button" value="hello" id='myButton'>
+    <div><label><input id="f1" type="checkbox">register</label></div>
+    <div><label>register<input id="f2" type="checkbox"></label></div>
+    <div><label><input id="f3" type="checkbox">register</label></div>
+    
+    </div>
+   
+   <div id="parent" class="blue_show">
+       <div class="blue">blue1</div>
+       <div class="red">red1</div>
+       <div class="green">green1</div>
+       <div class="blue">blue2</div>
+       <div class="red">red</div>
+       <div class="green">green2</div>
+       <div class="blue">blue2</div>
+       <div class="red">red2</div>
+       <div class="green">green2</div>
+       <div class="blue">blue3</div>
+       <div class="red">red3</div>
+       <div class="green">green3</div>
+       
+   </div>
+   
+</body>
+
 </html>

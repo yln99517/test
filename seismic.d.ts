@@ -15,7 +15,7 @@ interface SnComponent<InitState = any, Properties = any> {
 		}
 	},
 	actionHandlers?: {
-		[action: string]: (...args: Array<any>) => any | {
+		[action: string]: Function | {
 			effect: () => any,
 			args: Array<any>
 		}
@@ -27,15 +27,24 @@ interface SnComponent<InitState = any, Properties = any> {
 	}>
 }
 interface ComponentService {
-	t(formatter: string, ...args: any): string;
-	createHttpEffect(url: string, options?: any): Function;
-	createUpdateStateEffect(reducer: (...args: Array<any>) => void): Function;
-	createGraphQLEffect(query: string, options?: any): Function;
-	createAmbSubscriptionEffect(channelId: string, options?: any): Function;
+	actionTypes: {
+		COMPONENT_CONNECTED: string,
+		COMPONENT_DISCONNECTED: string,
+		COMPONENT_BOOTSTRAPPED :string,
+		COMPONENT_PROPERTY_CHANGED: string,
+		COMPONENT_RENDERED: string,
+		COMPONENT_ERROR_THROWN: string
+	};
+	createRef(): any,
+	t(formatter: string, ...args: any): string,
+	createHttpEffect(url: string, options?: any): Function,
+	createUpdateStateEffect(reducer: (...args: Array<any>) => void): Function,
+	createGraphQLEffect(query: string, options?: any): Function,
+	createAmbSubscriptionEffect(channelId: string, options?: any): Function,
 	createElement(tag: string, props?: any, ...children: Array<any>): any,
 	Fragment(): any,
 	getDefaultTemplate<InitState, Properties>(): SnComponent<InitState, Properties>
-	registerComponent<Name extends string, Config extends SnComponent>(name: Name, config: Config): void;
+	registerComponent<Name extends string, Config extends SnComponent>(name: Name, config: Config): void
 }
 interface Window {
 	snComponentServices: ComponentService

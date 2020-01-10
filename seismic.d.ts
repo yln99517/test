@@ -1,3 +1,10 @@
+import * as React from 'react';
+declare module 'react' {
+	interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
+		attrs?: { [key: string]: any }
+	}
+}
+
 interface ComponentProperties {
 }
 interface ComponentState<Props extends {}> {
@@ -30,7 +37,7 @@ interface ComponentService {
 	actionTypes: {
 		COMPONENT_CONNECTED: string,
 		COMPONENT_DISCONNECTED: string,
-		COMPONENT_BOOTSTRAPPED :string,
+		COMPONENT_BOOTSTRAPPED: string,
 		COMPONENT_PROPERTY_CHANGED: string,
 		COMPONENT_RENDERED: string,
 		COMPONENT_ERROR_THROWN: string

@@ -577,7 +577,1416 @@ var __awaiter=this&&this.__awaiter||function(e,t,i,n){function s(e){return e ins
 			${d}
 		}`,n.decl=d,n)}function g(e,t="-1"){var n={};for(let s in e){n[s]||(n[s]=[]);for(let a=0;a<e[s].length;a++)Array.isArray(e[s][a].td)&&e[s][a].id!=t&&n[s].push(e[s][a].td)}return n}function m(e){var t=0,n=[],s=0;for(let t=0;t<e.length;t++)if(n.push(e[t]),"punctuation"==e[t].kind){if("{"==e[t].text){s++;continue}if("}"==e[t].text){s--;continue}if(0==s)continue;if(":"!=e[t].text&&"("!=e[t].text&&"<"!=e[t].text)continue;if("<"==e[t].text){if(1>t)continue;if("methodName"!=e[t-1].kind)continue}let i=n.length-2;for(;1<i;){let e=n[i].kind,t=n[i].text;if(("punctuation"!=e||"."!=t)&&"propertyName"!=e&&"localName"!=e&&"methodName"!=e){i++;break}i--}n.splice(i,n.length-i-2)}t=0;var a=n.filter(e=>0<t?(t--,!1):("keyword"==e.kind&&"typeof"==e.text?(t=2,e.text="any"):"functionName"==e.kind&&(e.text="Function"),!0)),r={kind:"type",text:""};return r=a.reduce((e,t)=>(e.text+=t.text,e),{text:"",kind:"type"}),r.text.endsWith("...")?"any":r.text}function f(e,t,s,p){function c(e){return{isOptional:!1,name:e.getName(),documentation:ts.displayPartsToString(e.getDocumentationComment(p)),type:p.typeToString(p.getTypeOfSymbolAtLocation(e,e.valueDeclaration),void 0,ts.TypeFormatFlags.UseFullyQualifiedType)}}function u(e,t=!1){var i=e.getTypeParameters(),n=[];null!=i&&i.forEach(e=>{let t=e.getSymbol();t&&n.push(t.getName())});var s=ts.TypeFormatFlags.UseFullyQualifiedType;s|=ts.TypeFormatFlags.WriteArrayAsGenericType,s|=ts.TypeFormatFlags.NoTruncation;let r="";if(!t){let t=a(p,e.getReturnType(),void 0,s);r=m(t)}var o=ts.displayPartsToString(e.getDocumentationComment(p)),l={line:0,character:0};return 0<o.length&&(l.doc=o),{lineInfo:l,parameters:e.parameters.map(c),returnType:r,documentation:o,typeParams:n}}function g(e){var t=I.getLineAndCharacterOfPosition(e.pos);return t.line+=1,t.character+=1,{line:t.line,character:t.character}}function f(t){function i(){return-1!=t.body.getText().indexOf("return this;")||!e.parseReturnType}function n(e){if(!(ts.isFunctionExpression(e)||ts.isFunctionDeclaration(e))){if(ts.isReturnStatement(e)){if(3!=e.getChildCount())return;let t=e.getChildAt(1);if(ts.isObjectLiteralExpression(t)){let e=h(t),i=new D("temp");i.setKeysType(e);let n=i.toTypeFormat();return void(-1==o.indexOf(n)&&o.push(n))}let i=!1;if(ts.isFunctionExpression(t)&&(i=!0),"this"==t.getText())return void o.push("this");let n=p.getTypeAtLocation(t),s=ts.TypeFormatFlags.UseTypeOfFunction|ts.TypeFormatFlags.NoTruncation|ts.TypeFormatFlags.UseFullyQualifiedType|ts.TypeFormatFlags.MultilineObjectLiterals,r=a(p,n,void 0,s),l=m(r);return"any"==l||0<=o.indexOf(l)?void 0:void(i?o.unshift(l):o.push(l))}e.forEachChild(n)}}var s=g(t),o=[],l=p.getTypeAtLocation(t).getCallSignatures().map(e=>u(e,i())),r=_(t);if(0<r.length&&(l[0].returnType=r),l[0].lineInfo=s,i()&&(l[0].returnType="this"),l[0].parameters.length>t.parameters.length&&l[0].parameters.splice(l[0].parameters.length-1,1),0<t.parameters.length){let e=0;t.parameters.forEach(t=>{l[0].parameters[e++].isOptional=p.isOptionalParameter(t)})}let d=ts.getJSDocReturnTag(t);var c=l[0].returnType;if("Function"==c||"any"==c)try{n(t.body);var f=o.join("|");"Function"==c&&(l[0].returnType=0<f.length?f:"void")}catch(e){console.log("Return type parsing error "+e)}else if("boolean"==c&&d){let e=ts.getJSDocReturnType(t);if(e){var y=e.getText().split(" ");if(3==y.length&&"is"==y[1]){let i=ts.TypeFormatFlags.UseTypeOfFunction|ts.TypeFormatFlags.NoTruncation|ts.TypeFormatFlags.UseFullyQualifiedType|ts.TypeFormatFlags.MultilineObjectLiterals,n=a(p,p.getTypeAtLocation(t),void 0,i),s=m(n),r=e.getText();s.endsWith(r)&&(l[0].returnType=r)}}}return l}function y(e){var t=[];let i=e.getChildren(s).find(ts.isBlock);if(!i)return t;let r=i.getChildren().find(e=>e.kind==ts.SyntaxKind.SyntaxList);if(!r)return t;let o=r.getChildren(s).filter(ts.isExpressionStatement);return o.forEach(e=>{let i=g(e),r=e.getChildren(s).find(ts.isBinaryExpression);if(!r)return t;let o=r.getChildren(),l=o.find(ts.isPropertyAccessExpression);if(!l)return t;let d=l.getChildren();if(d[0].kind!=ts.SyntaxKind.ThisKeyword)return t;let c=d[d.length-1],u=c.getText(),f=ts.TypeFormatFlags.UseTypeOfFunction|ts.TypeFormatFlags.NoTruncation|ts.TypeFormatFlags.UseFullyQualifiedType|ts.TypeFormatFlags.MultilineObjectLiterals,y=o[o.length-1];i=g(y);var h="";if(ts.isNumericLiteral(y))h="number";else if(ts.isStringLiteral(y))h="string";else if(ts.isLiteralTypeNode(y))h="number";else if(ts.SyntaxKind.FalseKeyword==y.kind||ts.SyntaxKind.TrueKeyword==y.kind)h="boolean";else if(ts.SyntaxKind.FirstLiteralToken==y.kind)h="number";else{h=p.typeToString(p.getTypeAtLocation(y),s,0);let e=a(p,p.getTypeAtLocation(y),void 0,ts.TypeFormatFlags.UseFullyQualifiedType),t=m(e);h!=t&&(h=t),"Function"==h&&(h="any")}var S=!1;try{var T=n(h);S=!0,t.push(new P(u,T.paramBody,T.returnType,T.template).setLineInfo(i))}catch(t){}S||t.push(new F(u,h).setLineInfo(i).setLineInfo(i))}),t}function h(e,t=!1){var i={};return e.properties.forEach(e=>{var r=e.name.getText(),o=e.getChildren(),l=o.find(ts.isIdentifier),d=o.find(ts.isFunctionExpression);if(t&&d&&"initialize"==r){let e=y(d);e.forEach(e=>{i[e.name]=e})}let c=o[o.length-1];var u="";let h=ts.isStringLiteral(o[0]),S=g(c);if(ts.isNumericLiteral(c))i[r]=new x(r,"number").setLineInfo(S);else if(ts.isStringLiteral(c))i[r]=new N(r,"string").setLineInfo(S);else if(d){let e=f(d),t=L.create(r,e[0]);i[r]=t}else{let t=ts.TypeFormatFlags.UseTypeOfFunction|ts.TypeFormatFlags.NoTruncation|ts.TypeFormatFlags.UseFullyQualifiedType|ts.TypeFormatFlags.MultilineObjectLiterals;u=p.typeToString(p.getTypeAtLocation(c),void 0,t);let o=p.typeToString(p.getTypeAtLocation(e),s,t);u!=o&&(console.log("different types found, overriding default one"),u=o);let l=a(p,p.getTypeAtLocation(e),void 0,t);u=m(l);let d=!1;try{let e=n(u);i[r]=new P(r,e.paramBody,e.returnType,e.template),d=!0}catch(t){}d||(i[r]=new F(r,u))}h&&i[r].setAsElement(),i[r].setLineInfo(S)}),i}function S(e,t,i){var s=g(t);let a=ts.TypeFormatFlags.NoTruncation|ts.TypeFormatFlags.MultilineObjectLiterals,r=p.typeToString(p.getTypeAtLocation(t),void 0,a),o=!1;try{let t=n(r);o=!0,e==A?(j.addConstructorFunction(new P(e,t.paramBody,t.returnType,t.template).setLineInfo(s)),j.setAsFunction()):j.addField(new P(e,t.paramBody,t.returnType,t.template).setLineInfo(s))}catch(t){}o||j.addField(new F(e,r,i).setLineInfo(s))}function T(e){let t;var i=e.getChildren().find(ts.isParenthesizedExpression);if(!i)return t;var n=i.getChildren().find(ts.isFunctionExpression);if(!n)return t;var s=n.getChildren().find(ts.isBlock);if(!s)return t;let a=s.getChildren().find(e=>e.kind==ts.SyntaxKind.SyntaxList);return a}function C(e){var t=[];let i=e.getChildCount();if(!(1<=i&&2>=i))return t;let n=e.getChildAt(0);if(!ts.isCallExpression(n))return t;let s=T(n);return s?s.getChildren():t}function b(e){let t=ts.getJSDocTags(e).filter(ts.isJSDocTypedefTag);t.forEach(e=>{let t=e.getChildren();var i=ts.getNameOfJSDocTypedef(e);if(console.log(i.getText()),3!=t.length)return;let r=t.find(ts.isModuleDeclaration);if(r&&!V[r.getText()]){var l=t[2].getChildren();l.forEach(e=>{let t=p.getTypeAtLocation(e);var i=a(p,t,s,ts.TypeFormatFlags.NoTruncation|ts.TypeFormatFlags.UseFullyQualifiedType);console.log(m(i))})}let d=t[2],c="any",u=d.getText().trim(),g=u;if(!r){let e=p.getSymbolAtLocation(d);if(!e)return;let t=a(p,p.getDeclaredTypeOfSymbol(e),void 0,ts.TypeFormatFlags.NoTruncation|ts.TypeFormatFlags.UseFullyQualifiedType);if(c=m(t),"any"==c){let t="",i=p.getDeclaredTypeOfSymbol(e),s=i.getProperties();i.getApparentProperties(),s.forEach(e=>{let i=p.typeToString(p.getTypeOfSymbolAtLocation(e,e.valueDeclaration),void 0,ts.TypeFormatFlags.NoTruncation|ts.TypeFormatFlags.UseFullyQualifiedType),s="";try{let e=n(i);s=e.template+e.paramBody+": "+e.returnType}catch(t){}t+=0<s.length?`${e.getEscapedName()}${s},\n`:`${e.getEscapedName()}: ${i},\n`}),c=`{
 								${t}
-							}`}}else{let e=u.split(".");if(e.shift(),u=e.join("."),1>t[1].getChildCount())return;let i=p.getTypeAtLocation(t[1].getChildren()[1]);var f=a(p,i,void 0,void 0);if(c=m(f),"any"==c){let e="",i=[];try{i=t[1].getChildren()[1].getChildAt(1).getChildren()}catch(t){console.log("typedef parsing error")}i.forEach(t=>{let i=t.getChildren().find(ts.isIdentifier);if(null==i)return;let s=a(p,p.getTypeAtLocation(t),void 0,ts.TypeFormatFlags.NoTruncation|ts.TypeFormatFlags.UseFullyQualifiedType),r=m(s),o="";try{let e=n(r);o=`${e.template}${e.paramBody}: ${e.returnType}`}catch(t){}e+=0<o.length?`${i.getText()}${o},\n`:`${i.getText()}: ${r},\n`}),e=`{${e}}`,c=e}}"any"==c?console.warn("typedef came as any "+u):(o(g),j.addTypedefData({type:c,kind:M.typeDefs,name:u}))})}function _(e){var t=ts.getJSDocReturnTag(e);if(!t)return"";var i=ts.getJSDocReturnType(e);return i?d(i.getText())?i.getText():"":""}function E(e,t=!0){b(e);var i=g(e);if(ts.isVariableStatement(e)){let t=e.declarationList.declarations[0],c=t.getChildren(s);if(1==c.length)return void(R=c[0].getText().trim()==A);if(3!=c.length)return;let u=c[0],g=c[2];if(ts.isObjectLiteralExpression(g)&&(U[u.getText().trim()]=g),R)return;if(ts.isIdentifier(u)){if(u.getText().trim()!=A)return;if(ts.isCallExpression(g)){let e=g.getFullText().trim();if("Class.create()"==e)return R=!0,void j.setAsClass();var r=T(g);if(r)r.getChildren(s).forEach(e=>{E(e,!1)});else{let e=p.getTypeAtLocation(g),t=ts.TypeFormatFlags.UseTypeOfFunction|ts.TypeFormatFlags.NoTruncation|ts.TypeFormatFlags.UseFullyQualifiedType|ts.TypeFormatFlags.MultilineObjectLiterals,s=a(p,e,void 0,t);var o=m(s);if(o.startsWith("{")&&o.endsWith("}"))R=!0,j.addField(new k(A,o).setLineInfo(i)),j.setAsObjectLiteral();else try{n(o)}catch(t){}}}else if(ts.isObjectLiteralExpression(g)){R=!0;let e=h(g),t=new D(A);t.setLineInfo(i),t.setKeysType(e),j.addField(t),j.setAsObjectLiteral()}else if(ts.isFunctionExpression(g)){R=!0,j.setAsFunction();let e=f(g);j.addConstructorFunction(L.create(A,e[0]));let t=y(g);0<t.length&&j.setAsClass(),t.forEach(e=>j.addField(e))}else if(ts.isIdentifier(g)){var l=g.getText().trim();if(!U[l])return;R=!0;let e=h(U[l]),t=new D(A);t.setKeysType(e),j.addField(t),j.setAsObjectLiteral()}else if(ts.isParenthesizedExpression(g)){let e=g.getChildren().filter(ts.isFunctionExpression);if(0!=e.length){R=!0,j.setAsFunction();let t=f(e[0]);j.addConstructorFunction(L.create(A,t[0]))}else{if(1!=s.statements.length)return;let e=g.getChildren().filter(ts.isCallExpression);if(1!=e.length)return;var d=e.find(ts.isCallExpression);if(!d)return;let t=d.getChildren().find(ts.isFunctionExpression);if(!t)return;let i=t.getChildren().find(ts.isBlock);if(!i)return;let n=i.getChildren().find(e=>e.kind==ts.SyntaxKind.SyntaxList);if(!n)return;n.getChildren().forEach(e=>{E(e,!1)})}}}return}if(ts.isExpressionStatement(e)){if(!R){let t=e.getChildren().find(ts.isBinaryExpression);if(!t){let t=e.getChildren();return 2==t.length?ts.isIdentifier(t[0])&&t[1].kind==ts.SyntaxKind.SemicolonToken?void(R=t[0].getText().trim()==A):void 0:void 0}let i=t.getChildren();if(3!=i.length)return;let n=i[2],s=i[0];if(ts.isIdentifier(s))if(s.getText().trim()!=A)ts.isObjectLiteralExpression(n)&&(U[s.getText().trim()]=n);else if(ts.isCallExpression(n)){let e=n.getFullText().trim();"Class.create()"==e&&(R=!0,j.setAsClass())}else if(ts.isObjectLiteralExpression(n)){R=!0;let e=p.getSymbolAtLocation(n),t;e&&(t=ts.displayPartsToString(e.getDocumentationComment(p)));let i=new D(A,t);i.setLineInfo(g(n));let s=h(n);i.setKeysType(s),j.addField(i),j.setAsObjectLiteral()}else if(ts.isFunctionExpression(n)){R=!0;let e=f(n);j.setAsFunction(),j.addConstructorFunction(L.create(s.getText(),e[0]));let t=y(n);0<t.length&&j.setAsClass(),t.forEach(e=>j.addField(e))}else if(ts.isIdentifier(n)){let e=n.getText().trim();if(!U[e])return;R=!0;let t=h(U[e]),i=new D(A);i.setLineInfo(g(n)),i.setKeysType(t),j.setAsObjectLiteral(),j.addField(i)}return}let n=e.getChildren();if(1<=n.length&&2>=n.length&&t&&ts.isCallExpression(n[0])){let t=C(e);t.forEach(e=>{E(e,!1)})}let a=n.find(ts.isBinaryExpression);if(!a)return;let r=a.getChildren();if(3!=r.length)return;ts.isObjectLiteralExpression(r[2])&&(U[r[0].getText().trim()]=r[2]);let o=r.find(ts.isPropertyAccessExpression),l="",d="",c="",u=!1,m;if(o){u=!0;let e=o.getChildren(s).filter(ts.isIdentifier),t=o.getText().trim(),i=t.split(".");if(m=r[r.length-1],i[0]!=A)return;if(ts.isIdentifier(m)&&U[m.getText().trim()]&&(m=U[m.getText().trim()]),l=i.join("."),3<i.length)return}else if(ts.isIdentifier(r[0])&&(ts.isObjectLiteralExpression(r[2])&&(U[r[0].getText()]=r[2]),r[0].getText().trim()==A&&r[1].kind==ts.SyntaxKind.FirstAssignment&&(j.clearAll(),m=r[2],l=A,ts.isCallExpression(m)&&"Class.create()"==m.getText().trim())))return j.clearAll(),void j.setAsClass();if(m&&ts.isIdentifier(m)&&U[m.getText()]&&(m=U[m.getText()]),!m)return;if(i=g(m),ts.isNumericLiteral(m))j.addField(new x(l,"").setLineInfo(i));else if(ts.isStringLiteral(m))j.addField(new N(l,"").setLineInfo(i));else if(ts.isObjectLiteralExpression(m)){let e=h(m,!0),t=new D(l,d);t.setLineInfo(g(m)),t.setKeysType(e),j.addField(t),u||j.setAsObjectLiteral()}else if(ts.isFunctionExpression(m)){let e=f(m);u?j.addField(L.create(l,e[0])):(j.addConstructorFunction(L.create(A,e[0])),j.setAsFunction())}else if(l==A+".prototype"&&ts.isCallExpression(m)){let e=m.getChildren().find(ts.isPropertyAccessExpression);if(e&&"Object.extendsObject"==e.getText()){let e=m.getChildren().find(e=>e.kind==ts.SyntaxKind.SyntaxList),t=e.getChildCount();if(3!=t)return;let n=e.getChildAt(0,s);if(ts.isIdentifier(n)||(n=void 0),n||(n=e.getChildren().find(ts.isPropertyAccessExpression)),!n)return void console.log("unable to find the base class information");j.setAsClass();let a=n.getText();1==a.split(".").length&&(a=v+"."+a),j.setBaseType(a);let r=e.getChildren().find(ts.isObjectLiteralExpression);if(!r){let t=e.getChildren(),i=t[t.length-1];if(ts.isIdentifier(i)){let e=i.getText().trim();r=U[e]}}if(r){let e=h(r,!0),t=new D(l);t.setLineInfo(i),t.setKeysType(e),j.addField(t)}else{let i=ts.TypeFormatFlags.NoTruncation|ts.TypeFormatFlags.UseFullyQualifiedType|ts.TypeFormatFlags.MultilineObjectLiterals;c=p.typeToString(p.getTypeAtLocation(e.getChildAt(t-1)),void 0,i),-1==c.indexOf("typeof")&&S(l,e.getChildAt(t-1),d)}}else{let e=T(m),t=[];e&&(t=e.getChildren(s)),t.forEach(e=>{E(e,!1)});let n=t.filter(ts.isReturnStatement);if(0<n.length){1<n.length&&console.warn("Found multiple return statements in prototype assignment");let e=n[n.length-1].getChildren()[1],t;if(ts.isIdentifier(e))t=U[e.getText()];else if(ts.isObjectLiteralExpression(e))t=e;else if(ts.isCallExpression(e)){let i=e.getChildren();if(4!==i.length)return;let n=i[0];if(!ts.isPropertyAccessExpression(n))return;if("Object.extendsObject"!==n.getText())return;let s=e.getChildren().find(e=>e.kind==ts.SyntaxKind.SyntaxList);if(!s)return;let a=s.getChildren();if(3!=a.length)return;let r=a[0];if(!ts.isPropertyAccessExpression(r))return;let o=a[2];if(!ts.isObjectLiteralExpression(o))return;j.setAsClass();let l=r.getText();1==l.split(".").length&&(l=v+"."+l),j.setBaseType(l),t=o}if(t){let e=h(t,!0),n=new D(l);return n.setLineInfo(i),n.setKeysType(e),void j.addField(n)}}S(l,m,d)}}else S(l,m,"")}else if(ts.isFunctionDeclaration(e)){let t=e.name.getText();if(t!=A)return;R=!0;let i=p.getSymbolAtLocation(e.name),n=p.getTypeOfSymbolAtLocation(i,i.valueDeclaration),s=n.getCallSignatures().map(e=>u(e));var c=_(e);if(0<c.length&&(s[0].returnType=c),0<e.parameters.length){let t=0;e.parameters.forEach(e=>{s[0].parameters[t++].isOptional=p.isOptionalParameter(e)})}j.setAsFunction(),j.addConstructorFunction(L.create(t,s[0]));let r=y(e);0<r.length&&j.setAsClass(),r.forEach(e=>{j.addField(e)});let o=ts.getJSDocAugmentsTag(e);if(!o)return;let l=o.getChildren();if(2!=l.length)return;let d=l[0];if(!d)return;let g=p.getTypeAtLocation(l[1]);if(!g)return;let f=a(p,g,void 0,ts.TypeFormatFlags.UseFullyQualifiedType|ts.TypeFormatFlags.NoTruncation),h=m(f);0<h.length&&"any"!=h&&j.setBaseType(h)}else ts.isClassDeclaration(e)&&j.setAsES6()}l();var I=s;let A="",v="",w=t.split(".");1==w.length?A=t:(A=w[1],v=w[0]);var j=new O(e,t,"","12345"),R=!1,V={};(function(e){function t(e){if(e){if(ts.isJSDocTypedefTag(e)){var i=ts.getNameOfJSDocTypedef(e);console.log(i.getText());let t=e.getChildren(),s=t.find(ts.isModuleDeclaration);if(!s)return;if(2<=t.length){let e=s.getText();var n=e.split(".");if(2>n.length)return void console.warn("typedef should start with 'sn' namespace");if("sn"!=n[0])return void console.warn("typedef should start with 'sn' namespace");V[e]=!0}}else if(ts.isTypeReferenceNode(e)){var s=e.getFullText();if(!V[s])return;let t=e.typeName.getChildren();if(0==t.length)return void console.log("type children must exists "+e.getFullText());let i=p.getSymbolAtLocation(t[t.length-1]);if(!i)return;var r=a(p,p.getDeclaredTypeOfSymbol(i),void 0,8388608),o=m(r);j.addTypedefData({type:o,kind:M.typeDefs,name:s})}var l=e.getChildren();0<l.length&&l.forEach(e=>t(e))}}t(e)})(s);var U={};for(let n=0,i;s&&n<s.statements.length;n++)i=s.statements[n],E(i);return j}function h(e){e.forEach(e=>{"javaGlobalAPI"==e.name?W=e:"tableAPI"==e.name?G=e:"javaScopedAPI"==e.name?K=e:"jsAPI"==e.name&&(z=e)}),H="string"==typeof W.json_value?JSON.parse(W.json_value).api+"\n\n"+W.customization:W.json_value.api+"\n\n"+W.customization,Y="string"==typeof K.json_value?JSON.parse(K.json_value).api+"\n\n"+W.customization:K.json_value.api+"\n\n"+K.customization,q="string"==typeof G.json_value?JSON.parse(G.json_value).api+"\n\n"+G.customization+"\n\n"+z.customization:G.json_value.api+"\n\n"+G.customization,Q="string"==typeof z.json_value?JSON.parse(z.json_value).api:z.json_value.api}function _(e,t=!1){var i=e.split("."),n=i[0],s=i[1],a="";if(t)return Q[n]?(Q[n].forEach(e=>{var t=e.api.split(".");t[1]!=s&&"string"==typeof e.gf&&(a+=e.gf+";\n")}),a):(console.log("Unable to find the scope falling back to default one "+e),"");let r={};for(let i in Q){let e=Q[i];e.forEach(e=>{if(e.sp){let t=e.sp.split(".");return 1==t.length?(r[i]=r[i]||{},void(r[i][e.sp]=!0)):void(r[t[0]]=r[t[0]]||{},r[t[0]][t[1]]=!0)}})}for(let i in Q){let e=Q[i];a+="declare namespace "+i+" {",e.forEach(e=>{if("string"==typeof e.gf&&(C.isPublic(e.f)||i==n))a+="\n"+e.tf+"\n"+e.af+"\n";else{if(!r[i])return;r[i][e.api]&&(a+="\n"+e.tf+"\n")}}),a+="}\n"}return"global"==n?H+q+a:Y+q+a}function E(n,s,a){h(s);let o="point.js",l=g(Q,a.sys_id),p=r(l),d,c,u;var m=new eslint.Linter;return{dispose:function(){d&&(d.disposeAll(),d=null),c&&(c=null)},getTypeInfo:function(s,a){s.api_name||(s.api_name="global.point"),u||(u=s.api_name);var r=s.getScopeAndAPIMap();if(!d||u!=s.api_name){let e=0;s.access==y.public&&(e|=T.public),e|=T.cls;let t=new C(s.api_name,s.sys_id,"export class "+r.name+" { prop: number; }","","",s.access,"",e),i=s.formatCurrentSITSFormat(t);var l=n+"\n\n"+_(s.api_name)+"\n\n\n"+_(s.api_name,!0);l+="\n\n"+i+"\n\n"+p+"\n\n"+z.customization+"",d||(d=new B(l)),u!=s.api_name&&(u=s.api_name,d.updateLib(l))}let g={js:"",declaration:"",sourceMap:"",afterDotWalK:"",errorMsg:t.ERROR_MSG,linterErrors:[],tsDeclaration:""};let h=3.7<=parseFloat(ts.versionMajorMinor);if(s.isJavascript()){a.allowJs=!0,a.declaration=h&&self.recordConfig.isES6,a.removeComments=!0,a.noEmitOnError=!0,a.outFile="pointOut.js";let e=s.tsscript;self.recordConfig.isES6&&!self.recordConfig.isFromScriptRunner&&(e+=`\n/// @ts-ignore\n${r.name} = global.__extends(Class.create(), ${r.name});\n`),d.updateSI(e),o="point.js"}else{a.allowJs=!1,a.declaration=!0;let e=s.tsscript;self.recordConfig.isFromScriptRunner||(e+=`\n/// @ts-ignore\n${r.name} = global.__extends(Class.create(), ${r.name});\n`),d.updateTypeScriptSI(e),o="point.ts"}a.noLib=!0,a.types=["snlib"],ts.defaultMaximumTruncationLength=1e4,a.noResolve=!1,a.skipLibCheck=!0,c=ts.createProgram([o],a,d,c);let S=c.emit(c.getSourceFile(o),void 0,void 0,void 0,{before:[e.dotWalkingTransformer]}),b=ts.getPreEmitDiagnostics(c).concat(S.diagnostics);if(b.forEach(e=>{if(e.file){let{line:t,character:i}=e.file.getLineAndCharacterOfPosition(e.start),n=ts.flattenDiagnosticMessageText(e.messageText,"\n");console.log(`${e.file.fileName} (${t+1},${i+1}): ${n}`)}else console.log(`${ts.flattenDiagnosticMessageText(e.messageText,"\n")}`)}),S.emitSkipped)return g;let E=d.getOutFiles();if(s.isTypescript()?(g.js=E["point.js"],g.sourceMap=E["point.js.map"]):(h&&(g.tsDeclaration=E["pointOut.d.ts"]),g.js=E["pointOut.js"],g.sourceMap=E["pointOut.js.map"]),g.afterDotWalK=s.tsscript,g.errorMsg="",s.isTypescript())return g.tsDeclaration=g.declaration=E["point.d.ts"],g;var I;try{I=f(s,s.api_name,c.getSourceFile(o),c.getTypeChecker()),I.sysId=s.sys_id,I.accessType=s.access;let e=I.toMinifiedInterfaceFormat();g.declaration=JSON.stringify(e),g.afterDotWalK=s.tsscript,a.linter&&(g.linterErrors=m.verify(s.tsscript,i.eslintConfig))}catch(t){g.errorMsg=JSON.stringify({error:t+"",id:1})}return g}}}let I;(function(e){e[e.NumericLiteral=0]="NumericLiteral",e[e.StringLiteral=1]="StringLiteral",e[e.StringType=2]="StringType",e[e.FunctionType=3]="FunctionType",e[e.ObjectLiteral=4]="ObjectLiteral",e[e.AnonymouseStringLiteral=5]="AnonymouseStringLiteral"})(I=e.LiteralType||(e.LiteralType={}));class A{constructor(e,t,i,n=!1){this.name=e,this.type=t,this.doc=i,this.isStringPropertyElement=n}setLineInfo(e){return this.lineInfo=e,this}toJSONDecl(){var e={};return e.f=this.toTypeFormat(),this.lineInfo&&(e.l=this.lineInfo.line,this.lineInfo.doc&&(e.d=this.lineInfo.doc)),e}setDoc(e){this.doc=e}setAsElement(){this.isStringPropertyElement=!0}static isNumericType(e){return e instanceof A&&e.type==I.NumericLiteral}static isStringLiteral(e){return e instanceof A&&e.type==I.StringLiteral}static isStringType(e){return e instanceof A}static isParamType(e){return e instanceof v}static isFunctionType(e){return e instanceof A&&e.type==I.FunctionType}static isRawFunctionType(e){return e instanceof P}static isObjectLiteral(e){return e instanceof A&&e.type==I.ObjectLiteral}static isAnonymousStringType(e){return e instanceof A&&e.type==I.AnonymouseStringLiteral}getPropertyName(){if(this.isStringPropertyElement)return this.name;var e=this.name.split(".");return e[e.length-1]}isStatic(){var e=this.name.split(".");return!(2>e.length)&&"prototype"!=e[1]}}e.RawFieldType=A;class x extends A{constructor(e,t){super(e,I.NumericLiteral,t)}toTypeFormat(){return this.getPropertyName()+": number"}}e.NumericLiteralType=x;class N extends A{constructor(e,t){super(e,I.StringLiteral,t)}toTypeFormat(){return this.getPropertyName()+": string"}}e.StringLiteralType=N;class F extends A{constructor(e,t,i){super(e,I.StringType,i),("true"==t||"false"==t)&&(t="boolean"),t=t.replace(/undefined\[\]/g,"Array<any>"),this.rawType=t}toTypeFormat(){return this.getPropertyName()+": "+this.rawType}}e.StringType=F;class v extends F{constructor(e,t,i=!1,n){super(e,t,n),this.isOpt=i}toTypeFormat(){return this.isOpt?this.name+(this.isOpt?"?: ":": ")+this.rawType:"any"==this.rawType?this.name:this.name+": "+this.rawType}}e.ParamInfoType=v;e.AnonymousStringType=class extends F{constructor(e,t){super("",e,t)}toTypeFormat(){return"any"==this.rawType?"":this.rawType}};class P extends F{constructor(e,t,i,n,s){super(e,t,s),this.returnType=i,this.templateBody=n}getParts(){var e="";!this.templateBody||(e=this.templateBody),e+=this.rawType;var t;return this.returnType&&"any"!=this.returnType&&(t=this.returnType),{name:this.getPropertyName(),body:e,returnType:t}}getParamsFormat(){var e=this.getParts();return e.body}getClsFunctionFormat(){var e=this.getParts();return!e.returnType?e.body+": "+e.returnType:e.body}toTypeFormat(){var e="",t=this.getParts();return e=t.name+t.body,!t.returnType||(e+=": "+t.returnType),e}}e.RawFunctionType=P;class L extends A{constructor(e,t){super(e,I.FunctionType,t)}getParts(){var e=this.getPropertyName(),t="";if(Array.isArray(this.typeParams)&&0<this.typeParams.length&&(t="<"+this.typeParams.join(", ")+">"),Array.isArray(this.params)&&0<this.params.length){var i=[];this.params.map(e=>{i.push(e.toTypeFormat())}),t+="("+i.join(",")+")"}else t="()";var n;return this.returnType&&"any"!=this.returnType&&(n=this.returnType),{name:e,body:t,returnType:n}}getParamsFormat(){var e=this.getParts();return e.body}getClsFunctionFormat(){var e=this.getParts();return e.returnType&&(!e.returnType||"any"!=e.returnType)?e.body+": "+e.returnType:e.body}toTypeFormat(){var e=this.getParts();return e.returnType&&(!e.returnType||"any"!=e.returnType)?e.name+e.body+": "+e.returnType:e.name+e.body}addParam(e,t,i=!1,n){Array.isArray(this.params)||(this.params=[]),this.params.push(new v(e,t,i,n))}setReturnType(e,t){this.returnType=e,this.returnDoc=t}setTypeParams(e){Array.isArray(e)&&0<e.length&&(this.typeParams=e)}static create(e,t){var i=new L(e,t.documentation);return t.parameters.forEach(e=>{i.addParam(e.name,e.type,e.isOptional,e.documentation)}),t.lineInfo&&i.setLineInfo(t.lineInfo),i.setReturnType(t.returnType),i.setTypeParams(t.typeParams),i}}e.FunctionType=L;class k extends A{constructor(e,t,i){super(e,I.StringType),this.typeFormat=t}toTypeFormat(){return this.typeFormat}toJSONDecl(){var e=this.toTypeFormat().trim();return e.startsWith("{")&&(e=e.substring(1)),e.endsWith("}")&&(e=e.substr(0,e.length-1)),e=e.trim(),{l:0,f:e}}}e.RawStringObjectLiteralType=k;class D extends A{constructor(e,t){super(e,I.ObjectLiteral,t)}addField(e){this.keys[e.name]=e}setKeysType(e){this.keys=e}getPartsWithLineInfo(){var e=[];for(var t in this.keys){let i={};i.f=this.keys[t].toTypeFormat(),this.keys[t].lineInfo&&(i.l=this.keys[t].lineInfo.line,this.keys[t].lineInfo.doc&&(i.d=this.keys[t].lineInfo.doc)),e.push(i)}return e}getParts(){var e=[];for(var t in this.keys)e.push(this.keys[t].toTypeFormat());return e}toTypeFormat(){var e="{\n",t=this.getParts();return e+=t.join(";\n"),e+="\n}",e}}e.ObjectLiteraltype=D;class O extends b{constructor(e,t,i,n){super(e,t,i,n),this.fields={},this.flags=0,this.isES6=!1}setAsES6(){this.isES6=!0,this.flags|=T.jsES6}getInternalType(){return this.isClass()||this.isSubClass()?u.cls:this.isFunctionType()?u.fun:this.isObjectLiteral()?u.var:u.never}clearAll(){this.fields={}}exportToTS(){var e;return e}addConstructorFunction(e){this.constFun=e}addField(e){var t=e.name.split(".");if(1<t.length&&"prototype"==t[1])this.setAsClass();else if(this.isObjectLiteral()){let t=e.name.split("."),i=this.fields[t[0]];return void(i instanceof D&&2==t.length&&(e.name=t[1],i.addField(e)))}this.fields[e.name]=e}exportAliasName(e){return""}isSubClass(){return!!this.baseName}setBaseType(e){this.baseName=e}setAsFunction(){this.resetState(),this.flags|=T.fun}isFunctionType(){return!!(this.flags&T.fun)}setAsObjectLiteral(){this.resetState(),this.flags|=T.obj}isObjectLiteral(){return!!(this.flags&T.obj)}resetState(){this.flags=0}setAsClass(){this.resetState(),this.flags|=T.cls}isClass(){return!!(this.flags&T.cls)}addTypedefData(e){this.typeDefs||(this.typeDefs=[]),this.typeDefs.push(e)}toMinifiedInterfaceFormat_1(){var e=this.apiName.split("."),t=e[0],i=e[1];let n="",s="";var a=Object.keys(this.fields),r="",o;if(0==this.flags&&1==Object.keys(this.fields).length){this.fields[i]}if(this.isObjectLiteral()){let e="";for(let t in this.fields)this.fields[t]instanceof D?e+=this.fields[t].toTypeFormat():this.fields[t]instanceof k&&(e+=this.fields[t].toTypeFormat());let t={api:i,id:this.sysId,tf:e,f:0};return C.updateFlags(t,this.currentSI,this.getInternalType()),t}if(a.forEach(e=>{let t=this.fields[e],a="";if(e!=i+".prototype")a=t.toTypeFormat()+";\n",t.isStatic()?A.isObjectLiteral(t)?s+=t.getPropertyName()+": "+a:s+=a:A.isObjectLiteral(t)?n+=t.getPropertyName()+": "+a:n+=a;else if(A.isObjectLiteral(t)){a=t.getParts().join(";\n"),0<a.length&&(n+=a+";\n");var l=t.keys.initialize;l&&A.isFunctionType(l)&&(o=l)}else A.isStringType(t)&&(r=t.rawType,"{"==r[0]&&r[r.length-1]||(r=""))}),this.isClass()){var l="new";o=o||this.constFun,l+=o?o.getParamsFormat()+": "+this.apiName:"(): "+this.apiName,s=l+";\nprototype: "+this.apiName+";\n"+s}this.isFunctionType()&&!!this.constFun&&(this.constFun instanceof L?s=this.constFun.getClsFunctionFormat()+";\n"+s:this.constFun instanceof P&&(s=this.constFun.rawType+": "+this.constFun.returnType+";\n"+s)),0<r.length&&(r=r.substring(1),r=r.substr(0,r.length-1),n+="\n"+r);let p=[];p.push(n.trim()),p.push(s.trim());var d={api:i,id:this.sysId,f:0,tf:p};return this.isSubClass()&&(d.sp=this.baseName),!this.typeDefs||(d.td=this.typeDefs),C.updateFlags(d,this.currentSI,this.getInternalType()),d}toMinifiedInterfaceFormat(){var e=this.apiName.split("."),t=e[0],i=e[1];let n="",s="";var a=Object.keys(this.fields),r="",o;if(0==this.flags&&1==Object.keys(this.fields).length){this.fields[i]}if(this.isES6){let e={api:i,id:this.sysId,f:this.flags};return"undefined"!=typeof this.typeDefs&&(e.td=this.typeDefs),e}if(this.isObjectLiteral()){let e="",t=[];for(let i in this.fields)this.fields[i]instanceof D?e+=this.fields[i].toTypeFormat():this.fields[i]instanceof k&&(e+=this.fields[i].toTypeFormat(),t.push(this.fields[i].toJSONDecl()));let n=this.fields[i];if(n.keys)for(let e in n.keys)t.push(n.keys[e].toJSONDecl());let s={api:i,id:this.sysId,df:t,f:0};return C.updateFlags(s,this.currentSI,this.getInternalType()),s}let l=[],p=[];if(a.forEach(e=>{let t=this.fields[e],a="";if(e!=i+".prototype"){a=t.toTypeFormat()+";\n";let e=t.lineInfo;var d={};d.l=e.line,e.doc&&(d.d=e.doc),t.isStatic()?(p.push(d),A.isObjectLiteral(t)?(d.f=t.getPropertyName()+": "+t.toTypeFormat(),s+=t.getPropertyName()+": "+a):(d.f=t.toTypeFormat(),s+=a)):(l.push(d),A.isObjectLiteral(t)?(d.f=t.getPropertyName()+": "+t.toTypeFormat(),n+=t.getPropertyName()+": "+a):(d.f=t.toTypeFormat(),n+=a))}else if(A.isObjectLiteral(t)){l=t.getPartsWithLineInfo(),a=t.getParts().join(";\n"),0<a.length&&(n+=a+";\n");var c=t.keys.initialize;c&&A.isFunctionType(c)&&(o=c)}else A.isStringType(t)&&(r=t.rawType,"{"==r[0]&&r[r.length-1]||(r=""))}),this.isClass()){var d="new";o=o||this.constFun;let e={};p.push(e),o?(d+=o.getParamsFormat()+": "+this.apiName,e.f=d,o.lineInfo&&(e.l=o.lineInfo.line,o.doc&&(e.d=o.doc))):(d+="(): "+this.apiName,e.f=d,e.l=0);let t={};t.f=`prototype: ${this.apiName}`,t.l=0,p.push(t),s=d+";\nprototype: "+this.apiName+";\n"+s}if(this.isFunctionType()&&!!this.constFun){let e={};e.l=0,e.f="",p.push(e),this.constFun instanceof L?(s=this.constFun.getClsFunctionFormat()+";\n"+s,e.f=this.constFun.getClsFunctionFormat()):this.constFun instanceof P&&(s=this.constFun.rawType+": "+this.constFun.returnType+";\n"+s,e.f=this.constFun.rawType+": "+this.constFun.returnType)}0<r.length&&(console.warn("fix this extra user case"),r=r.substring(1),r=r.substr(0,r.length-1),n+="\n"+r);let c=[];c.push(n.trim()),c.push(s.trim());var u={api:i,id:this.sysId,f:0,df:[l,p]};return this.isSubClass()&&(u.sp=this.baseName),!this.typeDefs||(u.td=this.typeDefs),C.updateFlags(u,this.currentSI,this.getInternalType()),u}toInterfaceFormat(){var e=this.apiName.split("."),t=e[0],i=e[1];let n="",s="";var a=Object.keys(this.fields),r="",o;if(0==this.flags&&1==Object.keys(this.fields).length){this.fields[i];console.log("unknown type")}if(this.isObjectLiteral()){let e="interface "+i+" ";for(let t in this.fields)e+=this.fields[t].toTypeFormat();let t="declare const "+i+": "+this.apiName+";",n=new C(this.apiName,this.sysId,e,"const "+i+": "+i+";",t,this.accessType,u.var,0,this.typeDefs);return C.updateFlags(n,this.currentSI,this.getInternalType()),n}if(a.forEach(e=>{let t=this.fields[e],a="";if(e!=i+".prototype")a=t.toTypeFormat()+";\n",t.isStatic()?A.isObjectLiteral(t)?s+=t.getPropertyName()+": "+a:s+=a:n+=a;else if(A.isObjectLiteral(t)){a=t.getParts().join(";\n"),n+=a+";\n";var l=t.keys.initialize;l&&A.isFunctionType(l)&&(o=l)}else A.isStringType(t)&&(r=t.rawType,"{"==r[0]&&r[r.length-1]||(r=""))}),this.isClass()){var l="new";l+=o?o.getParamsFormat()+": "+this.apiName:"(): "+this.apiName,s=l+";\nprototype: "+this.apiName+";\n"+s}this.isFunctionType()&&!!this.constFun&&(this.constFun instanceof L?s=this.constFun.getClsFunctionFormat()+";\n"+s:this.constFun instanceof P&&(s=this.constFun.rawType+": "+this.constFun.returnType+";\n"+s)),0<r.length&&(r=r.substring(1),r=r.substr(0,r.length-1),n+="\n"+r);let p="interface "+i;this.isSubClass()&&(p+=" extends "+this.baseName),n=n.trim(),p+=" {\n"+n+"\n}";let d="interface "+i+"Constructor {\n";s=s.trim(),d+=s+"\n}";let c=p+"\n"+d;var g="declare const "+i+": "+this.apiName+"Constructor;";let m=new C(this.apiName,this.sysId,c,"const "+i+": "+i+"Constructor;",g,this.accessType,u.cls,0,this.typeDefs);return C.updateFlags(m,this.currentSI,this.getInternalType()),m}}e.TSTypeExporter=O,e.generateTypedefDeclFromScopemap=r;var w={};e.addToThisSITypedefMap=o,e.clearThisSITypedefMap=l;var j={};e.addToTypeDefMap=p,e.isTypedefType=d,e.generateTypedefDeclFromScopeName=c,e.generateTypedefDecl=function(e){function t(e){var i="";for(var n in e)if("object"==typeof e[n]){let s=t(e[n]);i+="namespace "+n+" {\n"+s+"\n}\n"}else"string"==typeof e[n]&&(i+=e[n]);return i}if(!Array.isArray(e))return"";var i={};for(let t=0;t<e.length;t++)for(let o=0,l;o<e[t].length;o++){if(l=e[t][o],!l.name)continue;var n=l.name.split(".");let p="interface "+n[n.length-1]+" "+l.type+"\n\n";1<n.length&&n.splice(0,1);for(var s=n.splice(n.length-1,1)[0],a=i,r=0;r<n.length;r++)a[n[r]]=a[n[r]]||{},"string"==typeof a[n[r]]&&(console.log("module is defined as type overriding the type with modue "),a[n[r]]={}),a=a[n[r]];a[s]=p}var o=t(i);return o="declare namespace sn {\n"+o+"}",console.log(o),o},e.getTypeDefsAsScopeMap=g,e.getTypeDefs=function(e,t="-1"){var n=[];for(let s in e)for(let a=0;a<e[s].length;a++)Array.isArray(e[s][a].td)&&e[s][a].id!=t&&n.push(e[s][a].td);return n},e.parseSIWithTypeChecker=f;const R="atypes.ts",V="point.js",U="node_modules/@types/snlib/index.d.ts";class B{constructor(e,t,i){this.snlib=e,this.sourceFiles={},this.outFiles={},this.updateContent(U,this.snlib),t&&this.updateContent(R,t),i&&this.updateContent(V,i)}getOutFiles(){return this.outFiles}disposeAll(){for(let e in this.sourceFiles)ts.disposeEmitNodes(this.sourceFiles[e]),this.sourceFiles[e]=null}updateContent(e,t){this.sourceFiles[e]&&(ts.disposeEmitNodes(this.sourceFiles[e]),this.sourceFiles[e]=null);var i=ts.createSourceFile(e,t,ts.ScriptTarget.ES5,!0,e.endsWith(".ts")?ts.ScriptKind.TS:ts.ScriptKind.JS);this.sourceFiles[e]=i}updateLib(e){this.updateContent(U,e)}updateAnonymousContent(e){this.updateContent(R,e)}updateTypeScriptSI(e){this.updateContent("point.ts",e)}updateSI(e){this.updateContent(V,e)}getTypeInfo(e,t,i="Point"){var n=null;return n=f(e,i,this.sourceFiles[V],t),n}getSourceFile(e){return this.sourceFiles[e]?this.sourceFiles[e]:void 0}writeFile(e,t){this.outFiles[e]=t}getDefaultLibFileName(){return"lib.d.ts"}useCaseSensitiveFileNames(){return!1}getCanonicalFileName(e){return e}getCurrentDirectory(){return""}getNewLine(){return"\r\n"}fileExists(e){return!0}readFile(e){return console.log("read file "+e),""}directoryExists(){return!0}getDirectories(){return[]}}e.MyCompilerHost=B;var J={allowNonTsExtensions:!0,target:1,allowJs:!0,sourceMap:!0,noLib:!0,noErrorTruncation:!0,types:["snlib"],linter:!1},W,K,G,z,H,Y,q,Q;e.dotWalkingTransformer=e=>t=>{function i(t){if(t=ts.visitEachChild(t,i,e),!ts.isTemplateExpression(t))return t;let n=t.getFullText(),a=s(),r=n.match(a);if(!r)return t;if(0==r.length)return t;var o=r[0].split(".");if(1>=o.length)return t;let l=function(e){let t=e.replace(a,(e,t,i,n)=>{var s=i;i.startsWith("$$")&&(i=i.substring(2,i.length)),i.startsWith("{")&&(i=i.substring(1,i.length)),i.endsWith("}")&&(i=i.substr(0,i.length-1));let a=i.split(".");return 1==a.length?s:(a.splice(0,1),t+a.join(".")+n)});return t.trim()}(n);return ts.createStringLiteral(l)}return!t.sourceFiles||(t=t.sourceFiles[0]),ts.visitNode(t,i)},e.initTypeInfoForSingleSI=E,e.generateTypeInfo=function(e,t,i,n){h(i);var s={},a=[],o={};e.forEach(e=>(e instanceof S||(e=new S(e)),"global"==e.sys_scope.value?void a.push(e):void(!o[e.sys_scope.value]&&(o[e.sys_scope.value]=[]),o[e.sys_scope.value].push(e))));var l=[];for(var p in 0<a.length&&l.push(a),o)l.push(o[p]);var d=null,c=[],u=["point.js","atypes.ts"],m=[],f=0,y="global",T;return l.forEach(i=>{i.forEach(i=>{f++;var a=(100*f/e.length).toFixed(2);if(n)try{n({name:i.api_name,percentage:a,sysId:i.sys_id})}catch(e){}i instanceof S||(i=new S(i));var o=i.getScopeAndAPIMap();if("string"!=typeof i.script)return void console.log("skipping: undefined script found for api "+i.api_name);let l=_(i.api_name,!0);if(!d){let e=_(i.api_name),n=g(Q,"-1"),s=r(n);d=new B(t+"\n\n"+e+"\n\n"+s)}if(d.updateAnonymousContent(l),d.updateSI(i.script),o.scope!=y){let e=_(i.api_name);d.updateLib(t+"\n\n"+e),y=o.scope,T=void 0}T=ts.createProgram(u,J,d,T);try{let e=d.getTypeInfo(i,T.getTypeChecker(),i.api_name);e.accessType=i.access,e.sysId=i.sys_id,e&&c.push(e),s[o.scope]||(s[o.scope]=[]);var p=e.toMinifiedInterfaceFormat();if(s[o.scope].push(p),n)try{n({name:i.api_name,percentage:a,sysId:i.sys_id,decl:p})}catch(e){}}catch(t){m.push(i.api_name)}})}),{formatterResult:s,types:c,errors:m,program:T,host:d}}})(D=t.TSChecker||(t.TSChecker={}))}),define("tsCompilerOptions",["require","exports"],function(e,t){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.default={allowNonTsExtensions:!0,module:0,noResolve:!0,suppressOutputPathCheck:!0,skipLibCheck:!0,skipDefaultLibCheck:!0,target:1,noImplicitAny:!1,strict:!1,strictNullChecks:!1,noImplicitThis:!1,noImplicitReturns:!1,experimentalDecorators:!1,noUnusedLocals:!1,noUnusedParameters:!1,declaration:!0,sourceMap:!0,jsx:2,jsxFactory:"createElement",noEmitHelpers:!1,isolatedModules:!1,noEmitOnError:!1,stripInternal:!1,allowJs:!0,checkJs:!1,noFallthroughCasesInSwitch:!1,allowUnreachableCode:!1,linter:!1,inlineSourceMap:!1,inlineSources:!1}}),define("recordWatcher",["require","exports"],function(e,t){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.default=function(){function e(e){return"string"==typeof e?(e=e.replace(/\^EQ/g,"").replace(/\^ORDERBY(?:DESC)?[^^]*/g,"").replace(/^GOTO/,""),btoa(e).replace(/=/g,"-")):""}function t(e){return d.getChannel(e)}function i(i,n){var s="/rw/default/"+i+"/"+e(n||"");return d.getChannel(s)}function n(e,t,i="sys_idISNOTEMPTY"){if(e){var n="";return n=t?"sys_id="+t:i,n||(n="sys_idISNOTEMPTY"),r(e,n)}}function s(e,t){if(e)return t=t||"sys_idISNOTEMPTY",r(e,t)}function a(e,t){t&&t.unsubscribe();var i=e.toString();return r("task","sys_idIN"+i)}function r(e,t="sys_idISNOTEMPTY"){return p(e)?(l("Blocked from watching",e),null):(l(">>> init "+e+"?"+t),c=i(e,t),c.subscribe(o),d.connect(),c)}function o(e){var t=e.data,i=e.channel;l(t)}function l(...e){console.log(e.join("s"))}function p(e){return"sys_amb_message"==e||e.startsWith("sys_rw")}let d;if("undefined"==typeof g_ambClient?window.top.g_ambClient&&(d=window.top.g_ambClient):d=g_ambClient,!!d){var c;return{getChannel:t,initTaskList:a,initChannel:r,init:function(e,t,i=""){n(e,t,i)},initList:s,initRecord:function(e,t){n(e,t,"")}}}}}),define("siDeclEmittor",["require","exports","constants","siParser","tsCompilerOptions","recordWatcher"],function(e,t,i,n,s,a){"use strict";var D=Math.max;function r(){return"undefined"!=typeof window}function o(){return!r()}function l(){return!!o()||p()&&window.recordConfig.canWrite}function p(){return!!o()||window.recordConfig.canRead}function d(e){l()&&e&&(G=new W(e),self.yln={dispatcher:G},G.sendMsg({cmd:B.THREAD_INITIALIZED}))}function c(t=!1){if(!window.recordConfig.isYLNSource){var i=window.ylnWorker;if(t&&(clearTimeout(Y),Y=-1),-1==Y){const t=D(15,parseInt(localStorage.getItem("codenow.threadWaitTime")||"15"));Y=setTimeout(()=>{i!=window.ylnWorker||(console.error("unresponsive parser thread. killing it"),window.ylnWorker.terminate(),z=!1,H=0,Se.parseReturnType=!1,G.cancelAllExistingPromises(),createParserThread(e("scripts/SIDeclEmittor")))},1e3*t)}}}function u(t=Object.assign({},T(F().isJavascript()))){if(!l())return Promise.reject("Unable to write Script Include");let i=Object.assign({},Se);if(i.script="",i.typedeclaration="",i.typesourcemap="",!z){let t={cmd:B.UPDATE_LIBS,lib:e("vs/language/typescript/lib/lib").lib_es5_dts,typeDecl:he,siRecord:i,isScriptRunner:S()};G.sendMsg(t).then(function(){z=!0})}let n={cmd:B.SINGLE_SCRIPT_INCLUDE_REQUEST,siRecord:i,options:t},s=G.sendMsg(n);return c(),s.then(()=>{clearTimeout(Y),Y=-1,H--},()=>{clearTimeout(Y),Y=-1,H--}),H++,s}function g(t){if(!l())return Promise.reject("Unable to write Script Include");var i=e("vs/language/typescript/lib/lib").lib_es5_dts;t.forEach(e=>{q[e.sys_id]={record:e},e.parseReturnType=!0,"undefined"!=typeof Q[e.sys_id]&&(!Q[e.sys_id]&&console.log("skipping return type for "+e.api_name),e.parseReturnType=Q[e.sys_id])}),c();var n=G.sendMsg({cmd:B.SCRIPT_INCLUDE_REQUEST,typeDecl:he,lib:i,siRecords:t});return n}function m(){let e=Se.getScopeAndAPIMap().scope;var t=monaco.languages.typescript.typescriptDefaults;(0==w.length||w!=e)&&(0!=w.length&&j.dispose(),j=e==i.GLOBAL_SOCPE?t.addExtraLib(de,"yln_"+X+i.JAVA_GLOBAL_API):t.addExtraLib(ce,"yln_"+X+i.JAVA_SCOPE_API)),w=e}function f(){X++,m();let e=new n.DefinitionEmittor(ye);var t={};Se.isNew()||(t[Se.sys_id]=!0),ge=e.emit(Se.getScopeAndAPIMap().scope,t)+O.newline+me,V&&(V.dispose(),V=null);var s="yln_"+X+i.JS_API;V=monaco.languages.typescript.typescriptDefaults.addExtraLib(ge,s),U&&U.dispose(),U=null;let a=n.TSChecker.getTypeDefsAsScopeMap(ye,Se.sys_id),r=n.TSChecker.generateTypedefDeclFromScopemap(a);var o="yln_"+X+i.TYPE_DEFS;U=monaco.languages.typescript.typescriptDefaults.addExtraLib(r,o),z=!1}function y(e){if(!e)return void f();if(e.id==Se.sys_id)return;if(!e.sc)return void console.warn("scope name not found in record watcher "+JSON.stringify(e));ye[e.sc]||(ye[e.sc]=[]);let t=-1,s=ye[e.sc];for(let n=0;n<s.length;n++)if(s[n].id==e.id){t=n;break}let a=n.SITSFormat.expandMinifiedFormat(e,e.sc,n.SITSFormat.isTypescript(e.f));-1==t?ye[e.sc].push(a):"delete"==e.op?ye[e.sc].splice(t,1):ye[e.sc][t]=a,f()}function h(){return!!window.g_ck}function S(){return!!window.recordConfig&&window.recordConfig.isFromScriptRunner&&"undefined"==typeof g_form}function T(e,t=!1){let i={};if(e){var n=monaco.languages.typescript.typescriptDefaults.getCompilerOptions();return n.target=s.default.target,n.allowJs=s.default.allowJs,n.checkJs=s.default.checkJs,n.strict=s.default.strict,n.jsx=s.default.jsx,n.jsxFactory=s.default.jsxFactory,n.noImplicitAny=s.default.noImplicitAny,n.strictNullChecks=s.default.strictNullChecks,(s.default.target>se.ES2015||S())&&(n.sourceMap=s.default.sourceMap),n.noImplicitThis=s.default.noImplicitThis,n.noImplicitReturns=s.default.noImplicitReturns,n.noUnusedParameters=s.default.noUnusedParameters,n.noUnusedLocals=s.default.noUnusedLocals,n.noFallthroughCasesInSwitch=s.default.noFallthroughCasesInSwitch,n.linter=s.default.linter,t||(n.declaration=!1),n}return i.jsx=s.default.jsx,i.jsxFactory=s.default.jsxFactory,i.noFallthroughCasesInSwitch=s.default.noFallthroughCasesInSwitch,i.allowUnreachableCode=s.default.allowUnreachableCode,i.module=monaco.languages.typescript.ModuleKind.None,i.noResolve=s.default.noResolve,i.skipLibCheck=s.default.skipLibCheck,i.skipDefaultLibCheck=s.default.skipDefaultLibCheck,i.target=s.default.target,i.noImplicitAny=s.default.noImplicitAny,i.strictNullChecks=s.default.strictNullChecks,i.noImplicitThis=s.default.noImplicitThis,i.noImplicitReturns=s.default.noImplicitReturns,i.experimentalDecorators=s.default.experimentalDecorators,i.noUnusedLocals=s.default.noUnusedLocals,i.noUnusedParameters=s.default.noUnusedParameters,i.declaration=s.default.declaration,i.sourceMap=s.default.sourceMap,i.noEmitHelpers=s.default.noEmitHelpers,i.isolatedModules=s.default.isolatedModules,i.noEmitOnError=s.default.noEmitOnError,i.allowJs=!0,i.strict=s.default.strict,i.stripInternal=s.default.stripInternal,i.linter=s.default.linter,i}function C(){return ye}function b(){return F().isGlobalScope()?de:ce}function _(){return ue}function E(){return ge}function I(){return fe}function A(){return b()+O.newline+_()+O.newline+E()+O.newline+I()}function x(){return he}function N(e,t,s,a){he=e;var r=i.GLOBAL_SOCPE;if(0!=t.length){var o=t.split(".");r=o[0].trim()}var l={};for(let i of he)l[i.name]="string"==typeof i.json_value?{api:JSON.parse(i.json_value).api,customization:i.customization}:{api:i.json_value.api,customization:i.customization};for(let i in ye||!l.jsAPI||(ye=l.jsAPI.api),"string"==typeof ye&&(ye=JSON.parse(ye+"")),ye){let e=ye[i];e.forEach((e,t,s)=>{if("undefined"!=typeof e.f){let a=n.SITSFormat.expandMinifiedFormat(e,i);a&&(s[t]=a)}})}let p=n.TSChecker.getTypeDefsAsScopeMap(ye,s),d=n.TSChecker.generateTypedefDeclFromScopemap(p),c=new n.DefinitionEmittor(ye);de=l.javaGlobalAPI.api+O.newline+l.javaGlobalAPI.customization,ce=l.javaScopedAPI.api+O.newline+l.javaScopedAPI.customization,ue=l.tableAPI.api+O.newline+l.tableAPI.customization,ge=c.emit(r,a)+O.newline+l.jsAPI.customization,me=l.jsAPI.customization;var u=monaco.languages.typescript.typescriptDefaults;(0==w.length||w!=r&&r==i.GLOBAL_SOCPE)&&(0!=w.length&&j.dispose(),j=r==i.GLOBAL_SOCPE?u.addExtraLib(de,i.JAVA_GLOBAL_API):u.addExtraLib(ce,i.JAVA_SCOPE_API)),w=r,R||(R=u.addExtraLib(ue,i.TABLE_API)),V&&V.dispose(),V=null,V=u.addExtraLib(ge,i.JS_API),U&&U.dispose(),U=null,fe=d,0<d.length&&(U=u.addExtraLib(d,i.TYPE_DEFS))}function F(){return Se}function v(){return k()?i.TSX_FILE_NAME:Se.isJavascript()?"module.js":"module.ts"}function P(e=!1,t){if(!Se.isTypescript()&&(Te&&(Te.dispose(),Te=null),Se.canGenerateDeclaration()||S()))if(!window.recordConfig.useTypeChecker){var i=Se.generateCurrentSIDeclaration(esprima,e||!!window.recordConfig.jsdoc);Te=monaco.languages.typescript.typescriptDefaults.addExtraLib(i,"current.d.ts")}else{if(!t)return;if(0<t.tf.length){let e=Se.formatCurrentSITSFormat(t);Te=monaco.languages.typescript.typescriptDefaults.addExtraLib(e,"current.d.ts")}}}function L(){return window.recordConfig?window.recordConfig.libVersions.jsLibState:!!window.snMonacoConfig&&window.snMonacoConfig.libState.jsLibState}function k(){return window.recordConfig&&window.recordConfig.isSeismic}function M(){if(Ce)return;Ce=!0;const e=["node_modules/@types/react/global.d.ts","node_modules/@types/prop-types/index.d.ts","node_modules/@types/react/index.d.ts","node_modules/csstype/index.d.ts"];e.push("typings/seismic/index.d.ts");var t=window.recordConfig.paths.app.startsWith("http://yln:9090");e.forEach(e=>{let i="";t||!h()?i+=`${"http://yln:9090"}/${e}`:i=e.replace("node_modules","https://www.unpkg.com/"),fetch(i).then(e=>e.text()).then(t=>{monaco.languages.typescript.typescriptDefaults.addExtraLib(t,e)})})}Object.defineProperty(t,"__esModule",{value:!0}),i=__importStar(i),n=__importStar(n),s=__importDefault(s),a=__importDefault(a);var O=n.TokenType,w="",j,R,V,U,B;(function(e){e[e.THREAD_INITIALIZED=0]="THREAD_INITIALIZED",e[e.SCRIPT_INCLUDE_REQUEST=1]="SCRIPT_INCLUDE_REQUEST",e[e.SCRIPT_INCLUDE_RESPONSE=2]="SCRIPT_INCLUDE_RESPONSE",e[e.SINGLE_SCRIPT_INCLUDE_REQUEST=3]="SINGLE_SCRIPT_INCLUDE_REQUEST",e[e.SINGLE_SCRIPT_INCLUDE_RESPONSE=4]="SINGLE_SCRIPT_INCLUDE_RESPONSE",e[e.UPDATE_LIBS=5]="UPDATE_LIBS",e[e.PROGRESS_MSG=6]="PROGRESS_MSG"})(B||(B={}));class J{constructor(){}static getInstance(e,t,i){return null==J.instance?(J.instance=new J,J.instance.typeInfo=n.TSChecker.initTypeInfoForSingleSI(e,t,i),J.instance):(e&&t&&(J.instance.typeInfo.dispose(),J.instance.typeInfo=n.TSChecker.initTypeInfoForSingleSI(e,t,i)),J.instance)}handleRequest(e){let t=new n.ClientSIRecordData(e.siRecord);return Se=t,console.log("si reqest parser came"),Se.isNew()&&2>t.api_name.split(".").length&&(t.api_name="global.Point"),this.typeInfo.getTypeInfo(Se,e.options)}}t.SingleSIRequestHandler=J;class W{constructor(e){this.sender=e,this.pendingReplies={},this.seqNumber=0,e.onmessage=this.handleMessage.bind(this)}cancelAllExistingPromises(){for(let e in this.pendingReplies)this.pendingReplies[e].reject("Parser thread is too busy for this operation. Please try again or contact yln99517@gmail.com with your SI"),delete this.pendingReplies[e]}sendReplyMsg(e,t){this.sender.postMessage(Object.assign({seqNum:t},e))}sendMsg(e){var t=this.seqNumber++ +"",i=Object.assign({seqNum:t},e),n=new Promise((e,n)=>{this.pendingReplies[t]={resolve:e,reject:n},this.sender.postMessage(i)});return n}isSIProgressMsg(e){return e.cmd==B.PROGRESS_MSG}isSingleSIRequest(e){return e.cmd==B.SINGLE_SCRIPT_INCLUDE_REQUEST}isSIParserRequest(e){return e.cmd==B.SCRIPT_INCLUDE_REQUEST}isSIParserResp(e){return e.cmd==B.SCRIPT_INCLUDE_RESPONSE}isLibUpdateMsg(e){return e.cmd==B.UPDATE_LIBS}handleMessage(t){var e=t.data,i=this.pendingReplies[e.seqNum];if(i){delete this.pendingReplies[e.seqNum];try{e.errorMsg?i.reject(e.errorMsg):i.resolve(e)}catch(t){console.log("error on resolving thread message "+t)}return}if(this.isSIParserRequest(e)){var s=n.TSChecker.generateTypeInfo(e.siRecords,e.lib,e.typeDecl,e=>{var t={seqNum:"-1",cmd:B.PROGRESS_MSG,name:e.name,sysId:e.sysId,percentage:e.percentage,decl:e.decl};this.sendReplyMsg(t,"-1")}),a={seqNum:e.seqNum,cmd:B.SCRIPT_INCLUDE_RESPONSE,formatterResult:s.formatterResult,types:s.types,errors:s.errors};this.sendReplyMsg(a,e.seqNum)}else if(this.isSingleSIRequest(e)){let t=J.getInstance().handleRequest(e);this.sendReplyMsg(t,e.seqNum)}else this.isLibUpdateMsg(e)?(J.getInstance(e.lib,e.typeDecl,e.siRecord),self.recordConfig.isFromScriptRunner=e.isScriptRunner,this.sendReplyMsg({replayMsg:"thank you",cmd:B.SINGLE_SCRIPT_INCLUDE_RESPONSE},e.seqNum)):e.cmd==B.THREAD_INITIALIZED?K=!0:this.isSIProgressMsg(e)&&r()&&(c(!0),Q[e.sysId]=!!e.decl,!e.decl&&console.log("Parser started for => "+e.name),"function"==typeof window.onSIParserProgressEvent&&window.onSIParserProgressEvent(e))}}t.isMainThread=r,t.isWorkerThread=o,t.canWriteSI=l,t.canReadSI=p;var K=!1,G;t.onThreadInitialized=d;var z;let H=0,Y=-1;t.generateTypeDeclForSingleRecord=u;t.gotoDefintionService={open:function(){var e=arguments[0];if("string"==typeof arguments[0]&&(e=monaco.Uri.parse(arguments[0])),"code.devsnc.com"===e.authority)return void window.open(arguments[0]);let t=e.authority.split(".");const i=C();if(!i||!i[t[0]])return window.open(e.toString(),null),void console.log("invalid scope name when opening file "+e.authority);const n=i[t[0]].find(e=>e.api==t[1]);if(!n)return void console.log("invalid scope name when opening file "+e.authority);var s=e.path.substr(1),a=`./sys_script_include.do?sys_id=${n.id}&gotoLine=${s}`;return window.open(a),console.log(JSON.stringify(arguments)),{catch:function(){console.log("eror callback")}}}};var q={},Q={};t.generateTypeDeclarations=g,t.scopeUpdated=m;var X=0;t.apiDeclarationUpdated=f,t.siUpdated=y;var Z;if(r()&&"undefined"!=typeof BroadcastChannel){var ee=a.default();if(ee){var te=ee.getChannel("/yln/typedef");te.subscribe(e=>{y(e.data)})}}t.updateSIDeclListeners=function(e){!Z||Z.postMessage(JSON.stringify(e))},t.isServiceNow=h;class ie{constructor(e="",t="",i="",n="",s,a){this.js=e,this.declaration=t,this.sourceMap=i,this.tsScript=n,this.backEndDecl=s,this.linterErrors=a}}t.TranspilerOutput=ie;const ne=e=>t=>{function i(t){if(t=ts.visitEachChild(t,i,e),!ts.isTemplateExpression(t))return t;let s=t.getFullText(),a=n.getDotWalkingRegExp(),r=s.match(a);if(!r)return t;if(0==r.length)return t;var o=r[0].split(".");if(1>=o.length)return t;let l=function(e){let t=e.replace(a,(e,t,i,n)=>{var s=i;i=i.replace(/^\$\${/,""),i=i.replace(/\}$/,"");let a=i.split(".");return 1==a.length?s:(a.splice(0,1),t+a.join(".")+n)});return t.trim()}(s);return ts.createStringLiteral(l)}return ts.visitNode(t,i)};t.isScriptRunner=S;var se;(function(e){e[e.ES3=0]="ES3",e[e.ES5=1]="ES5",e[e.ES2015=2]="ES2015",e[e.ES2016=3]="ES2016",e[e.ES2017=4]="ES2017",e[e.ES2018=5]="ES2018",e[e.ESNext=6]="ESNext",e[e.JSON=100]="JSON",e[e.Latest=6]="Latest"})(se||(se={})),t.getCompilerOptions=T;class ae{constructor(e,t,i,n=ts.ScriptTarget.ES5){this.sourceContent=e,this.libContent=t,this.snLibContent=i,this.SOURCE_PATH="module.ts",this.LIB_PATH="lib.d.ts",this.SN_LIB_PATH="node_modules/@types/snlib/index.d.ts",this.sourceFileMap={},this.fileMap={},t+="\n\n\n"+A(),this.sourceFileMap[this.LIB_PATH]=ts.createSourceFile(this.LIB_PATH,t,n);let s=Se.isJavascript()?ts.ScriptKind.JS:ts.ScriptKind.TS;Se.isJavascript()&&(this.SOURCE_PATH="module.js");const a=ts.createSourceFile(this.SOURCE_PATH,Se.tsscript,ts.ScriptTarget.ES5,!0,s);this.sourceFileMap[this.SOURCE_PATH]=a;const r=ts.transform(a,[ne]),o=r.transformed[0],l=ts.createPrinter();let p=l.printFile(o);ts.disposeEmitNodes(a),r.dispose(),this.sourceFileMap[this.SOURCE_PATH]=a.update(p,{span:{start:0,length:e.length},newLength:p.length})}getFileMap(){return this.fileMap}getSourceFile(e){return this.sourceFileMap[e]}writeFile(e,t){"module.js"==e?this.fileMap.js=t:"module.d.ts"==e?this.fileMap.declaration=t:this.fileMap.sourceMap=t}getDefaultLibFileName(){return"lib.d.ts"}useCaseSensitiveFileNames(){return!1}getCanonicalFileName(e){return e}getCurrentDirectory(){return""}getNewLine(){return"\r\n"}fileExists(e){return!0}readFile(e){return""}directoryExists(){return!0}getDirectories(){return[]}static compile(t=Object.assign({},T(!1)),i=!1){let n=new ie,s=e("vs/language/typescript/lib/lib").lib_es5_dts+"\n\n\n"+A();var a=new ae(F().tsscript,s,A());let r=ts.createProgram([i?"module.js":"module.ts"],t,a),o=r.emit(),l=a.getFileMap();for(var d in l)console.log(l[d]);let p=ts.getPreEmitDiagnostics(r).concat(o.diagnostics);p.forEach(e=>{if(e.file){let{line:t,character:i}=e.file.getLineAndCharacterOfPosition(e.start),n=ts.flattenDiagnosticMessageText(e.messageText,"\n");console.log(`${e.file.fileName} (${t+1},${i+1}): ${n}`)}else console.log(`${ts.flattenDiagnosticMessageText(e.messageText,"\n")}`)});let c=o.emitSkipped?1:0;if(console.log(`Process exiting with code '${c}'.`),r.getSourceFiles().forEach(e=>ts.disposeEmitNodes(e)),0!=c)return Promise.reject("Compilation Errros");n.js=l.js,n.tsScript=Se.tsscript,n.sourceMap=l.sourceMap;var u=Se.emitTSDeclaration(l.declaration);return n.declaration=Se.typedeclaration=JSON.stringify(u),Se.script=n.js,Se.typesourcemap=n.sourceMap,Promise.resolve(n)}static getModelValueAfterTransform(e){let t=ae.applyTemplateTransformation(e);const i=t.transformed[0],n=ts.createPrinter();let s=n.printFile(i);return t.dispose(),s}static getSourceAfterTransform(e){let t=ae.applyTemplateTransformation(e);return t.transformed[0]}static applyTemplateTransformation(e){let t="proxyModel.js",i=ts.ScriptKind.JS;Se.isTypescript()&&(t="proxyModel.ts",i=ts.ScriptKind.TS);const s=ts.createSourceFile(t,e,ts.ScriptTarget.ES5,!0,i),a=ts.transform(s,[n.TSChecker.dotWalkingTransformer]);return a}}t.TSCompilerHost=ae,r()&&(window.transform=ae.getModelValueAfterTransform);class re{constructor(e,t=""){this.pathName=e,this.filter=t}fetch(){if(this.fetchPromise)return this.fetchPromise;var e=this;return this.fetchPromise=new Promise(t=>{jQuery.ajax({url:e.pathName,data:{},headers:{"X-UserToken":window.g_ck},success:function(i){e.onFetch(i);try{t(i.result)}catch(e){console.log("error on resolving promise")}console.log("received for path "+e.pathName)}})}),this.fetchPromise}onFetch(e){}}t.RecordFetcher=re;class oe extends re{constructor(e,t=""){super(e,t),this.pathName=e,this.isDataAvailable=!1,(!h()||L())&&(this.isDataAvailable=!0,this.cachedData="string"==typeof window.snLibContent?JSON.parse(window.snLibContent).result:window.snLibContent.result)}fetch(){return this.isDataAvailable?new Promise(e=>{e(this.cachedData)}):super.fetch()}onFetch(e){this.isDataAvailable=!0,this.cachedData=e.result}}t.CachedRecordData=oe;var le=i.DECLARATION_TABLE_PATH;r()&&!h()&&(le=i.DECLARATION_DATA_PATH);var pe=null;r()&&(pe=new oe(le,""),pe.fetch());let de="",ce="",ue="",ge="",me="",fe="",ye;t.getSIMap=C,t.getJavaAPI=b,t.setJavaAPI=function(e){de=e},t.getTableAPI=_,t.getJSAPI=E,t.getTypedefAPI=I,t.getAllDeclAPI=A;var he;t.getTypeDeclarations=x,t.internalInitialize=N;let Se;t.getCurrentSI=F,t.getCurrentModuleName=v;let Te;t.updateCurrentSIDeclaration=P,t.isJSCacheReady=L,t.isSeismicComponent=k,t.isNewFiddle=function(){return window.recordConfig&&"-1"===window.recordConfig.uxfRecord.sys_id};let Ce=!1;t.loadJSXIntellisense=M,t.initializeWithSIRecord=function(e){Se=e;var t=new Promise(e=>k()?e():void pe.fetch().then(function(t){let i={};Se.isNew()||(i[Se.sys_id]=!0),N(t,Se.api_name,Se.sys_id,i),h()&&P(!1),e()}));return t},t.initializeTypeDeclarations=function(e=""){return e=e||"global.",new Promise(t=>{pe.fetch().then(function(i){N(i,e,"-1",{}),t()})})}}),define("fileSearch",["require","exports","siDeclEmittor","siParser"],function(e,t,n,s){"use strict";var o=Math.floor,l=Math.max;function a(e,t){for(var n=-1,s=0,a=0,r=e.length,o=0,p=t.length,d=!1,c=!1,u=!0,g=null,m=null,f=null,y=0,h=[];o!=p;){var S=a==r?null:e.charAt(a),T=t.charAt(o),C=null==S?null:S.toLowerCase(),b=T.toLowerCase(),_=T.toUpperCase(),E=S&&C==b,I=g&&m==b,A=E&&g,x=g&&S&&m==C;if((A||x)&&(s+=y,h.push(f),g=null,m=null,f=null,y=0),E||I){var N=0;if(0==a){var F=l(o*-3,-9);s+=F}d&&(N+=5),u&&(N+=10),c&&T==_&&b!=_&&(N+=10),E&&++a,N>=y&&(null!=g&&(s+=n),g=T,m=g.toLowerCase(),f=o,y=N),d=!0}else v+=T,s+=n,d=!1;c=T==b&&b!=_,u="_"==T||" "==T,++o}g&&(s+=y,h.push(f));for(var v="",P=0,L=0,k;L<h.length;++L){k=h[L];let e=t.substr(P,k-P),i=t.charAt(k);v+=`<span class = "no-match">${e}</span><span class='highlight'>${i}</span>`,P=k+1}0!=t.length-P&&(v+=`<span class="no-match">${t.substr(P,t.length-P)}</span>`);var M=a==r;return[M,s,v]}function r(e,t,s){function r(){clearTimeout(p),p=null;var r=performance.now()+o,d=n.getSIMap();for(var c in d){let i=d[c];for(var u=0;u<i.length;u++){let n=i[u].api.split("."),s=n[0];2==n.length&&i[u].api.split(".")[1];let r=e(t,s);e==a&&!0!=r[0]||l.push({rank:r[1],matchStr:r[2],item:i[u]})}}return s(l),null}var o=1e3/30,l=[],p=null;this.cancel=function(){null!==p&&clearTimeout(p)},this.start=function(){r()},this.flush=function(){o=1/0,r()}}Object.defineProperty(t,"__esModule",{value:!0}),n=__importStar(n);class p{constructor(e){this.domNode=e,this.id="FileSearch"}getId(){return this.id}getDomNode(){return this.domNode}getPosition(){return null}}var d="<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAPCAMAAADXs89aAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAABOFBMVEVCpfX///9CpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfX///8Jns0AAAAAZnRSTlMAAEx9fn98eAcsiqeURr0SAkTi+HQOmtTTz+ff0Agg6uu25jIWKCYhYSInUvV1Q1kLZD5XbvryVm1ezUkxuu38XwYw7vNjRSOTrBCp+cQ6Kp0Pw7zW/r9yThOHszaIgCQFjqWbaBXwbi/OAAAAAWJLR0QB/wIt3gAAAAd0SU1FB+MCDg4uBi7hZswAAAABb3JOVAHPoneaAAAA2klEQVQY022QaVcBcRTGb/4TlUhkUKSpUGNsMVH2Jdq0b5Rdz/f/CGYmh8nxe3Gf5/ze3HsuGRjjuFXGmNG0RrS+Yd60kIIVM7Zs23YlHDtOIt7l9uwCe163x7fvx4FwCBwRHQeCIQ44ORWDFIYUoSgfi5NGAjhTMwkHR3NSgLZHlHEupGc6M9W2CxmQLrMLmiiXLwDFUnlBE1XMVdSu/ut6QxnXwI1e397dNx98jwLwpL/k+QWwv7694yOn6U/gS81WW1Kf8B36W/PT6fa00q8PhqPxr9JWljIBIUAu3lTAeuwAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTktMDItMTRUMTQ6NDY6MDYrMDA6MDBwkCElAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE5LTAyLTE0VDE0OjQ2OjA2KzAwOjAwAc2ZmQAAAABJRU5ErkJggg==\" alt=\"\" />";class c{constructor(e,t){this.editor=e,this.callback=t,this.id="FileSearch",this.fileSearchWrapper="FileSearch-filesWrapper",this.fileSearchInput="FileSearch-searchInput",this.domNode=document.createElement("div"),this.domNode.setAttribute("id",this.id),this.domNode.setAttribute("class",this.id),this.filterTimerId=-1,this.nextResultTimerId=-1,this.currentIndex=0}getNode(){return this.domNode}close(){}static isActive(){return c.isOpen}dispose(){c.isOpen=!1,this.domNode.removeEventListener("click",this),this.domNode.removeEventListener("keydown",this),this.domNode.removeEventListener("mousewheel",this),document.removeEventListener("keydown",this),this.editor.removeOverlayWidget(this.overlayWidget),this.editor.focus()}handleEvent(t){var e=Math.ceil;if("mousewheel"==t.type)return t.stopImmediatePropagation(),void t.stopPropagation();let i,n;if("keydown"==t.type){var s=t;if(27==s.keyCode||13==s.keyCode){if(13==s.keyCode&&(i=jQuery(this.domNode).find("#FileSearch-filesWrapper"),n=i.children(),this.currentIndex<n.length)){let e=n[this.currentIndex].getAttribute("data-sysid"),t=n[this.currentIndex].getAttribute("data-apiname");this.callback({apiName:t,sysId:e})}return s.stopImmediatePropagation(),s.stopPropagation(),s.preventDefault(),void this.dispose()}if(40==s.keyCode||38==s.keyCode){t.stopImmediatePropagation(),t.stopPropagation(),t.preventDefault(),i=jQuery(this.domNode).find("#FileSearch-filesWrapper"),n=i.children();let a=this.currentIndex;40==s.keyCode?this.currentIndex++:(this.currentIndex--,0>this.currentIndex&&(this.currentIndex=n.length-1)),this.currentIndex%=n.length,0<=a&&jQuery(n[a]).removeClass("selected"),jQuery(n[this.currentIndex]).addClass("selected"),!c.itemHieght&&0<n.length&&(c.itemHieght=n[0].getBoundingClientRect().height);let r=c.itemHieght||23,l=r*this.currentIndex,p=i.height(),d=i.scrollTop();if(38==s.keyCode){if(l=o(l),l>=d&&l<p+d)return;i.scrollTop(l)}else{let t=e(l+r);if(t>=d&&t<p+d)return;i.scrollTop(t-p)}return}let r=s.keyCode;if(!(47<r&&58>r||64<r&&91>r||96<r&&123>r||8==r||13==r))return;var a=this.domNode.querySelector("#"+this.fileSearchInput);return-1!=this.filterTimerId&&(window.clearTimeout(this.filterTimerId),this.filterTimerId=-1),-1!=this.nextResultTimerId&&window.clearTimeout(this.nextResultTimerId),this.nextResultTimerId=-1,void(this.filterTimerId=window.setTimeout(()=>{this.filter(a.value)},100))}var r=t.target,l=r.closest("div.FileSearch-file");if(null!=l){let e=l.dataset.apiname,t=l.dataset.sysid;return this.dispose(),void this.callback({apiName:e,sysId:t})}null==r.closest("div#FileSearch")&&this.dispose()}open(){c.isOpen=!0,this.domNode.innerHTML=this.constructHTML(),this.domNode.addEventListener("click",this),this.domNode.addEventListener("keydown",this),this.domNode.addEventListener("mousewheel",this),document.addEventListener("keydown",this),this.overlayWidget=new p(this.domNode),this.editor.addOverlayWidget(this.overlayWidget),this.domNode.querySelector("#"+this.fileSearchInput).focus()}filter(e){var t=this.domNode.querySelector("#"+this.fileSearchWrapper);let i=this.constructItems(e);this.currentIndex=-1,!i||(t.innerHTML=i)}constructItemsUsingFuzzy(e,t=50){!this.asyncMatcher||(this.asyncMatcher.cancel(),this.asyncMatcher=void 0),this.asyncMatcher=new r(a,e,e=>{e=e.sort(function(e,t){return t.rank-e.rank});let i=0,n="",a="";for(let r of e){let e="<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QA/wD/AP+gvaeTAAAAB3RJTUUH4gcPDwoiWcgyPAAAAh5JREFUSMfV1U2IjWEUB/Df/aDBVVj4mHEZnwmFBVGWdthJESGEUrOSpTWRKERNYqwsSKJ8pGztrCjF1FgIibi5GMPiOdc83ebOZXb+9fae53nOec/X/zkv/zsKI23WB7pbGnRU+0c9b9YdzUEJMzEev/AOtSbVMqqYFTpvMIDBXKEVpqEPi8OgB7ey8yU4gg2hCx/wCMfxvJ2DErrigUnZ2QJcwZommwp2Yzl24nmxTRl/xXsok2Ff9vEaHuIBvsTefCxtl0ErTMS6bN2LoxHAXmzEKTz+GwcjkaCEjmz9BvWQL0Xp/pChXYlGwleJKQ0cwB6p0YP5xzuq/aM6KLTYH8QNfI/1XFzEHRxGZ0OxPtA9pgzgJk7jW6zHYS3O4i52xF5bB3kWOYvqOIb9eGL4YhWwQupFD4pjzUBE3yexZg/uG272BOkSri//7VxpyiDHe1yLsm3DCUzFdGzKM1goNSwvT34+lMmzcQjzsr0aLkfJGugqhreDUnPOSiwoYjVmhOIPfAx5C27jPM5gmdTQElZJt7iBD2VpWJ2UZs1CzMHrUK6EYj+ehbwIK0PeHPJT/AybOXH2GQ/K0gy5Ho0qhMHKLIofuBBO4Zw0ovdF5NV4cgxJTLpXiCZPkS7J9lAeL7HkZSj2GuY8aR5txa4o0eQI7ite4Gr0o1ZoYlFnNK6CT+HgrdaooFtiTEn6H7yKd2LKv/z+GhiLzf+L3xLMgT1r10J2AAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE4LTA3LTE1VDEzOjEwOjM0KzAyOjAwRXld0gAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxOC0wNy0xNVQxMzoxMDozNCswMjowMDQk5W4AAAAASUVORK5CYII=\" alt=\"\" />";s.SITSFormat.isTypescript(r.item.f)&&(e=d);let o=`<div class="FileSearch-file" data-apiname="${r.item.api}" data-sysId="${r.item.id}">
+							}`}}else{let e=u.split(".");if(e.shift(),u=e.join("."),1>t[1].getChildCount())return;let i=p.getTypeAtLocation(t[1].getChildren()[1]);var f=a(p,i,void 0,void 0);if(c=m(f),"any"==c){let e="",i=[];try{i=t[1].getChildren()[1].getChildAt(1).getChildren()}catch(t){console.log("typedef parsing error")}i.forEach(t=>{let i=t.getChildren().find(ts.isIdentifier);if(null==i)return;let s=a(p,p.getTypeAtLocation(t),void 0,ts.TypeFormatFlags.NoTruncation|ts.TypeFormatFlags.UseFullyQualifiedType),r=m(s),o="";try{let e=n(r);o=`${e.template}${e.paramBody}: ${e.returnType}`}catch(t){}e+=0<o.length?`${i.getText()}${o},\n`:`${i.getText()}: ${r},\n`}),e=`{${e}}`,c=e}}"any"==c?console.warn("typedef came as any "+u):(o(g),j.addTypedefData({type:c,kind:M.typeDefs,name:u}))})}function _(e){var t=ts.getJSDocReturnTag(e);if(!t)return"";var i=ts.getJSDocReturnType(e);return i?d(i.getText())?i.getText():"":""}function E(e,t=!0){b(e);var i=g(e);if(ts.isVariableStatement(e)){let t=e.declarationList.declarations[0],c=t.getChildren(s);if(1==c.length)return void(R=c[0].getText().trim()==A);if(3!=c.length)return;let u=c[0],g=c[2];if(ts.isObjectLiteralExpression(g)&&(U[u.getText().trim()]=g),R)return;if(ts.isIdentifier(u)){if(u.getText().trim()!=A)return;if(ts.isCallExpression(g)){let e=g.getFullText().trim();if("Class.create()"==e)return R=!0,void j.setAsClass();var r=T(g);if(r)r.getChildren(s).forEach(e=>{E(e,!1)});else{let e=p.getTypeAtLocation(g),t=ts.TypeFormatFlags.UseTypeOfFunction|ts.TypeFormatFlags.NoTruncation|ts.TypeFormatFlags.UseFullyQualifiedType|ts.TypeFormatFlags.MultilineObjectLiterals,s=a(p,e,void 0,t);var o=m(s);if(o.startsWith("{")&&o.endsWith("}"))R=!0,j.addField(new k(A,o).setLineInfo(i)),j.setAsObjectLiteral();else try{n(o)}catch(t){}}}else if(ts.isObjectLiteralExpression(g)){R=!0;let e=h(g),t=new D(A);t.setLineInfo(i),t.setKeysType(e),j.addField(t),j.setAsObjectLiteral()}else if(ts.isFunctionExpression(g)){R=!0,j.setAsFunction();let e=f(g);j.addConstructorFunction(L.create(A,e[0]));let t=y(g);0<t.length&&j.setAsClass(),t.forEach(e=>j.addField(e))}else if(ts.isIdentifier(g)){var l=g.getText().trim();if(!U[l])return;R=!0;let e=h(U[l]),t=new D(A);t.setKeysType(e),j.addField(t),j.setAsObjectLiteral()}else if(ts.isParenthesizedExpression(g)){let e=g.getChildren().filter(ts.isFunctionExpression);if(0!=e.length){R=!0,j.setAsFunction();let t=f(e[0]);j.addConstructorFunction(L.create(A,t[0]))}else{if(1!=s.statements.length)return;let e=g.getChildren().filter(ts.isCallExpression);if(1!=e.length)return;var d=e.find(ts.isCallExpression);if(!d)return;let t=d.getChildren().find(ts.isFunctionExpression);if(!t)return;let i=t.getChildren().find(ts.isBlock);if(!i)return;let n=i.getChildren().find(e=>e.kind==ts.SyntaxKind.SyntaxList);if(!n)return;n.getChildren().forEach(e=>{E(e,!1)})}}}return}if(ts.isExpressionStatement(e)){if(!R){let t=e.getChildren().find(ts.isBinaryExpression);if(!t){let t=e.getChildren();return 2==t.length?ts.isIdentifier(t[0])&&t[1].kind==ts.SyntaxKind.SemicolonToken?void(R=t[0].getText().trim()==A):void 0:void 0}let i=t.getChildren();if(3!=i.length)return;let n=i[2],s=i[0];if(ts.isIdentifier(s))if(s.getText().trim()!=A)ts.isObjectLiteralExpression(n)&&(U[s.getText().trim()]=n);else if(ts.isCallExpression(n)){let e=n.getFullText().trim();"Class.create()"==e&&(R=!0,j.setAsClass())}else if(ts.isObjectLiteralExpression(n)){R=!0;let e=p.getSymbolAtLocation(n),t;e&&(t=ts.displayPartsToString(e.getDocumentationComment(p)));let i=new D(A,t);i.setLineInfo(g(n));let s=h(n);i.setKeysType(s),j.addField(i),j.setAsObjectLiteral()}else if(ts.isFunctionExpression(n)){R=!0;let e=f(n);j.setAsFunction(),j.addConstructorFunction(L.create(s.getText(),e[0]));let t=y(n);0<t.length&&j.setAsClass(),t.forEach(e=>j.addField(e))}else if(ts.isIdentifier(n)){let e=n.getText().trim();if(!U[e])return;R=!0;let t=h(U[e]),i=new D(A);i.setLineInfo(g(n)),i.setKeysType(t),j.setAsObjectLiteral(),j.addField(i)}return}let n=e.getChildren();if(1<=n.length&&2>=n.length&&t&&ts.isCallExpression(n[0])){let t=C(e);t.forEach(e=>{E(e,!1)})}let a=n.find(ts.isBinaryExpression);if(!a)return;let r=a.getChildren();if(3!=r.length)return;ts.isObjectLiteralExpression(r[2])&&(U[r[0].getText().trim()]=r[2]);let o=r.find(ts.isPropertyAccessExpression),l="",d="",c="",u=!1,m;if(o){u=!0;let e=o.getChildren(s).filter(ts.isIdentifier),t=o.getText().trim(),i=t.split(".");if(m=r[r.length-1],i[0]!=A)return;if(ts.isIdentifier(m)&&U[m.getText().trim()]&&(m=U[m.getText().trim()]),l=i.join("."),3<i.length)return}else if(ts.isIdentifier(r[0])&&(ts.isObjectLiteralExpression(r[2])&&(U[r[0].getText()]=r[2]),r[0].getText().trim()==A&&r[1].kind==ts.SyntaxKind.FirstAssignment&&(j.clearAll(),m=r[2],l=A,ts.isCallExpression(m)&&"Class.create()"==m.getText().trim())))return j.clearAll(),void j.setAsClass();if(m&&ts.isIdentifier(m)&&U[m.getText()]&&(m=U[m.getText()]),!m)return;if(i=g(m),ts.isNumericLiteral(m))j.addField(new x(l,"").setLineInfo(i));else if(ts.isStringLiteral(m))j.addField(new N(l,"").setLineInfo(i));else if(ts.isObjectLiteralExpression(m)){let e=h(m,!0),t=new D(l,d);t.setLineInfo(g(m)),t.setKeysType(e),j.addField(t),u||j.setAsObjectLiteral()}else if(ts.isFunctionExpression(m)){let e=f(m);u?j.addField(L.create(l,e[0])):(j.addConstructorFunction(L.create(A,e[0])),j.setAsFunction())}else if(l==A+".prototype"&&ts.isCallExpression(m)){let e=m.getChildren().find(ts.isPropertyAccessExpression);if(e&&"Object.extendsObject"==e.getText()){let e=m.getChildren().find(e=>e.kind==ts.SyntaxKind.SyntaxList),t=e.getChildCount();if(3!=t)return;let n=e.getChildAt(0,s);if(ts.isIdentifier(n)||(n=void 0),n||(n=e.getChildren().find(ts.isPropertyAccessExpression)),!n)return void console.log("unable to find the base class information");j.setAsClass();let a=n.getText();1==a.split(".").length&&(a=v+"."+a),j.setBaseType(a);let r=e.getChildren().find(ts.isObjectLiteralExpression);if(!r){let t=e.getChildren(),i=t[t.length-1];if(ts.isIdentifier(i)){let e=i.getText().trim();r=U[e]}}if(r){let e=h(r,!0),t=new D(l);t.setLineInfo(i),t.setKeysType(e),j.addField(t)}else{let i=ts.TypeFormatFlags.NoTruncation|ts.TypeFormatFlags.UseFullyQualifiedType|ts.TypeFormatFlags.MultilineObjectLiterals;c=p.typeToString(p.getTypeAtLocation(e.getChildAt(t-1)),void 0,i),-1==c.indexOf("typeof")&&S(l,e.getChildAt(t-1),d)}}else{let e=T(m),t=[];e&&(t=e.getChildren(s)),t.forEach(e=>{E(e,!1)});let n=t.filter(ts.isReturnStatement);if(0<n.length){1<n.length&&console.warn("Found multiple return statements in prototype assignment");let e=n[n.length-1].getChildren()[1],t;if(ts.isIdentifier(e))t=U[e.getText()];else if(ts.isObjectLiteralExpression(e))t=e;else if(ts.isCallExpression(e)){let i=e.getChildren();if(4!==i.length)return;let n=i[0];if(!ts.isPropertyAccessExpression(n))return;if("Object.extendsObject"!==n.getText())return;let s=e.getChildren().find(e=>e.kind==ts.SyntaxKind.SyntaxList);if(!s)return;let a=s.getChildren();if(3!=a.length)return;let r=a[0];if(!ts.isPropertyAccessExpression(r))return;let o=a[2];if(!ts.isObjectLiteralExpression(o))return;j.setAsClass();let l=r.getText();1==l.split(".").length&&(l=v+"."+l),j.setBaseType(l),t=o}if(t){let e=h(t,!0),n=new D(l);return n.setLineInfo(i),n.setKeysType(e),void j.addField(n)}}S(l,m,d)}}else S(l,m,"")}else if(ts.isFunctionDeclaration(e)){let t=e.name.getText();if(t!=A)return;R=!0;let i=p.getSymbolAtLocation(e.name),n=p.getTypeOfSymbolAtLocation(i,i.valueDeclaration),s=n.getCallSignatures().map(e=>u(e));var c=_(e);if(0<c.length&&(s[0].returnType=c),0<e.parameters.length){let t=0;e.parameters.forEach(e=>{s[0].parameters[t++].isOptional=p.isOptionalParameter(e)})}j.setAsFunction(),j.addConstructorFunction(L.create(t,s[0]));let r=y(e);0<r.length&&j.setAsClass(),r.forEach(e=>{j.addField(e)});let o=ts.getJSDocAugmentsTag(e);if(!o)return;let l=o.getChildren();if(2!=l.length)return;let d=l[0];if(!d)return;let g=p.getTypeAtLocation(l[1]);if(!g)return;let f=a(p,g,void 0,ts.TypeFormatFlags.UseFullyQualifiedType|ts.TypeFormatFlags.NoTruncation),h=m(f);0<h.length&&"any"!=h&&j.setBaseType(h)}else ts.isClassDeclaration(e)&&j.setAsES6()}l();var I=s;let A="",v="",w=t.split(".");1==w.length?A=t:(A=w[1],v=w[0]);var j=new O(e,t,"","12345"),R=!1,V={};(function(e){function t(e){if(e){if(ts.isJSDocTypedefTag(e)){var i=ts.getNameOfJSDocTypedef(e);console.log(i.getText());let t=e.getChildren(),s=t.find(ts.isModuleDeclaration);if(!s)return;if(2<=t.length){let e=s.getText();var n=e.split(".");if(2>n.length)return void console.warn("typedef should start with 'sn' namespace");if("sn"!=n[0])return void console.warn("typedef should start with 'sn' namespace");V[e]=!0}}else if(ts.isTypeReferenceNode(e)){var s=e.getFullText();if(!V[s])return;let t=e.typeName.getChildren();if(0==t.length)return void console.log("type children must exists "+e.getFullText());let i=p.getSymbolAtLocation(t[t.length-1]);if(!i)return;var r=a(p,p.getDeclaredTypeOfSymbol(i),void 0,8388608),o=m(r);j.addTypedefData({type:o,kind:M.typeDefs,name:s})}var l=e.getChildren();0<l.length&&l.forEach(e=>t(e))}}t(e)})(s);var U={};for(let n=0,i;s&&n<s.statements.length;n++)i=s.statements[n],E(i);return j}function h(e){e.forEach(e=>{"javaGlobalAPI"==e.name?W=e:"tableAPI"==e.name?G=e:"javaScopedAPI"==e.name?K=e:"jsAPI"==e.name&&(z=e)}),H="string"==typeof W.json_value?JSON.parse(W.json_value).api+"\n\n"+W.customization:W.json_value.api+"\n\n"+W.customization,q="string"==typeof K.json_value?JSON.parse(K.json_value).api+"\n\n"+W.customization:K.json_value.api+"\n\n"+K.customization,Y="string"==typeof G.json_value?JSON.parse(G.json_value).api+"\n\n"+G.customization+"\n\n"+z.customization:G.json_value.api+"\n\n"+G.customization,Q="string"==typeof z.json_value?JSON.parse(z.json_value).api:z.json_value.api}function _(e,t=!1){var i=e.split("."),n=i[0],s=i[1],a="";if(t)return Q[n]?(Q[n].forEach(e=>{var t=e.api.split(".");t[1]!=s&&"string"==typeof e.gf&&(a+=e.gf+";\n")}),a):(console.log("Unable to find the scope falling back to default one "+e),"");let r={};for(let i in Q){let e=Q[i];e.forEach(e=>{if(e.sp){let t=e.sp.split(".");return 1==t.length?(r[i]=r[i]||{},void(r[i][e.sp]=!0)):void(r[t[0]]=r[t[0]]||{},r[t[0]][t[1]]=!0)}})}for(let i in Q){let e=Q[i];a+="declare namespace "+i+" {",e.forEach(e=>{if("string"==typeof e.gf&&(C.isPublic(e.f)||i==n))a+="\n"+e.tf+"\n"+e.af+"\n";else{if(!r[i])return;r[i][e.api]&&(a+="\n"+e.tf+"\n")}}),a+="}\n"}return"global"==n?H+Y+a:q+Y+a}function E(n,s,a){h(s);let o="point.js",l=g(Q,a.sys_id),p=r(l),d,c,u;var m=new eslint.Linter;return{dispose:function(){d&&(d.disposeAll(),d=null),c&&(c=null)},getTypeInfo:function(s,a){s.api_name||(s.api_name="global.point"),u||(u=s.api_name);var r=s.getScopeAndAPIMap();if(!d||u!=s.api_name){let e=0;s.access==y.public&&(e|=T.public),e|=T.cls;let t=new C(s.api_name,s.sys_id,"export class "+r.name+" { prop: number; }","","",s.access,"",e),i=s.formatCurrentSITSFormat(t);var l=n+"\n\n"+_(s.api_name)+"\n\n\n"+_(s.api_name,!0);l+="\n\n"+i+"\n\n"+p+"\n\n"+z.customization+"",d||(d=new B(l)),u!=s.api_name&&(u=s.api_name,d.updateLib(l))}let g={js:"",declaration:"",sourceMap:"",afterDotWalK:"",errorMsg:t.ERROR_MSG,linterErrors:[],tsDeclaration:""};let h=3.7<=parseFloat(ts.versionMajorMinor);if(s.isJavascript()){a.allowJs=!0,a.declaration=h&&self.recordConfig.isES6,a.removeComments=!0,a.noEmitOnError=!0,a.outFile="pointOut.js";let e=s.tsscript;self.recordConfig.isES6&&!self.recordConfig.isFromScriptRunner&&(e+=`\n/// @ts-ignore\n${r.name} = global.__extends(Class.create(), ${r.name});\n`),d.updateSI(e),o="point.js"}else{a.allowJs=!1,a.declaration=!0;let e=s.tsscript;self.recordConfig.isFromScriptRunner||(e+=`\n/// @ts-ignore\n${r.name} = global.__extends(Class.create(), ${r.name});\n`),d.updateTypeScriptSI(e),o="point.ts"}a.noLib=!0,a.types=["snlib"],ts.defaultMaximumTruncationLength=1e4,a.noResolve=!1,a.skipLibCheck=!0,c=ts.createProgram([o],a,d,c);let S=c.emit(c.getSourceFile(o),void 0,void 0,void 0,{before:[e.dotWalkingTransformer]}),b=ts.getPreEmitDiagnostics(c).concat(S.diagnostics);if(b.forEach(e=>{if(e.file){let{line:t,character:i}=e.file.getLineAndCharacterOfPosition(e.start),n=ts.flattenDiagnosticMessageText(e.messageText,"\n");console.log(`${e.file.fileName} (${t+1},${i+1}): ${n}`)}else console.log(`${ts.flattenDiagnosticMessageText(e.messageText,"\n")}`)}),S.emitSkipped)return g;let E=d.getOutFiles();if(s.isTypescript()?(g.js=E["point.js"],g.sourceMap=E["point.js.map"]):(h&&(g.tsDeclaration=E["pointOut.d.ts"]),g.js=E["pointOut.js"],g.sourceMap=E["pointOut.js.map"]),g.afterDotWalK=s.tsscript,g.errorMsg="",s.isTypescript())return g.tsDeclaration=g.declaration=E["point.d.ts"],g;var I;try{I=f(s,s.api_name,c.getSourceFile(o),c.getTypeChecker()),I.sysId=s.sys_id,I.accessType=s.access;let e=I.toMinifiedInterfaceFormat();g.declaration=JSON.stringify(e),g.afterDotWalK=s.tsscript,a.linter&&(g.linterErrors=m.verify(s.tsscript,i.eslintConfig))}catch(t){g.errorMsg=JSON.stringify({error:t+"",id:1})}return g}}}let I;(function(e){e[e.NumericLiteral=0]="NumericLiteral",e[e.StringLiteral=1]="StringLiteral",e[e.StringType=2]="StringType",e[e.FunctionType=3]="FunctionType",e[e.ObjectLiteral=4]="ObjectLiteral",e[e.AnonymouseStringLiteral=5]="AnonymouseStringLiteral"})(I=e.LiteralType||(e.LiteralType={}));class A{constructor(e,t,i,n=!1){this.name=e,this.type=t,this.doc=i,this.isStringPropertyElement=n}setLineInfo(e){return this.lineInfo=e,this}toJSONDecl(){var e={};return e.f=this.toTypeFormat(),this.lineInfo&&(e.l=this.lineInfo.line,this.lineInfo.doc&&(e.d=this.lineInfo.doc)),e}setDoc(e){this.doc=e}setAsElement(){this.isStringPropertyElement=!0}static isNumericType(e){return e instanceof A&&e.type==I.NumericLiteral}static isStringLiteral(e){return e instanceof A&&e.type==I.StringLiteral}static isStringType(e){return e instanceof A}static isParamType(e){return e instanceof v}static isFunctionType(e){return e instanceof A&&e.type==I.FunctionType}static isRawFunctionType(e){return e instanceof P}static isObjectLiteral(e){return e instanceof A&&e.type==I.ObjectLiteral}static isAnonymousStringType(e){return e instanceof A&&e.type==I.AnonymouseStringLiteral}getPropertyName(){if(this.isStringPropertyElement)return this.name;var e=this.name.split(".");return e[e.length-1]}isStatic(){var e=this.name.split(".");return!(2>e.length)&&"prototype"!=e[1]}}e.RawFieldType=A;class x extends A{constructor(e,t){super(e,I.NumericLiteral,t)}toTypeFormat(){return this.getPropertyName()+": number"}}e.NumericLiteralType=x;class N extends A{constructor(e,t){super(e,I.StringLiteral,t)}toTypeFormat(){return this.getPropertyName()+": string"}}e.StringLiteralType=N;class F extends A{constructor(e,t,i){super(e,I.StringType,i),("true"==t||"false"==t)&&(t="boolean"),t=t.replace(/undefined\[\]/g,"Array<any>"),this.rawType=t}toTypeFormat(){return this.getPropertyName()+": "+this.rawType}}e.StringType=F;class v extends F{constructor(e,t,i=!1,n){super(e,t,n),this.isOpt=i}toTypeFormat(){return this.isOpt?this.name+(this.isOpt?"?: ":": ")+this.rawType:"any"==this.rawType?this.name:this.name+": "+this.rawType}}e.ParamInfoType=v;e.AnonymousStringType=class extends F{constructor(e,t){super("",e,t)}toTypeFormat(){return"any"==this.rawType?"":this.rawType}};class P extends F{constructor(e,t,i,n,s){super(e,t,s),this.returnType=i,this.templateBody=n}getParts(){var e="";!this.templateBody||(e=this.templateBody),e+=this.rawType;var t;return this.returnType&&"any"!=this.returnType&&(t=this.returnType),{name:this.getPropertyName(),body:e,returnType:t}}getParamsFormat(){var e=this.getParts();return e.body}getClsFunctionFormat(){var e=this.getParts();return!e.returnType?e.body+": "+e.returnType:e.body}toTypeFormat(){var e="",t=this.getParts();return e=t.name+t.body,!t.returnType||(e+=": "+t.returnType),e}}e.RawFunctionType=P;class L extends A{constructor(e,t){super(e,I.FunctionType,t)}getParts(){var e=this.getPropertyName(),t="";if(Array.isArray(this.typeParams)&&0<this.typeParams.length&&(t="<"+this.typeParams.join(", ")+">"),Array.isArray(this.params)&&0<this.params.length){var i=[];this.params.map(e=>{i.push(e.toTypeFormat())}),t+="("+i.join(",")+")"}else t="()";var n;return this.returnType&&"any"!=this.returnType&&(n=this.returnType),{name:e,body:t,returnType:n}}getParamsFormat(){var e=this.getParts();return e.body}getClsFunctionFormat(){var e=this.getParts();return e.returnType&&(!e.returnType||"any"!=e.returnType)?e.body+": "+e.returnType:e.body}toTypeFormat(){var e=this.getParts();return e.returnType&&(!e.returnType||"any"!=e.returnType)?e.name+e.body+": "+e.returnType:e.name+e.body}addParam(e,t,i=!1,n){Array.isArray(this.params)||(this.params=[]),this.params.push(new v(e,t,i,n))}setReturnType(e,t){this.returnType=e,this.returnDoc=t}setTypeParams(e){Array.isArray(e)&&0<e.length&&(this.typeParams=e)}static create(e,t){var i=new L(e,t.documentation);return t.parameters.forEach(e=>{i.addParam(e.name,e.type,e.isOptional,e.documentation)}),t.lineInfo&&i.setLineInfo(t.lineInfo),i.setReturnType(t.returnType),i.setTypeParams(t.typeParams),i}}e.FunctionType=L;class k extends A{constructor(e,t,i){super(e,I.StringType),this.typeFormat=t}toTypeFormat(){return this.typeFormat}toJSONDecl(){var e=this.toTypeFormat().trim();return e.startsWith("{")&&(e=e.substring(1)),e.endsWith("}")&&(e=e.substr(0,e.length-1)),e=e.trim(),{l:0,f:e}}}e.RawStringObjectLiteralType=k;class D extends A{constructor(e,t){super(e,I.ObjectLiteral,t)}addField(e){this.keys[e.name]=e}setKeysType(e){this.keys=e}getPartsWithLineInfo(){var e=[];for(var t in this.keys){let i={};i.f=this.keys[t].toTypeFormat(),this.keys[t].lineInfo&&(i.l=this.keys[t].lineInfo.line,this.keys[t].lineInfo.doc&&(i.d=this.keys[t].lineInfo.doc)),e.push(i)}return e}getParts(){var e=[];for(var t in this.keys)e.push(this.keys[t].toTypeFormat());return e}toTypeFormat(){var e="{\n",t=this.getParts();return e+=t.join(";\n"),e+="\n}",e}}e.ObjectLiteraltype=D;class O extends b{constructor(e,t,i,n){super(e,t,i,n),this.fields={},this.flags=0,this.isES6=!1}setAsES6(){this.isES6=!0,this.flags|=T.jsES6}getInternalType(){return this.isClass()||this.isSubClass()?u.cls:this.isFunctionType()?u.fun:this.isObjectLiteral()?u.var:u.never}clearAll(){this.fields={}}exportToTS(){var e;return e}addConstructorFunction(e){this.constFun=e}addField(e){var t=e.name.split(".");if(1<t.length&&"prototype"==t[1])this.setAsClass();else if(this.isObjectLiteral()){let t=e.name.split("."),i=this.fields[t[0]];return void(i instanceof D&&2==t.length&&(e.name=t[1],i.addField(e)))}this.fields[e.name]=e}exportAliasName(e){return""}isSubClass(){return!!this.baseName}setBaseType(e){this.baseName=e}setAsFunction(){this.resetState(),this.flags|=T.fun}isFunctionType(){return!!(this.flags&T.fun)}setAsObjectLiteral(){this.resetState(),this.flags|=T.obj}isObjectLiteral(){return!!(this.flags&T.obj)}resetState(){this.flags=0}setAsClass(){this.resetState(),this.flags|=T.cls}isClass(){return!!(this.flags&T.cls)}addTypedefData(e){this.typeDefs||(this.typeDefs=[]),this.typeDefs.push(e)}toMinifiedInterfaceFormat_1(){var e=this.apiName.split("."),t=e[0],i=e[1];let n="",s="";var a=Object.keys(this.fields),r="",o;if(0==this.flags&&1==Object.keys(this.fields).length){this.fields[i]}if(this.isObjectLiteral()){let e="";for(let t in this.fields)this.fields[t]instanceof D?e+=this.fields[t].toTypeFormat():this.fields[t]instanceof k&&(e+=this.fields[t].toTypeFormat());let t={api:i,id:this.sysId,tf:e,f:0};return C.updateFlags(t,this.currentSI,this.getInternalType()),t}if(a.forEach(e=>{let t=this.fields[e],a="";if(e!=i+".prototype")a=t.toTypeFormat()+";\n",t.isStatic()?A.isObjectLiteral(t)?s+=t.getPropertyName()+": "+a:s+=a:A.isObjectLiteral(t)?n+=t.getPropertyName()+": "+a:n+=a;else if(A.isObjectLiteral(t)){a=t.getParts().join(";\n"),0<a.length&&(n+=a+";\n");var l=t.keys.initialize;l&&A.isFunctionType(l)&&(o=l)}else A.isStringType(t)&&(r=t.rawType,"{"==r[0]&&r[r.length-1]||(r=""))}),this.isClass()){var l="new";o=o||this.constFun,l+=o?o.getParamsFormat()+": "+this.apiName:"(): "+this.apiName,s=l+";\nprototype: "+this.apiName+";\n"+s}this.isFunctionType()&&!!this.constFun&&(this.constFun instanceof L?s=this.constFun.getClsFunctionFormat()+";\n"+s:this.constFun instanceof P&&(s=this.constFun.rawType+": "+this.constFun.returnType+";\n"+s)),0<r.length&&(r=r.substring(1),r=r.substr(0,r.length-1),n+="\n"+r);let p=[];p.push(n.trim()),p.push(s.trim());var d={api:i,id:this.sysId,f:0,tf:p};return this.isSubClass()&&(d.sp=this.baseName),!this.typeDefs||(d.td=this.typeDefs),C.updateFlags(d,this.currentSI,this.getInternalType()),d}toMinifiedInterfaceFormat(){var e=this.apiName.split("."),t=e[0],i=e[1];let n="",s="";var a=Object.keys(this.fields),r="",o;if(0==this.flags&&1==Object.keys(this.fields).length){this.fields[i]}if(this.isES6){let e={api:i,id:this.sysId,f:this.flags};return"undefined"!=typeof this.typeDefs&&(e.td=this.typeDefs),e}if(this.isObjectLiteral()){let e="",t=[];for(let i in this.fields)this.fields[i]instanceof D?e+=this.fields[i].toTypeFormat():this.fields[i]instanceof k&&(e+=this.fields[i].toTypeFormat(),t.push(this.fields[i].toJSONDecl()));let n=this.fields[i];if(n.keys)for(let e in n.keys)t.push(n.keys[e].toJSONDecl());let s={api:i,id:this.sysId,df:t,f:0};return C.updateFlags(s,this.currentSI,this.getInternalType()),s}let l=[],p=[];if(a.forEach(e=>{let t=this.fields[e],a="";if(e!=i+".prototype"){a=t.toTypeFormat()+";\n";let e=t.lineInfo;var d={};d.l=e.line,e.doc&&(d.d=e.doc),t.isStatic()?(p.push(d),A.isObjectLiteral(t)?(d.f=t.getPropertyName()+": "+t.toTypeFormat(),s+=t.getPropertyName()+": "+a):(d.f=t.toTypeFormat(),s+=a)):(l.push(d),A.isObjectLiteral(t)?(d.f=t.getPropertyName()+": "+t.toTypeFormat(),n+=t.getPropertyName()+": "+a):(d.f=t.toTypeFormat(),n+=a))}else if(A.isObjectLiteral(t)){l=t.getPartsWithLineInfo(),a=t.getParts().join(";\n"),0<a.length&&(n+=a+";\n");var c=t.keys.initialize;c&&A.isFunctionType(c)&&(o=c)}else A.isStringType(t)&&(r=t.rawType,"{"==r[0]&&r[r.length-1]||(r=""))}),this.isClass()){var d="new";o=o||this.constFun;let e={};p.push(e),o?(d+=o.getParamsFormat()+": "+this.apiName,e.f=d,o.lineInfo&&(e.l=o.lineInfo.line,o.doc&&(e.d=o.doc))):(d+="(): "+this.apiName,e.f=d,e.l=0);let t={};t.f=`prototype: ${this.apiName}`,t.l=0,p.push(t),s=d+";\nprototype: "+this.apiName+";\n"+s}if(this.isFunctionType()&&!!this.constFun){let e={};e.l=0,e.f="",p.push(e),this.constFun instanceof L?(s=this.constFun.getClsFunctionFormat()+";\n"+s,e.f=this.constFun.getClsFunctionFormat()):this.constFun instanceof P&&(s=this.constFun.rawType+": "+this.constFun.returnType+";\n"+s,e.f=this.constFun.rawType+": "+this.constFun.returnType)}0<r.length&&(console.warn("fix this extra user case"),r=r.substring(1),r=r.substr(0,r.length-1),n+="\n"+r);let c=[];c.push(n.trim()),c.push(s.trim());var u={api:i,id:this.sysId,f:0,df:[l,p]};return this.isSubClass()&&(u.sp=this.baseName),!this.typeDefs||(u.td=this.typeDefs),C.updateFlags(u,this.currentSI,this.getInternalType()),u}toInterfaceFormat(){var e=this.apiName.split("."),t=e[0],i=e[1];let n="",s="";var a=Object.keys(this.fields),r="",o;if(0==this.flags&&1==Object.keys(this.fields).length){this.fields[i];console.log("unknown type")}if(this.isObjectLiteral()){let e="interface "+i+" ";for(let t in this.fields)e+=this.fields[t].toTypeFormat();let t="declare const "+i+": "+this.apiName+";",n=new C(this.apiName,this.sysId,e,"const "+i+": "+i+";",t,this.accessType,u.var,0,this.typeDefs);return C.updateFlags(n,this.currentSI,this.getInternalType()),n}if(a.forEach(e=>{let t=this.fields[e],a="";if(e!=i+".prototype")a=t.toTypeFormat()+";\n",t.isStatic()?A.isObjectLiteral(t)?s+=t.getPropertyName()+": "+a:s+=a:n+=a;else if(A.isObjectLiteral(t)){a=t.getParts().join(";\n"),n+=a+";\n";var l=t.keys.initialize;l&&A.isFunctionType(l)&&(o=l)}else A.isStringType(t)&&(r=t.rawType,"{"==r[0]&&r[r.length-1]||(r=""))}),this.isClass()){var l="new";l+=o?o.getParamsFormat()+": "+this.apiName:"(): "+this.apiName,s=l+";\nprototype: "+this.apiName+";\n"+s}this.isFunctionType()&&!!this.constFun&&(this.constFun instanceof L?s=this.constFun.getClsFunctionFormat()+";\n"+s:this.constFun instanceof P&&(s=this.constFun.rawType+": "+this.constFun.returnType+";\n"+s)),0<r.length&&(r=r.substring(1),r=r.substr(0,r.length-1),n+="\n"+r);let p="interface "+i;this.isSubClass()&&(p+=" extends "+this.baseName),n=n.trim(),p+=" {\n"+n+"\n}";let d="interface "+i+"Constructor {\n";s=s.trim(),d+=s+"\n}";let c=p+"\n"+d;var g="declare const "+i+": "+this.apiName+"Constructor;";let m=new C(this.apiName,this.sysId,c,"const "+i+": "+i+"Constructor;",g,this.accessType,u.cls,0,this.typeDefs);return C.updateFlags(m,this.currentSI,this.getInternalType()),m}}e.TSTypeExporter=O,e.generateTypedefDeclFromScopemap=r;var w={};e.addToThisSITypedefMap=o,e.clearThisSITypedefMap=l;var j={};e.addToTypeDefMap=p,e.isTypedefType=d,e.generateTypedefDeclFromScopeName=c,e.generateTypedefDecl=function(e){function t(e){var i="";for(var n in e)if("object"==typeof e[n]){let s=t(e[n]);i+="namespace "+n+" {\n"+s+"\n}\n"}else"string"==typeof e[n]&&(i+=e[n]);return i}if(!Array.isArray(e))return"";var i={};for(let t=0;t<e.length;t++)for(let o=0,l;o<e[t].length;o++){if(l=e[t][o],!l.name)continue;var n=l.name.split(".");let p="interface "+n[n.length-1]+" "+l.type+"\n\n";1<n.length&&n.splice(0,1);for(var s=n.splice(n.length-1,1)[0],a=i,r=0;r<n.length;r++)a[n[r]]=a[n[r]]||{},"string"==typeof a[n[r]]&&(console.log("module is defined as type overriding the type with modue "),a[n[r]]={}),a=a[n[r]];a[s]=p}var o=t(i);return o="declare namespace sn {\n"+o+"}",console.log(o),o},e.getTypeDefsAsScopeMap=g,e.getTypeDefs=function(e,t="-1"){var n=[];for(let s in e)for(let a=0;a<e[s].length;a++)Array.isArray(e[s][a].td)&&e[s][a].id!=t&&n.push(e[s][a].td);return n},e.parseSIWithTypeChecker=f;const R="atypes.ts",V="point.js",U="node_modules/@types/snlib/index.d.ts";class B{constructor(e,t,i){this.snlib=e,this.sourceFiles={},this.outFiles={},this.updateContent(U,this.snlib),t&&this.updateContent(R,t),i&&this.updateContent(V,i)}getOutFiles(){return this.outFiles}disposeAll(){for(let e in this.sourceFiles)ts.disposeEmitNodes(this.sourceFiles[e]),this.sourceFiles[e]=null}updateContent(e,t){this.sourceFiles[e]&&(ts.disposeEmitNodes(this.sourceFiles[e]),this.sourceFiles[e]=null);var i=ts.createSourceFile(e,t,ts.ScriptTarget.ES5,!0,e.endsWith(".ts")?ts.ScriptKind.TS:ts.ScriptKind.JS);this.sourceFiles[e]=i}updateLib(e){this.updateContent(U,e)}updateAnonymousContent(e){this.updateContent(R,e)}updateTypeScriptSI(e){this.updateContent("point.ts",e)}updateSI(e){this.updateContent(V,e)}getTypeInfo(e,t,i="Point"){var n=null;return n=f(e,i,this.sourceFiles[V],t),n}getSourceFile(e){return this.sourceFiles[e]?this.sourceFiles[e]:void 0}writeFile(e,t){this.outFiles[e]=t}getDefaultLibFileName(){return"lib.d.ts"}useCaseSensitiveFileNames(){return!1}getCanonicalFileName(e){return e}getCurrentDirectory(){return""}getNewLine(){return"\r\n"}fileExists(e){return!0}readFile(e){return console.log("read file "+e),""}directoryExists(){return!0}getDirectories(){return[]}}e.MyCompilerHost=B;var J={allowNonTsExtensions:!0,target:1,allowJs:!0,sourceMap:!0,noLib:!0,noErrorTruncation:!0,types:["snlib"],linter:!1},W,K,G,z,H,q,Y,Q;e.dotWalkingTransformer=e=>t=>{function i(t){if(t=ts.visitEachChild(t,i,e),!ts.isTemplateExpression(t))return t;let n=t.getFullText(),a=s(),r=n.match(a);if(!r)return t;if(0==r.length)return t;var o=r[0].split(".");if(1>=o.length)return t;let l=function(e){let t=e.replace(a,(e,t,i,n)=>{var s=i;i.startsWith("$$")&&(i=i.substring(2,i.length)),i.startsWith("{")&&(i=i.substring(1,i.length)),i.endsWith("}")&&(i=i.substr(0,i.length-1));let a=i.split(".");return 1==a.length?s:(a.splice(0,1),t+a.join(".")+n)});return t.trim()}(n);return ts.createStringLiteral(l)}return!t.sourceFiles||(t=t.sourceFiles[0]),ts.visitNode(t,i)},e.initTypeInfoForSingleSI=E,e.generateTypeInfo=function(e,t,i,n){h(i);var s={},a=[],o={};e.forEach(e=>(e instanceof S||(e=new S(e)),"global"==e.sys_scope.value?void a.push(e):void(!o[e.sys_scope.value]&&(o[e.sys_scope.value]=[]),o[e.sys_scope.value].push(e))));var l=[];for(var p in 0<a.length&&l.push(a),o)l.push(o[p]);var d=null,c=[],u=["point.js","atypes.ts"],m=[],f=0,y="global",T;return l.forEach(i=>{i.forEach(i=>{f++;var a=(100*f/e.length).toFixed(2);if(n)try{n({name:i.api_name,percentage:a,sysId:i.sys_id})}catch(e){}i instanceof S||(i=new S(i));var o=i.getScopeAndAPIMap();if("string"!=typeof i.script)return void console.log("skipping: undefined script found for api "+i.api_name);let l=_(i.api_name,!0);if(!d){let e=_(i.api_name),n=g(Q,"-1"),s=r(n);d=new B(t+"\n\n"+e+"\n\n"+s)}if(d.updateAnonymousContent(l),d.updateSI(i.script),o.scope!=y){let e=_(i.api_name);d.updateLib(t+"\n\n"+e),y=o.scope,T=void 0}T=ts.createProgram(u,J,d,T);try{let e=d.getTypeInfo(i,T.getTypeChecker(),i.api_name);e.accessType=i.access,e.sysId=i.sys_id,e&&c.push(e),s[o.scope]||(s[o.scope]=[]);var p=e.toMinifiedInterfaceFormat();if(s[o.scope].push(p),n)try{n({name:i.api_name,percentage:a,sysId:i.sys_id,decl:p})}catch(e){}}catch(t){m.push(i.api_name)}})}),{formatterResult:s,types:c,errors:m,program:T,host:d}}})(D=t.TSChecker||(t.TSChecker={}))}),define("tsCompilerOptions",["require","exports"],function(e,t){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.default={allowNonTsExtensions:!0,module:0,noResolve:!0,suppressOutputPathCheck:!0,skipLibCheck:!0,skipDefaultLibCheck:!0,target:1,noImplicitAny:!1,strict:!1,strictNullChecks:!1,noImplicitThis:!1,noImplicitReturns:!1,experimentalDecorators:!1,noUnusedLocals:!1,noUnusedParameters:!1,declaration:!0,sourceMap:!0,jsx:2,jsxFactory:"createElement",noEmitHelpers:!1,isolatedModules:!1,noEmitOnError:!1,stripInternal:!1,allowJs:!0,checkJs:!1,noFallthroughCasesInSwitch:!1,allowUnreachableCode:!1,linter:!1,inlineSourceMap:!1,inlineSources:!1}}),define("recordWatcher",["require","exports"],function(e,t){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.default=function(){function e(e){return"string"==typeof e?(e=e.replace(/\^EQ/g,"").replace(/\^ORDERBY(?:DESC)?[^^]*/g,"").replace(/^GOTO/,""),btoa(e).replace(/=/g,"-")):""}function t(e){return d.getChannel(e)}function i(i,n){var s="/rw/default/"+i+"/"+e(n||"");return d.getChannel(s)}function n(e,t,i="sys_idISNOTEMPTY"){if(e){var n="";return n=t?"sys_id="+t:i,n||(n="sys_idISNOTEMPTY"),r(e,n)}}function s(e,t){if(e)return t=t||"sys_idISNOTEMPTY",r(e,t)}function a(e,t){t&&t.unsubscribe();var i=e.toString();return r("task","sys_idIN"+i)}function r(e,t="sys_idISNOTEMPTY"){return p(e)?(l("Blocked from watching",e),null):(l(">>> init "+e+"?"+t),c=i(e,t),c.subscribe(o),d.connect(),c)}function o(e){var t=e.data,i=e.channel;l(t)}function l(...e){console.log(e.join("s"))}function p(e){return"sys_amb_message"==e||e.startsWith("sys_rw")}let d;if("undefined"==typeof g_ambClient?window.top.g_ambClient&&(d=window.top.g_ambClient):d=g_ambClient,!!d){var c;return{getChannel:t,initTaskList:a,initChannel:r,init:function(e,t,i=""){n(e,t,i)},initList:s,initRecord:function(e,t){n(e,t,"")}}}}}),define("seismic",["require","exports"],function(e,t){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.seismicDTS=`import react from 'react';
+export { };
+declare global {
+	interface ActionTypes<T = any> {
+		"NOW_ALERT#ACTION_CLICKED": {action: {type: 'dismiss'}},
+		"NOW_ALERT#EXPANDED_SET": { value: boolean },
+		"NOW_ALERT#TEXT_LINK_CLICKED": Record<string, any>,
+
+		"NOW_ALERT_LIST#ITEMS_SET": {value: Array<NowAlertItem>},
+		"NOW_ALERT_LIST#ITEM_ACTION_CLICKED": {item: NowAlertItem},
+		"NOW_ALERT_LIST#ITEM_TEXT_LINK_CLICKED": {item: NowAlertItem},
+
+		"NOW_BUTTON#CLICKED": Record<string, any>,
+		"NOW_BUTTON_BARE#CLICKED": Record<string, any>,
+		"NOW_BUTTON_ICONIC#CLICKED": Record<string, any>,
+		"NOW_BUTTON_STATEFUL#SELECTED_SET": Record<string, any>,
+
+		"NOW_CARD#CLICKED": Record<string, any>,
+		"NOW_CARD#SELECTED_SET": {value: boolean},
+
+		"NOW_CARD_ACTIONS#ACTION_CLICKED": T,
+
+		"NOW_CARD_HEADER#ACTION_CLICKED": T,
+
+		"NOW_CONTENT_TREE#ACTIONABLE_ITEM_CLICKED": T,
+		"NOW_CONTENT_TREE#ACTION_CLICKED": T,
+		"NOW_CONTENT_TREE#ACTION_MOUSEENTER": T,
+		"NOW_CONTENT_TREE#ACTION_MOUSELEAVE": T,
+		"NOW_CONTENT_TREE#EXPANDED_ITEMS_SET": T,
+		"NOW_CONTENT_TREE#ITEM_CLICKED": T,
+		"NOW_CONTENT_TREE#LOADING_CANCELLED": T,
+		"NOW_CONTENT_TREE#LOADING_REQUESTED": T,
+		"NOW_CONTENT_TREE#SELECTED_ITEMS_SET": T,
+
+		"NOW_DROPDOWN#ITEM_CLICKED": T,
+		"NOW_DROPDOWN#OPENED_SET": T,
+		"NOW_DROPDOWN#SELECTED_ITEMS_SET": T,
+
+		"NOW_LOADER#ACTION_CLICKED": T,
+
+		"NOW_MODAL#FOOTER_ACTION_CLICKED": T,
+		"NOW_MODAL#OPENED_SET": T,
+
+		"NOW_PILL#DISMISSED": T,
+		"NOW_PILL#SELECTED_SET": T,
+
+		"NOW_SPLIT_BUTTON#ACTION_CLICKED": T,
+		"NOW_SPLIT_BUTTON#ITEM_CLICKED": T,
+		"NOW_SPLIT_BUTTON#OPENED_SET": T,
+
+		"NOW_TABS#SELECTED_ITEM_SET": T,
+
+		"NOW_TEMPLATE_CARD_ASSIST#SELECTED_SET": T,
+
+		"NOW_TEMPLATE_CARD_ATTACHMENT#ACTION_CLICKED": T,
+
+		"NOW_TEXT_LINK#CLICKED": T,
+
+		"NOW_TOGGLE#CHECKED_SET": T,
+
+		"NOW_DROPDOWN_PANEL#ITEM_CLICKED": T,
+		"NOW_DROPDOWN_PANEL#OPENED_SET": T,
+		"NOW_DROPDOWN_PANEL#SELECTED_ITEMS_SET": T,
+
+		"NOW_INPUT#INVALID_SET": T,
+		"NOW_INPUT#VALUE_SET": T,
+
+
+		"NOW_INPUT_PASSWORD#INVALID_SET": T,
+		"NOW_INPUT_PASSWORD#VALUE_SET": T,
+
+		"NOW_INPUT_PHONE#BUTTON_CLICKED": T,
+		"NOW_INPUT_PHONE#COUNTRY_CODE_SET": T,
+		"NOW_INPUT_PHONE#INVALID_SET": T,
+		"NOW_INPUT_PHONE#VALUE_SET": T,
+
+		"NOW_INPUT_URL#INVALID_SET": T,
+
+		"NOW_RADIO_BUTTONS#VALUE_SET": T,
+
+		"NOW_SCORE#CLICKED": T,
+
+		"NOW_STEPPER#NEXT_PAGE_BUTTON_CLICKED": T,
+
+		"NOW_TEXTAREA#INVALID_SET": T,
+		"NOW_TEXTAREA#VALUE_SET": T,
+
+		'NOW_RADIO_GROUP#VALUE_CHANGED': T,
+
+		"NOW_RECORD_CHECKBOX#VALUE_CHANGED": T,
+
+		'PREVIEW_RECORD': T,
+
+		'NOW_RECORD_COMMON_SIDEBAR#OPENED_SET': T,
+
+		"NOW_RECORD_UI_ACTION_BAR#CLICKED": T,
+
+		"NOW_RECORD_DATE_PICKER#STAGED_VALUE_CHANGED": T,
+		'NOW_RECORD_DATE_PICKER#VALUE_CHANGED': T,
+
+		"NOW_RECORD_FILE_ATTACHMENT#VALUE_CHANGED": T,
+
+		"NOW_RECORD_HTML_EDITOR#STAGED_VALUE_CHANGED": T,
+		"NOW_RECORD_HTML_EDITOR#VALUE_CHANGED": T,
+
+		'NOW_RECORD_IP_ADDRESS#STAGED_VALUE_CHANGED': T,
+		'NOW_RECORD_IP_ADDRESS#VALUE_CHANGED': T
+		//[action: string]: any
+	}
+	interface ActionTypes {
+		"COMPONENT_CONNECTED": "SEISMIC_COMPONENT_CONNECTED",
+		"COMPONENT_DISCONNECTED": "SEISMIC_COMPONENT_DISCONNECTED",
+		"COMPONENT_BOOTSTRAPPED": "SEISMIC_COMPONENT_BOOTSTRAPPED",
+		"COMPONENT_PROPERTY_CHANGED": "SEISMIC_COMPONENT_PROPERTY_CHANGED",
+		"COMPONENT_RENDERED": "SEISMIC_COMPONENT_RENDERED",
+		"COMPONENT_ERROR_THROWN": "SEISMIC_COMPONENT_ERROR_THROWN",
+		"COMPONENT_DOM_READY": "SEISMIC_COMPONENT_DOM_READY"
+	}
+	interface ComponentService {
+		t(formatter: string, ...args: any): string;
+		actionTypes: ActionTypes,
+		createRef(): any,
+		createElement(tag: string, props?: any, ...children: Array<any>): any,
+		Fragment(): any,
+		createHttpEffect(url: string, options?: any): Function;
+		//createUpdateStateEffect(reducer: (...args: Array<any>) => void): Function;
+		createGraphQLEffect(query: string, options?: any): Function;
+		createAmbSubscriptionEffect(channelId: string, options?: any): Function;
+		createAmbEventEffect(...args: any[]): any;
+		createAmbPublishEffect(...args: any[]): any;
+		getTemplates(recordIds: Array<any>, consolidated?: boolean): Promise<any>;
+		componentSysIds(componentSysIds: Array<string>, consolidated?: boolean): Promise<any>;
+		getComponentsByTagNames(componentTagNames: Array<string>, consolidated?: boolean): Promise<any>;
+		createComponentConfig: typeof createComponentConfig,
+		registerCustomElement: typeof registerCustomElement
+	}
+	interface Window {
+		snComponentServices: ComponentService
+		createElement(tag: string, props?: any, ...children: Array<any>): any
+		createComponentConfig: typeof createComponentConfig,
+		registerCustomElement(tag: string, config: any): void;
+		componentStyle: string;
+		provideComponentStyle(): string;
+		createJSXElement(tagName: string, props?: any, ...children: Array<any>): any
+		preloadComponents?(): Array<string>
+	}
+	const snComponentServices: typeof window.snComponentServices;
+	const createElement: typeof window.createElement;//(tag: string, props?: any, ...children: Array<any>): any;
+	const createJSXElement: typeof window.createJSXElement;
+	const registerCustomElement: typeof window.registerCustomElement;//(tag: string, config: any): void;
+	const provideComponentStyle: typeof window.provideComponentStyle;
+	const preloadComponents: typeof window.preloadComponents;
+	const componentStyle: string;
+
+	type UnknownPropKeys = 'readonly' | 'reflect' | 'unstableParse' | 'unstablePreseveEmptyStr' | 'selectable' | 'schema';
+	type ExtractComponentProps<T, U, E = UnknownPropKeys> = T extends U ? T : T extends E ? never : T;
+	type ComponentPropValueOf<T> = T[ExtractComponentProps<keyof T, 'default'>] extends null ? any : T[ExtractComponentProps<keyof T, 'default'>];
+	type ComponentPropType<T> = { [p in keyof T]: ComponentPropValueOf<T[p]> extends (...args) => infer R ? R : ComponentPropValueOf<T[p]> };
+
+
+	interface ActionPayload<T extends keyof ActionTypes> {
+		type: T,
+		payload?: ActionTypes[T],
+		meta?: {
+			componentName?: string,
+			event?: Event,
+			hoiestHost?: any,
+			id?: string
+		},
+		error?: any,
+		stopPropagation(): void
+	}
+
+	interface EventHandlerArgs<P, T extends ComponentState, Actions = Record<string, any>> {
+		action: {
+			type: keyof DocumentEventMap,
+			error: any,
+			meta: any,
+			payload: { event: any, host: Element },
+			stopPropagation(): void;
+		},
+		host: Element,
+		properties: P,
+		state: T,
+		dispatch(type: keyof Actions, payload?: any, meta?: any, error?: boolean | null): void;
+		updateState(obj: Partial<{ [prop in keyof Omit<T, "properties">]: T[prop] }>): void;
+		updateState(obj: { path: string, value: any, operation?: 'set' | 'assign' | 'merge' | 'pop' | 'push' | 'shift' | 'unshift' | 'splice' | 'concat' }): void;
+		updateProperties(obj: Partial<{ [prop in keyof T["properties"]]: T['properties'][prop] }>): void;
+	}
+
+	interface ComponentState {
+		properties?: Record<string, any>
+	}
+	type ActionHandler<P, AS, D, ActionName extends keyof ActionTypes> = (args: {
+		action: ActionPayload<ActionName>,
+		dispatch: D,
+		properties: P,
+		state: AS,
+		host: HTMLElement
+	}) => void | {
+		effect?: Function,
+		args?: Array<any>,
+		interceptors?: Array<Function | Record<string, any>>,
+		modifiers?: {name: 'throttle', limit: number} | {name: 'debounce', delay: number},
+	};
+
+	interface Dispatcher<T extends ComponentState, Actions = Record<string, any>> {
+		<K extends keyof Actions>(type: K extends keyof Actions? K: string, payload?: K extends keyof ActionTypes? ActionTypes[K]: any , meta?: any, error?: boolean | null): void;
+		updateState(obj: Partial<{ [prop in keyof Omit<T, "properties">]: T[prop] }>): void;
+		updateState(obj: { path: string, value: any, operation?: 'set' | 'assign' | 'merge' | 'pop' | 'push' | 'shift' | 'unshift' | 'splice' | 'concat' }): void;
+		updateProperties(obj: Partial<{ [prop in keyof T["properties"]]: T['properties'][prop] }>): void;
+	}
+	interface ActionDispatcher<T extends ComponentState, Actions, ActionName extends keyof ActionTypes> extends Dispatcher<T, Actions> {
+		action?: ActionPayload<ActionName>
+	}
+	type AggregateState<RawProperties, InitialState> = InitialState & { properties: ComponentPropType<RawProperties> };
+	function createComponentConfig<
+		RawProperties,
+		InitialState,
+		Actions = Record<string, any>,
+		ComponentState = AggregateState<RawProperties, InitialState>,
+		ActionHandlers = Partial<{ [ActionName in keyof ActionTypes]:  ActionHandler<ComponentPropType<RawProperties>, ComponentState, ActionDispatcher<ComponentState, Actions, ActionName>, ActionName>}>,
+		>
+		(
+			properties?: RawProperties,
+			initialState?: InitialState,
+			styles?: string,
+			actions?: Actions,
+			actionHandlers?: ActionHandlers,
+			eventHandlers?: Array<{
+				events: Array<keyof DocumentEventMap>,
+				effect?: (args: EventHandlerArgs<RawProperties, ComponentState, Actions>) => void,
+				target?: Element | Document | Window
+			}>,
+			view?: (State?: ComponentState, dispatch?: Dispatcher<ComponentState, Actions>) => void
+		): any;
+	interface VNode {
+		elm: Node | undefined
+	}
+
+	type HookInitHandler = (vNode?: VNode) => void;
+	type HookInsertHandler = (vNode?: VNode) => void;
+	type HookUpdateHandler = (oldVNode?: VNode, vNode?: VNode) => void;
+	type HookRemoveHandler = (vNode?: VNode, callback?: (...args) => void) => void;
+	type HookDestroyHandler = (vNode?: VNode) => void;
+
+
+}
+
+
+declare module 'react' {
+	interface DOMAttributes<T> {
+		appendToPayload?: Record<string, any>
+	}
+	interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
+		appendToPayload?: Record<string, any>,
+		attrs?: Record<string, any>,
+		hookInsert?: HookInsertHandler,
+		hookInit?: HookInitHandler,
+		hookUpdate?: HookUpdateHandler,
+		hookRemove?: HookRemoveHandler,
+		hookDestroy?: HookDestroyHandler,
+		"hook-init"?: HookInitHandler,
+		"hook-insert"?: HookInsertHandler,
+		"hook-update"?: HookUpdateHandler,
+		"hook-remove"?: HookRemoveHandler,
+		"hook-destroy"?: HookDestroyHandler,
+		hook?: {
+			init?: HookInitHandler
+			insert?: HookInsertHandler,
+			update?: HookUpdateHandler,
+			remove?: HookRemoveHandler,
+			destroy?: HookDestroyHandler
+		},
+		on?: Partial<{ [P in keyof DocumentEventMap]: (e: DocumentEventMap[P]) => void; }>
+		// Clipboard Events
+		"on-copy"?: ClipboardEventHandler<T>;
+		"on-copycapture"?: ClipboardEventHandler<T>;
+		"on-cut"?: ClipboardEventHandler<T>;
+		"on-cutcapture"?: ClipboardEventHandler<T>;
+		"on-paste"?: ClipboardEventHandler<T>;
+		"on-pastecapture"?: ClipboardEventHandler<T>;
+
+		// Composition Events
+		"on-compositionend"?: CompositionEventHandler<T>;
+		"on-compositionendcapture"?: CompositionEventHandler<T>;
+		"on-compositionstart"?: CompositionEventHandler<T>;
+		"on-compositionstartcapture"?: CompositionEventHandler<T>;
+		"on-compositionupdate"?: CompositionEventHandler<T>;
+		"on-compositionupdatecapture"?: CompositionEventHandler<T>;
+
+		// Focus Events
+		"on-focus"?: FocusEventHandler<T>;
+		"on-focuscapture"?: FocusEventHandler<T>;
+		"on-blur"?: FocusEventHandler<T>;
+		"on-blurcapture"?: FocusEventHandler<T>;
+
+		// Form Events
+		"on-change"?: FormEventHandler<T>;
+		"on-changecapture"?: FormEventHandler<T>;
+		"on-beforeinput"?: FormEventHandler<T>;
+		"on-beforeinputcapture"?: FormEventHandler<T>;
+		"on-input"?: FormEventHandler<T>;
+		"on-inputcapture"?: FormEventHandler<T>;
+		"on-reset"?: FormEventHandler<T>;
+		"on-resetcapture"?: FormEventHandler<T>;
+		"on-submit"?: FormEventHandler<T>;
+		"on-submitcapture"?: FormEventHandler<T>;
+		"on-invalid"?: FormEventHandler<T>;
+		"on-invalidcapture"?: FormEventHandler<T>;
+
+		// Image Events
+		"on-load"?: ReactEventHandler<T>;
+		"on-loadcapture"?: ReactEventHandler<T>;
+		"on-error"?: ReactEventHandler<T>; // also a Media Event
+		"on-errorcapture"?: ReactEventHandler<T>; // also a Media Event
+
+		// Keyboard Events
+		"on-keydown"?: KeyboardEventHandler<T>;
+		"on-keydowncapture"?: KeyboardEventHandler<T>;
+		"on-keypress"?: KeyboardEventHandler<T>;
+		"on-keypresscapture"?: KeyboardEventHandler<T>;
+		"on-keyup"?: KeyboardEventHandler<T>;
+		"on-keyupcapture"?: KeyboardEventHandler<T>;
+
+		// Media Events
+		"on-abort"?: ReactEventHandler<T>;
+		"on-abortcapture"?: ReactEventHandler<T>;
+		"on-canplay"?: ReactEventHandler<T>;
+		"on-canplaycapture"?: ReactEventHandler<T>;
+		"on-canplaythrough"?: ReactEventHandler<T>;
+		"on-canplaythroughcapture"?: ReactEventHandler<T>;
+		"on-durationchange"?: ReactEventHandler<T>;
+		"on-durationchangecapture"?: ReactEventHandler<T>;
+		"on-emptied"?: ReactEventHandler<T>;
+		"on-emptied-capture"?: ReactEventHandler<T>;
+		"on-encrypted"?: ReactEventHandler<T>;
+		"on-encryptedcapture"?: ReactEventHandler<T>;
+		"on-ended"?: ReactEventHandler<T>;
+		"on-endedcapture"?: ReactEventHandler<T>;
+		"on-loadeddata"?: ReactEventHandler<T>;
+		"on-loadeddatacapture"?: ReactEventHandler<T>;
+		"on-loadedmetadata"?: ReactEventHandler<T>;
+		"on-loadedmetadatacapture"?: ReactEventHandler<T>;
+		"on-loadstart"?: ReactEventHandler<T>;
+		"on-loadstartcapture"?: ReactEventHandler<T>;
+		"on-pause"?: ReactEventHandler<T>;
+		"on-pause-capture"?: ReactEventHandler<T>;
+		"on-play"?: ReactEventHandler<T>;
+		"on-playcapture"?: ReactEventHandler<T>;
+		"on-playing"?: ReactEventHandler<T>;
+		"on-playingcapture"?: ReactEventHandler<T>;
+		"on-progress"?: ReactEventHandler<T>;
+		"on-progress-capture"?: ReactEventHandler<T>;
+		"on-ratechange"?: ReactEventHandler<T>;
+		"on-ratechangecapture"?: ReactEventHandler<T>;
+		"on-seeked"?: ReactEventHandler<T>;
+		"on-seekedcapture"?: ReactEventHandler<T>;
+		"on-seeking"?: ReactEventHandler<T>;
+		"on-seekingcapture"?: ReactEventHandler<T>;
+		"on-stalled"?: ReactEventHandler<T>;
+		"on-stalledcapture"?: ReactEventHandler<T>;
+		"on-suspend"?: ReactEventHandler<T>;
+		"on-suspend-capture"?: ReactEventHandler<T>;
+		"on-timeupdate"?: ReactEventHandler<T>;
+		"on-timeupdatecapture"?: ReactEventHandler<T>;
+		"on-volumechange"?: ReactEventHandler<T>;
+		"on-volumechangecapture"?: ReactEventHandler<T>;
+		"on-waiting"?: ReactEventHandler<T>;
+		"on-waitingcapture"?: ReactEventHandler<T>;
+
+		// MouseEvents
+		"on-auxclick"?: MouseEventHandler<T>;
+		"on-auxclickcapture"?: MouseEventHandler<T>;
+		"on-click"?: MouseEventHandler<T>;
+		"on-clickcapture"?: MouseEventHandler<T>;
+		"on-contextmenu"?: MouseEventHandler<T>;
+		"on-contextmenucapture"?: MouseEventHandler<T>;
+		"on-doubleclick"?: MouseEventHandler<T>;
+		"on-doubleclickcapture"?: MouseEventHandler<T>;
+		"on-drag"?: DragEventHandler<T>;
+		"on-dragcapture"?: DragEventHandler<T>;
+		"on-dragend"?: DragEventHandler<T>;
+		"on-dragendcapture"?: DragEventHandler<T>;
+		"on-dragenter"?: DragEventHandler<T>;
+		"on-dragentercapture"?: DragEventHandler<T>;
+		"on-dragexit"?: DragEventHandler<T>;
+		"on-dragexitcapture"?: DragEventHandler<T>;
+		"on-dragleave"?: DragEventHandler<T>;
+		"on-dragleavecapture"?: DragEventHandler<T>;
+		"on-dragover"?: DragEventHandler<T>;
+		"on-dragovercapture"?: DragEventHandler<T>;
+		"on-dragstart"?: DragEventHandler<T>;
+		"on-Dragstartcapture"?: DragEventHandler<T>;
+		"on-drop"?: DragEventHandler<T>;
+		"on-dropcapture"?: DragEventHandler<T>;
+		"on-mousedown"?: MouseEventHandler<T>;
+		"on-mousedowncapture"?: MouseEventHandler<T>;
+		"on-mouseenter"?: MouseEventHandler<T>;
+		"on-mouseleave"?: MouseEventHandler<T>;
+		"on-mousemove"?: MouseEventHandler<T>;
+		"on-mousemovecapture"?: MouseEventHandler<T>;
+		"on-mouseout"?: MouseEventHandler<T>;
+		"on-mouseoutcapture"?: MouseEventHandler<T>;
+		"on-mouseover"?: MouseEventHandler<T>;
+		"on-mouseovercapture"?: MouseEventHandler<T>;
+		"on-mouseup"?: MouseEventHandler<T>;
+		"on-mouseupcapture"?: MouseEventHandler<T>;
+
+		// Selection Events
+		"on-select"?: ReactEventHandler<T>;
+		"on-selectcapture"?: ReactEventHandler<T>;
+
+		// Touch Events
+		"on-touchcancel"?: TouchEventHandler<T>;
+		"on-touchcancelcapture"?: TouchEventHandler<T>;
+		"on-touchend"?: TouchEventHandler<T>;
+		"on-touchendcapture"?: TouchEventHandler<T>;
+		"on-touchmove"?: TouchEventHandler<T>;
+		"on-touchmovecapture"?: TouchEventHandler<T>;
+		"on-touchstart"?: TouchEventHandler<T>;
+		"on-touchstartcapture"?: TouchEventHandler<T>;
+
+		// Pointer Events
+		"on-pointerdown"?: PointerEventHandler<T>;
+		"on-pointerdowncapture"?: PointerEventHandler<T>;
+		"on-pointermove"?: PointerEventHandler<T>;
+		"on-pointermovecapture"?: PointerEventHandler<T>;
+		"on-pointerup"?: PointerEventHandler<T>;
+		"on-pointerupcapture"?: PointerEventHandler<T>;
+		"on-pointercancel"?: PointerEventHandler<T>;
+		"on-pointercancelcapture"?: PointerEventHandler<T>;
+		"on-pointerenter"?: PointerEventHandler<T>;
+		"on-pointerentercapture"?: PointerEventHandler<T>;
+		"on-pointerleave"?: PointerEventHandler<T>;
+		"on-pointerleavecapture"?: PointerEventHandler<T>;
+		"on-pointerover"?: PointerEventHandler<T>;
+		"on-pointerovercapture"?: PointerEventHandler<T>;
+		"on-pointerout"?: PointerEventHandler<T>;
+		"on-pointeroutcapture"?: PointerEventHandler<T>;
+		"on-gotpointercapture"?: PointerEventHandler<T>;
+		"on-gotpointercapturecapture"?: PointerEventHandler<T>;
+		"on-lostpointercapture"?: PointerEventHandler<T>;
+		"on-lostpointercapturecapture"?: PointerEventHandler<T>;
+
+		// UI Events
+		"on-scroll"?: UIEventHandler<T>;
+		"on-scrollcapture"?: UIEventHandler<T>;
+
+		// Wheel Events
+		"on-wheel"?: WheelEventHandler<T>;
+		"on-wheelcapture"?: WheelEventHandler<T>;
+
+		// Animation Events
+		"on-animationstart"?: AnimationEventHandler<T>;
+		"on-animationstartcapture"?: AnimationEventHandler<T>;
+		"on-animationend"?: AnimationEventHandler<T>;
+		"on-animationendcapture"?: AnimationEventHandler<T>;
+		"on-animationiteration"?: AnimationEventHandler<T>;
+		"on-animationiterationcapture"?: AnimationEventHandler<T>;
+
+		// Transition Events
+		"on-transitionend"?: TransitionEventHandler<T>;
+		"on-transitionendcapture"?: TransitionEventHandler<T>;
+	}
+}
+
+
+declare global {
+
+	interface NowAlertItem {
+		action?: { type: "dismiss" | "acknowledge" | "open", href?: string }
+		content?: string,
+		expanded?: boolean,
+		header?: string,
+		iconName?: string,
+		linkHref?: string,
+		linkText?: string,
+		manageExpanded?: boolean,
+		status?: "critical" | "high" | "moderate" | "warning" | "info" | "positive" | "low" | "info",
+		variant?: string,//"critical" | "high" | "moderate" | "warning" | "info" | "positive" | "low" | "info",
+		textLinkProps?: { label: string, href: string }
+	}
+	namespace JSX {
+		interface NowCalendarAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			style?: {height: string, display: string},
+			dir?: string,
+			availableViews?: Array<string>
+		}
+		interface NowAlertAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T>, NowAlertItem {
+			// action?: { type: "dismiss" | "acknowledge" | "open", href?: string }
+			// content?: string,
+			// expanded?: boolean,
+			// header?: string,
+			// iconName?: string,
+			// linkHref?: string,
+			// linkText?: string,
+			// manageExpanded?: boolean,
+			// status?: "critical" | "high" | "moderate" | "warning" | "info" | "positive" | "low" | "info",
+			// variant?: string,//"critical" | "high" | "moderate" | "warning" | "info" | "positive" | "low" | "info",
+			// textLinkProps?: { label: string, href: string }
+		}
+		interface NowAlertListAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			configAriaLive?: 'polite' | 'off' | 'assertive',
+			items: Array<NowAlertItem>,
+			manageItems?: boolean
+		}
+		type ElementSize = 'sm' | 'md' | 'lg';
+		type VariantType = 'primary' | 'secondary';
+		type ButtonVariant = "primary" | "primary-positive" | "primary-negative" | "secondary" | "secondary-positive" | "secondary-negative" | "tertiary" | "inherit";
+		interface NowAvatarAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			ariaHidden?: string,
+			imageSrc?: string,
+			presence?: "available" | "busy" | "away" | "offline",
+			size?: ElementSize,
+			userName?: string
+		}
+		interface NowBadgeAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			variant?: VariantType,
+			value: number | string,
+			status?: "critical" | "high" | "warning" | "moderate" | "info" | "positive" | "low",
+			size: ElementSize,
+			round?: boolean,
+			maxDigits?: number | string
+		}
+		interface NowButtonAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			cta?: string,
+			iconName?: string,
+			iconSet?: string,
+			label?: string,
+			size?: ElementSize,
+			variant?: ButtonVariant,
+			icon?: string,
+			disabled?: boolean,
+			configAria?: Record<string, string>,
+			tooltipContent?: string,
+			bare?: boolean,
+			inherit?: boolean
+		}
+		interface NowButtonBareAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			disabled?: boolean,
+			configAria?: Record<string, string>,
+			hidePadding?: boolean,
+			highContrast?: boolean,
+			iconEnd?: string,
+			iconStart?: string,
+			label?: string,
+			size?: ElementSize,
+			variant?: VariantType
+		}
+		interface NowButtonIconicAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			icon?: string,
+			size?: ElementSize,
+			tooltipContent?: string,
+			variant?: "primary" | "secondary" | "tertiary",
+			bare?: boolean,
+			configAria?: Record<string, string>,
+			disabled?: boolean,
+			hidePadding?: boolean,
+			highContrast?: boolean
+		}
+		interface NowButtonStatefulAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			icon?: string,
+			variant?: "primary" | "primary-highlighted" | "secondary" | "secondary-highlighted" | "tertiary",
+			tooltipContent?: string,
+			size?: ElementSize,
+			selected?: boolean,
+			manageSelected?: boolean,
+			highContrast?: boolean,
+			hidePadding?: boolean,
+			disabled?: boolean,
+			configRole?: 'button' | 'radio' | 'tab',
+			configAria?: Record<string, string>
+		}
+		type NowElement<T> = React.DetailedHTMLProps<T, HTMLElement>
+		interface NowCardAttributes extends React.AriaAttributes, React.DOMAttributes<HTMLElement> {
+			configArial?: Record<string, string>,
+			interaction?: 'none' | 'click' | 'select',
+			manageSelected?: boolean,
+			slected?: boolean,
+			size?: ElementSize
+		}
+		interface NowCardActionItem {
+			label?: string,
+			icon?: string,
+			variant?: ButtonVariant,
+			disabled?: boolean,
+			clickActionType?: string
+		}
+		interface NowCardActionsAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			items?: Array<NowCardActionItem>
+		}
+		interface NowCardFooterAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			label?: string | { start: string, end: string },
+			split?: 'equal' | 'unequal'
+		}
+		interface NowCardHeaderAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			actions?: Array<Partial<{ icon: string, label: string, disabled: boolean, clickActionType: string }>>,
+			caption?: Partial<{ label: string, lines: number, size: ElementSize }>
+			dropdowns?: Array<{ id: string, items: Array<{ id: string, label: string }> }>,
+			heading?: Partial<{ label: string, lines: number, level?: number, size: ElementSize, variant: ButtonVariant }>,
+			tagline?: Partial<{ label: string, icon: string, variant: 'secondary' | 'tertiary' }>
+		}
+		interface NowContentTreeAction {
+			icon: string,
+			label: string,
+			clickActionType: string,
+			mouseenterActionType: string,
+			mouseleaveActionType: string,
+		}
+		interface NowContentTreeHightlightedValue {
+			label: string,
+			status: string,
+			widht: string,
+		}
+		interface NowContentTreeIdentifier {
+			type: 'icon' | 'avatar',
+			icon: string,
+			userName: string,
+			imageSrc: string,
+			ariaHidden: string
+		}
+
+		interface NowContentTreeItem {
+			id: string,
+			label: string,
+			children: Array<Partial<NowContentTreeItem>>,
+			childrenAvailable: number,
+			identifierProps: Partial<NowContentTreeIdentifier>,
+			actionable: boolean,
+			actions: Array<Partial<NowContentTreeAction>>,
+			highlightedValueProps: Array<Partial<NowContentTreeHightlightedValue>>,
+			disabled: boolean
+		}
+		interface NowContentTreeAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			showDividers?: boolean,
+			select?: 'single' | 'multi' | 'none',
+			items?: Array<Partial<NowContentTreeItem>>,
+			loadingItems?: Array<{ path?: Array<string>, error?: Array<any>, erroMessage?: string }>,
+			manageExpandedItems?: boolean,
+			expandedItems?: Array<string>,
+			selectedItems?: Array<Array<string>>,
+			manageSelectedItems?: boolean
+			searchTerm?: string,
+
+		}
+		interface NowDropdownItem {
+			id?: string | number,
+			label: string,
+			count?: number,
+			icon?: string,
+			presence?: "available" | "away" | "busy" | "offline",
+			disabled?: boolean
+		}
+		interface NowDropdownSection {
+			id?: string | number,
+			label?: string,
+			children?: Array<Partial<NowDropdownItem>>,
+		}
+		interface NowDropdownAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			bare?: boolean,
+			configAria?: Record<string, string>,
+			disabled?: boolean,
+			hideCaret?: boolean,
+			hideLabel?: boolean,
+			icon?: string,
+			items?: Array<Partial<NowDropdownItem | NowDropdownSection>>,
+			manageOpended?: boolean,
+			manageSelectedItems?: boolean,
+			opened?: boolean,
+			panelFitProps?: { position?: Array<string>, container?: HTMLElement, constrain: Object },
+			placeholder?: string,
+			select: 'single' | 'multi' | 'none',
+			selectedItems?: Array<Array<string>>,
+			showPadding?: boolean,
+			size?: ElementSize,
+			toooltipContent?: string,
+			variant?: "primary" | "secondary" | "secondary-selected" | "tertiary" | "tertiary-selected" | "inherit"
+		}
+		interface NowHeadingAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			hasNoMargin?: boolean,
+			label?: string,
+			level?: string | number,
+			variant?: "header-primary" | "header-secondary" | "header-tertiary" | "title-primary" | "title-secondary" | "title-tertiary",
+			wontWrap?: boolean,
+			purpose: string,
+
+		}
+		interface NowHighlightedValueAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			label?: string,
+			showIcon?: boolean,
+			status?: "critical" | "high" | "warning" | "moderate" | "positive" | "info" | "low"
+		}
+		interface NowIconAttriutes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			icon?: string,
+			size?: ElementSize | 'x1',
+			spin?: boolean
+		}
+		interface NowIconPresenceAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			accessibilityMode?: boolean,
+			presence?: "available" | "busy" | "away" | "offline",
+			size?: ElementSize | 'x1'
+		}
+		interface NowImageAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			alt?: string,
+			src?: string,
+			height?: number | string,
+			width?: number | string,
+			fit?: "fill" | "contain" | "cover" | "none" | "scale-down",
+			position?: any,
+			sources?: Array<{ srcset?: string, type: string, media?: string, sizes?: string }>
+		}
+
+		interface NowLabelValueInlineAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			label?: string,
+			reversed?: boolean,
+			truncated?: boolean,
+			value?: string
+		}
+		interface NowLabelValueStackedAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			align?: "vertical" | "horizontal" | "horizontal-equal",
+			delimiter?: string,
+			itemMinWidth?: string,
+			items?: Array<{ label: string, value: any }>,
+			size?: ElementSize,
+			truncated?: boolean,
+			wrapped?: boolean
+		}
+		interface NowLabelHighlightedStringType {
+			type?: 'string',
+			value?: string,
+			previous?: string
+		}
+		interface NowLabelHighlightedValueType {
+			type?: 'highlighted-value',
+			label?: string,
+			status?: string,
+			showIcon?: boolean
+		}
+		interface NowLabelHightlightedTextLinkType {
+			type?: 'text-link',
+			label?: string,
+			href?: string,
+			variant?: string,
+			underlined?: boolean,
+			opensWindow?: boolean
+		}
+		interface NowLabelHightligtedJSXType {
+			type?: 'jsx',
+			value?: any,
+			previous?: any
+		}
+		interface NowLabelHighlightedHTMLType {
+			type?: 'html',
+			value?: string,
+			previous?: string
+		}
+		interface NowLabelValueTabbedAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			delimiter?: boolean,
+			items?: Array<NowLabelHighlightedStringType | NowLabelHighlightedValueType | NowLabelHightlightedTextLinkType | NowLabelHightligtedJSXType | NowLabelHighlightedHTMLType>
+			size?: ElementSize
+		}
+
+		interface NowLoaderAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			label?: string,
+			action?: string,
+			size?: ElementSize
+		}
+		interface NowModalAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			content?: string,
+			contentFullWidth?: boolean,
+			footerActions?: Array<{ label?: string, variant?: string, disabled?: boolean, clickActionType?: string }>,
+			headerLabel?: string,
+			manageOpened?: boolean,
+			opened?: boolean,
+			size?: ElementSize
+		}
+		interface NowPillAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			canDismiss?: boolean,
+			icon?: string,
+			imageSrc?: string,
+			label?: string,
+			manageSelected?: boolean,
+			selected?: boolean,
+			size?: ElementSize
+		}
+		interface NowProgressBarAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			configAria?: Record<string, string>
+			max?: number,
+			pathType?: "initial" | "alert" | "error" | "inactive",
+			size?: ElementSize | 'xs',
+			value?: number | string
+		}
+		interface NowRichTextAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			html?: string
+		}
+		interface NowSplitButtonAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			configAriaAction?: Record<string, string>,
+			configAriaTrigger?: Record<string, string>,
+			disabled?: boolean,
+			icon?: string,
+			items?: Array<NowDropdownItem | NowDropdownSection>,
+			label?: string,
+			manageOpened?: boolean,
+			opened?: boolean,
+			size?: ElementSize,
+			variant?: ButtonVariant,
+		}
+		interface NowTabItem {
+			id: string,
+			label?: string,
+			icon?: string,
+			count?: number,
+			presence?: string,
+			disabled?: boolean
+		}
+		interface NowTabsAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			fixedWidth?: boolean,
+			hideLabel?: boolean,
+			items: Array<NowTabItem>
+			manageSelectedItem?: boolean,
+			maxWidth?: number,
+			selectedItem?: string
+		}
+		interface NowTemplateCardAssistAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			actions?: Array<{ label?: string, id?: string }>,
+			configAria?: Record<string, string>,
+			content?: Array<any>,
+			footerContent?: { label?: string, value?: string, reversed?: boolean },
+			heading?: { label?: string, value?: number | string },
+			manageSelected?: boolean,
+			selected?: boolean,
+			tagline?: { label?: string, icon?: string }
+		}
+		interface NowTemplateCardAttachmentAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			actions?: Array<{ id?: string, label?: string }>,
+			caption?: string,
+			heading?: { label?: string, level?: number | string },
+			identifier?: { type?: "icon" | 'image', icon?: string, src?: string, alt?: string },
+		}
+		interface NowTemplateCardOmniChannelAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			actions?: Array<{ label?: string, icon?: string, variant?: string, disabled?: boolean, clickActionType?: string }>,
+			content?: { label?: string, value?: string },
+			heading?: { label?: string, level?: number | string },
+			tagline?: { label?: string, icon?: string }
+		}
+		interface NowTextLinkAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			configAria?: Record<string, string>,
+			download?: boolean | string,
+			href?: string,
+			label?: string,
+			opensWindow?: boolean,
+			underlined?: boolean,
+			variant?: "primary" | "secondary",
+			accessibleLabel?: string
+		}
+		interface NowToggleAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			checked?: boolean,
+			configAria?: Record<string, string>,
+			disabled?: boolean,
+			manageChecked?: boolean,
+			size?: ElementSize
+		}
+		type TOOLTIP_POSITIONS = "top-center bottom-center" | "bottom-center top-center" | "center-end center-start" | "center-start center-end" | "top-end top-start" | "bottom-end bottom-start" | "top-start top-end" | "bottom-start bottom-end";
+		interface NowTooltipAttributes<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			container?: HTMLElement,
+			content?: string,
+			delay?: number | { show?: number, hide?: number },
+			manageOpened?: boolean,
+			opened?: boolean,
+			position?: Array<TOOLTIP_POSITIONS>
+		}
+		interface NowCardDividerAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			fullWidth?: boolean,
+			blockSpacing?: ElementSize | 'none'
+		}
+		interface NowChartBarAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			options?: Record<string, any>
+		}
+		interface NowCheckBoxAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			checked?: boolean,
+			label?: string,
+			required?: boolean,
+			confitAria?: Record<string, string>,
+			disabled?: boolean,
+			invalid?: boolean,
+			manageChecked?: boolean,
+			name?: string,
+			readonly?: boolean,
+			value?: "true" | 'false' | 'indeterminate',
+		}
+		interface NowCollapseAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			expanded?: boolean
+		}
+		interface NowCollapseTriggerAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			controls: string
+		}
+		interface NowDropdownPanelAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			constrain?: { minHeight?: number, minWidth?: string, maxWidth?: number, maxHeight?: number },
+			container?: HTMLElement,
+			items?: Array<string>,
+			manageOpened?: boolean,
+			manageSelectedItems?: boolean,
+			opened?: boolean,
+			position?: Array<string>,
+			slect?: 'single' | 'multi' | 'none',
+			selectedItems?: Array<string>,
+			targetRef?: HTMLElement
+		}
+		interface NowInputAtts<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			autofocus?: boolean,
+			disabled?: boolean,
+			helperContent: any,
+			invalid?: boolean,
+			label?: string,
+			manageInvalid?: boolean,
+			manageValue?: boolean,
+			max?: number,
+			maxLength?: number,
+			messages?: Array<{ status?: string, header?: string, content?: string, icon?: string }>,
+			min?: number,
+			minLength?: number,
+			multiple?: boolean,
+			name?: string,
+			optional?: boolean,
+			pattern?: string,
+			placeHolder?: string,
+			readonly?: boolean,
+			required?: boolean,
+			step?: number,
+			type?: 'email' | 'ip' | 'number' | 'text',
+			value?: string
+		}
+		interface NowInputPasswordAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			label?: string,
+			autofocus?: boolean,
+			compact?: boolean,
+			disabled?: boolean,
+			invalid?: boolean,
+			manageInvalid?: boolean,
+			manageValue?: boolean,
+			message?: Array<{ status?: string, header?: string, content?: string, icon?: string }>,
+			name?: string,
+			optional?: boolean,
+			placeholder?: string,
+			readonly?: boolean,
+			required?: boolean,
+			requirements?: Array<{ label?: string, pattern?: RegExp }>
+			value?: string
+		}
+		interface NowInputPhoneAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			autofocus?: boolean,
+			countryCodes?: Array<{ code: string, name: string }>,
+			disabled?: boolean,
+			helperContent?: any,
+			invalid?: boolean,
+			label?: string,
+			manageInvalid?: boolean,
+			manageValue?: boolean,
+			max?: number,
+			maxlength?: number,
+			messages?: Array<{ status?: string, header?: string, content?: string, icon?: string }>,
+			min?: number,
+			minlength?: number,
+			name?: string,
+			number?: string,
+			optional?: boolean,
+			pattern?: string,
+			placeholder?: string,
+			readonly?: boolean,
+			required?: boolean,
+			selectedCountryCode?: string,
+			value?: string
+		}
+		interface NowInputUrlAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			disabled?: boolean,
+			helperContent?: any,
+			invalid?: boolean,
+			label?: string,
+			manageInvalid?: boolean,
+			manageValue?: boolean,
+			maxlength?: number,
+			messages?: Array<{ status?: string, header?: string, content?: string, icon?: string }>
+			minlength?: number,
+			name?: string,
+			optional?: boolean,
+			pattern?: string,
+			placeholder?: string,
+			readonly?: boolean,
+			required?: boolean,
+			value?: string
+		}
+		interface NowLegacyIconAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			border?: boolean,
+			fixedWidth?: boolean,
+			flip?: "horizontal" | 'vertical' | 'both',
+			inverse?: boolean,
+			pull?: 'left' | 'right',
+			pulse?: boolean,
+			rotation?: '90' | '180' | '270',
+			size?: ElementSize | 'xs' | 'xl' | 'xxl' | 'xxxl',
+			spin?: boolean,
+			transfrom?: string,
+			type?: string,
+			weight?: 'regular' | 'bold' | 'strong' | 'custom'
+		}
+		interface NowRadioButtonOption {
+			id?: string,
+			label?: string,
+			checked?: boolean,
+			readonly?: boolean,
+			disabled?: boolean
+		}
+		interface NowRadioButtonsAttr<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			disabled?: boolean,
+			helperContent?: boolean,
+			invalid?: boolean,
+			label?: string,
+			layout?: 'horizontal' | 'vertical',
+			manageValue?: boolean,
+			messages?: Array<{ status?: string, header?: string, content?: string, icon?: string }>,
+			name?: string,
+			optional?: boolean,
+			options?: Array<NowRadioButtonOption>,
+			readonly?: boolean,
+			required?: boolean,
+			value?: string
+		}
+		interface NowScoreAdvancedAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			canClick?: boolean,
+			changeInfo?: { change?: string, timestamp?: string, arrow?: string },
+			configAria?: Record<string, string>,
+			heading?: string,
+			hideWhitespace?: boolean,
+			score?: string,
+			scoreSize?: string,
+			sparkline?: any,
+			targetInfo?: any,
+			timestamp?: string,
+			size?: ElementSize
+		}
+		interface NowScoreBasicAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			canClick?: boolean,
+			heading?: string,
+			headingPosition?: string,
+			hideWhitespace?: boolean,
+			score?: string,
+			scoreSize?: ElementSize,
+			timestamp?: string
+		}
+		interface NowStepperItem {
+			id?: string | number,
+			label?: string,
+			icon?: string,
+			subLabel?: string,
+			progress?: 'none' | 'partial' | 'done',
+			disabled?: boolean
+		}
+		interface NowStepperAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			hideNumbers?: boolean,
+			items?: Array<NowStepperItem>,
+			manageSelectedItem?: boolean,
+			selctedItem?: string,
+			showCompletedCount?: boolean
+		}
+		interface NowTextAreaAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			autofocus?: boolean,
+			autoresize?: boolean,
+			cols?: number,
+			configAria?: Record<string, string>,
+			disabled?: boolean,
+			helperContent?: any,
+			invalid?: boolean,
+			label?: string,
+			manageInvalid?: boolean,
+			manageValue?: boolean,
+			maxlength?: number,
+			messages?: Array<{ status?: string, header?: string, content?: string, icon?: string }>,
+			minlength?: number,
+			name?: string,
+			optional?: boolean,
+			placeholder?: string,
+			readonly?: boolean,
+			required?: boolean,
+			resize?: 'both' | 'horizontal' | 'none' | 'vertical',
+			rows?: number,
+			showBorders?: boolean,
+			showCounter?: boolean,
+			value?: string
+		}
+		interface NowDateRangePickerAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			end?: string,
+			format?: string,
+			labelEnd?: string,
+			labelStart?: string,
+			language?: string,
+			name?: string,
+			preset?: string,
+			presets?: any,
+			start?: string
+		}
+		interface NowRecordFormSectionConnectedAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			query?: string,
+			readOnlyForm?: boolean,
+			sysId?: string,
+			table?: string,
+			view?: string
+		}
+		interface NowRadioGroupAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			description?: string,
+			invalid?: boolean,
+			label?: string,
+			language?: string,
+			name?: string,
+			options?: Array<{ value?: string, displayValue?: string }>,
+			readonly?: boolean,
+			required?: boolean,
+			value?: any
+		}
+		interface NowRecordCheckBoxAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			autofocus?: string | boolean,
+			configAria?: Record<string, string>,
+			description?: string,
+			invalid?: boolean,
+			label?: string,
+			messages?: Array<{ type?: string, liveUpdate?: string }>,
+			name?: string,
+			readonly?: boolean,
+			required?: boolean,
+			value?: string
+		}
+		interface SecondaryItem {
+			fieldLabel?: string,
+			displayValue?: string,
+			table?: string,
+			sysId?: string,
+			type: 'simple' | 'reference' | 'highlighted'
+		}
+		interface PreviewRecordPayload {
+			table?: string,
+			sysId?: string
+		}
+		interface NowRecordCommonHeaderAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			classicForm?: boolean,
+			primaryValue?: string,
+			recordDisplayValue?: string,
+			recordTags?: Array<string>,
+			secondaryItems?: Array<SecondaryItem>,
+			sysId?: string,
+			table?: string,
+			width?: string,
+			workspaceConfigId?: string
+		}
+		interface SidebarModelConditions {
+			field?: string,
+			operator?: string,
+			value?: string,
+			newQuery?: string,
+			or?: string,
+
+		}
+		interface SidbarFormAction {
+			actionAttributes?: string,
+			actionComponent?: string,
+			addignmentId?: string,
+			icon?: string,
+			label?: string,
+			modelConditions?: Array<SidebarModelConditions>,
+			name?: string,
+			order?: number,
+			tooltip?: string
+		}
+		interface NowRecordCommonSidebarAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			actions?: Array<SidbarFormAction>,
+			classicForm?: boolean,
+			formModel?: Record<string, any>,
+			manageOpened?: boolean,
+			opened?: boolean,
+			sidebarPanelExtras?: Record<string, any>
+		}
+		interface UIAction {
+			clientScript?: string,
+			hasClientScript?: boolean,
+			hint?: string,
+			label?: string,
+			name?: string,
+			sysId?: string,
+			type?: string,
+		}
+		interface UIActionNode {
+			label?: string,
+			overflow?: boolean,
+			type?: string,
+			color?: string,
+			order?: number,
+			'null-null'?: Array<UIAction>
+		}
+		interface NowRecordCommonUIActionBarAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			classicForm?: boolean,
+			handleClick?: (a: UIAction) => void,
+			uiActionNodes?: Array<UIActionNode>,
+			width?: string
+		}
+		interface NowRecordDatePickerAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			autofocus?: string | boolean,
+			confiAria?: Record<string, string>,
+			description?: string,
+			firstDayOfWeek?: number,
+			formData?: Record<string, any>,
+			format?: string,
+			invalid?: boolean,
+			label?: string,
+			language?: string,
+			messages?: Array<any>,
+			name?: string,
+			placeholder?: string,
+			readonly?: boolean,
+			recordSysId?: string,
+			required?: boolean | string,
+			tableName?: string,
+			timePicker?: boolean,
+			utcOffset?: number,
+			value?: string
+		}
+		interface NowRecordFieldLookupConnectedAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			ariDescribedBy?: string,
+			ariaLabel?: string,
+			ariaLabelledBy?: string,
+			autofocus?: boolean,
+			dependentField?: string,
+			dependentFieldValue?: string,
+			description?: string,
+			disableDisplayValueWarning?: boolean,
+			disableEmailFreeFormEntry?: boolean,
+			disableReferenceQualifier?: boolean,
+			displayValue?: Array<any> | string | number,
+			fieldName?: string,
+			hideReferenceIcon?: boolean,
+			invalid?: boolean,
+			isSearching?: boolean,
+			label?: string,
+			messages?: Array<any>,
+			multiSelection?: boolean,
+			name?: string,
+			placeholder?: string,
+			readonly?: boolean,
+			recordSysId?: string,
+			referenceAddonReadonly?: boolean,
+			referenceTable?: string,
+			required?: boolean | string,
+			resultLimit?: number,
+			results?: Array<any>,
+			searchDebounce?: number,
+			serilizedChanges?: string,
+			tableName?: string,
+			value?: any
+		}
+		interface NowRecordFileAttachmentAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			componentType?: string,
+			description?: string,
+			displayValue?: string,
+			error?: string | boolean,
+			extensions?: string,
+			fileContent?: Object,
+			label?: string,
+			language?: string,
+			maxAttachmentSize?: string,
+			messages?: Array<any>,
+			name?: string,
+			readonly?: boolean,
+			required?: boolean,
+			tableName?: string,
+			tableSysId?: string,
+			value?: string,
+			virusState?: string
+		}
+		interface HTMLEditorMentionConfig {
+			enableMentions?: boolean,
+			fetch: Function,
+			table?: string,
+			resourceTable?: string,
+			resourceSysId?: string,
+			messages?: { loading?: string, noMatches?: string, init?: string }
+		}
+		interface NowRecordHTMLEditorAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			autofocus?: boolean | string,
+			configMentions?: HTMLEditorMentionConfig,
+			contentStyle?: string,
+			convertUrls?: boolean,
+			description?: string,
+			enableCodeBlocks?: boolean,
+			extendedValidElements?: string
+			fonts?: string,
+			height?: number,
+			invalid?: boolean,
+			label?: string,
+			language?: string,
+			maxHeight?: number,
+			messages?: Array<any>,
+			minHeight?: number,
+			minLineCount?: number,
+			name?: string,
+			placeHolder?: string,
+			plugins?: string,
+			readonly?: boolean,
+			referringRecordSysId?: string,
+			referringTable?: string,
+			relativeUrls?: boolean,
+			removeHost?: boolean,
+			required?: boolean,
+			toolbar?: Array<string>,
+			validButtons?: string,
+			value?: string
+		}
+		interface NowRecordIPAddressAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			description?: string,
+			error?: string | boolean,
+			label?: string,
+			language?: string,
+			messages?: Array<any>,
+			name?: string,
+			placeholder?: string,
+			required?: boolean | string,
+			value?: string
+		}
+		interface SnRecordCommonMultiFormAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			sysIds?: Array<string>,
+			table?: string,
+			title?: string,
+			view?: string,
+			workspaceConfigId?: string
+		}
+		interface NowChartSparkline<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+
+		}
+		interface SnCheckListAttrs<T = HTMLElement> extends React.AriaAttributes, React.DOMAttributes<T> {
+			title?: string,
+			checklistId?: string,
+			documentId?: string
+		}
+		interface IntrinsicElements {
+			'now-alert': NowElement<NowAlertAttrs>,
+			'now-alert-list': NowElement<NowAlertListAttrs>,
+			'now-avatar': NowElement<NowAvatarAttrs>
+			'now-badge': NowElement<NowBadgeAttrs>,
+			'now-button': NowElement<NowButtonAttrs>,
+			'now-button-bare': NowElement<NowButtonBareAttrs>,
+			'now-button-iconic': NowElement<NowButtonIconicAttributes>,
+			'now-button-stateful': NowElement<NowButtonStatefulAttributes>,
+			'now-calendar': NowElement<NowCalendarAttributes>
+			'now-card': NowElement<NowCardAttributes>
+			'now-card-divider': NowElement<NowCardDividerAttrs>,
+			'now-card-actions': NowElement<NowCardActionsAttributes>,
+			'now-card-footer': NowElement<NowCardFooterAttributes>,
+			'now-card-header': NowElement<NowCardHeaderAttributes>,
+			'now-chart-bar': NowElement<NowChartBarAttrs>
+			'now-content-tree': NowElement<NowContentTreeAttributes>,
+			'now-dropdown': NowElement<NowDropdownAttributes>,
+			'now-heading': NowElement<NowHeadingAttributes>,
+			'now-highlighted-value': NowElement<NowHighlightedValueAttributes>
+			'now-icon': NowElement<NowIconAttriutes>,
+			'now-icon-presence': NowElement<NowIconPresenceAttributes>,
+			'now-image': NowElement<NowImageAttributes>,
+			'now-label-value-inline': NowElement<NowLabelValueInlineAttributes>,
+			'now-label-value-stacked': NowElement<NowLabelValueStackedAttributes>,
+			'now-label-value-tabbed': NowElement<NowLabelValueTabbedAttributes>,
+			'now-loader': NowElement<NowLoaderAttributes>,
+			'now-modal': NowElement<NowModalAttributes>,
+			'now-pill': NowElement<NowPillAttributes>,
+			'now-progress-bar': NowElement<NowProgressBarAttributes>,
+			'now-rich-text': NowElement<NowRichTextAttributes>,
+			'now-split-button': NowElement<NowSplitButtonAttributes>
+			'now-tabs': NowElement<NowTabsAttributes>,
+			'now-template-card-assist': NowElement<NowTemplateCardAssistAttributes>,
+			'now-template-card-attachment': NowElement<NowTemplateCardAttachmentAttributes>,
+			'now-template-card-omnichannel': NowElement<NowTemplateCardOmniChannelAttributes>,
+			'now-text-link': NowElement<NowTextLinkAttributes>,
+			'now-toggle': NowElement<NowToggleAttributes>,
+			'now-tooltip': NowElement<NowTooltipAttributes>,
+			'now-checkbox': NowElement<NowCheckBoxAttrs>,
+			'now-collapse': NowElement<NowCollapseAttrs>,
+			'now-collapse-trigger': NowElement<NowCollapseTriggerAttrs>,
+			'now-dropdown-panel': NowElement<NowDropdownPanelAttrs>,
+			'now-input': NowElement<NowInputAtts>,
+			'now-input-password': NowElement<NowInputPasswordAttrs>,
+			'now-input-phone': NowElement<NowInputPhoneAttrs>,
+			'now-input-url': NowElement<NowInputUrlAttrs>,
+			'now-legacy-icon': NowElement<NowLegacyIconAttrs>,
+			'now-radio-buttons': NowElement<NowRadioButtonsAttr>,
+			'now-score-advanced': NowElement<NowScoreAdvancedAttrs>,
+			'now-score-basic': NowElement<NowScoreBasicAttrs>,
+			'now-stepper': NowElement<NowStepperAttrs>,
+			'now-textarea': NowElement<NowTextAreaAttrs>,
+			'now-date-range-picker': NowElement<NowDateRangePickerAttrs>,
+			'now-record-form-section-connected': NowElement<NowRecordFormSectionConnectedAttrs>,
+			'now-radio-group': NowElement<NowRadioGroupAttrs>,
+			'now-record-checkbox': NowElement<NowRecordCheckBoxAttrs>,
+			'now-record-common-header': NowElement<NowRecordCommonHeaderAttrs>,
+			'now-record-common-sidebar': NowElement<NowRecordCommonSidebarAttrs>,
+			'now-record-common-uiactionbar': NowElement<NowRecordCommonUIActionBarAttrs>,
+			'now-record-date-picker': NowElement<NowRecordDatePickerAttrs>,
+			'now-record-field-lookup-connected': NowElement<NowRecordFieldLookupConnectedAttrs>,
+			'now-record-file-attachment': NowElement<NowRecordFileAttachmentAttrs>,
+			'now-record-html-editor': NowElement<NowRecordHTMLEditorAttrs>,
+			'now-record-ip-address': NowElement<NowRecordIPAddressAttrs>,
+			'sn-record-common-multi-form': NowElement<SnRecordCommonMultiFormAttrs>,
+			'sn-checklist': NowElement<SnCheckListAttrs>
+		}
+	}
+}`}),define("siDeclEmittor",["require","exports","constants","siParser","tsCompilerOptions","recordWatcher","seismic"],function(e,t,i,n,s,a,r){"use strict";var w=Math.max;function o(){return"undefined"!=typeof window}function l(){return!o()}function d(){return!!l()||c()&&window.recordConfig.canWrite}function c(){return!!l()||window.recordConfig.canRead}function u(e){d()&&e&&(H=new G(e),self.yln={dispatcher:H},H.sendMsg({cmd:W.THREAD_INITIALIZED}))}function g(t=!1){if(!window.recordConfig.isYLNSource){var i=window.ylnWorker;if(t&&(clearTimeout(Q),Q=-1),-1==Q){const t=w(15,parseInt(localStorage.getItem("codenow.threadWaitTime")||"15"));Q=setTimeout(()=>{i!=window.ylnWorker||(console.error("unresponsive parser thread. killing it"),window.ylnWorker.terminate(),q=!1,Y=0,Ce.parseReturnType=!1,H.cancelAllExistingPromises(),createParserThread(e("scripts/SIDeclEmittor")))},1e3*t)}}}function m(t=Object.assign({},b(P().isJavascript()))){if(!d())return Promise.reject("Unable to write Script Include");let i=Object.assign({},Ce);if(i.script="",i.typedeclaration="",i.typesourcemap="",!q){let t={cmd:W.UPDATE_LIBS,lib:e("vs/language/typescript/lib/lib").lib_es5_dts,typeDecl:Te,siRecord:i,isScriptRunner:C()};H.sendMsg(t).then(function(){q=!0})}let n={cmd:W.SINGLE_SCRIPT_INCLUDE_REQUEST,siRecord:i,options:t},s=H.sendMsg(n);return g(),s.then(()=>{clearTimeout(Q),Q=-1,Y--},()=>{clearTimeout(Q),Q=-1,Y--}),Y++,s}function f(t){if(!d())return Promise.reject("Unable to write Script Include");var i=e("vs/language/typescript/lib/lib").lib_es5_dts;t.forEach(e=>{X[e.sys_id]={record:e},e.parseReturnType=!0,"undefined"!=typeof Z[e.sys_id]&&(!Z[e.sys_id]&&console.log("skipping return type for "+e.api_name),e.parseReturnType=Z[e.sys_id])}),g();var n=H.sendMsg({cmd:W.SCRIPT_INCLUDE_REQUEST,typeDecl:Te,lib:i,siRecords:t});return n}function y(){let e=Ce.getScopeAndAPIMap().scope;var t=monaco.languages.typescript.typescriptDefaults;(0==R.length||R!=e)&&(0!=R.length&&V.dispose(),V=e==i.GLOBAL_SOCPE?t.addExtraLib(ue,"yln_"+ee+i.JAVA_GLOBAL_API):t.addExtraLib(ge,"yln_"+ee+i.JAVA_SCOPE_API)),R=e}function h(){ee++,y();let e=new n.DefinitionEmittor(Se);var t={};Ce.isNew()||(t[Ce.sys_id]=!0),fe=e.emit(Ce.getScopeAndAPIMap().scope,t)+j.newline+ye,B&&(B.dispose(),B=null);var s="yln_"+ee+i.JS_API;B=monaco.languages.typescript.typescriptDefaults.addExtraLib(fe,s),J&&J.dispose(),J=null;let a=n.TSChecker.getTypeDefsAsScopeMap(Se,Ce.sys_id),r=n.TSChecker.generateTypedefDeclFromScopemap(a);var o="yln_"+ee+i.TYPE_DEFS;J=monaco.languages.typescript.typescriptDefaults.addExtraLib(r,o),q=!1}function S(e){if(!e)return void h();if(e.id==Ce.sys_id)return;if(!e.sc)return void console.warn("scope name not found in record watcher "+JSON.stringify(e));Se[e.sc]||(Se[e.sc]=[]);let t=-1,s=Se[e.sc];for(let n=0;n<s.length;n++)if(s[n].id==e.id){t=n;break}let a=n.SITSFormat.expandMinifiedFormat(e,e.sc,n.SITSFormat.isTypescript(e.f));-1==t?Se[e.sc].push(a):"delete"==e.op?Se[e.sc].splice(t,1):Se[e.sc][t]=a,h()}function T(){return!!window.g_ck}function C(){return!!window.recordConfig&&window.recordConfig.isFromScriptRunner&&"undefined"==typeof g_form}function b(e,t=!1){let i={};if(e){var n=monaco.languages.typescript.typescriptDefaults.getCompilerOptions();return n.target=s.default.target,n.allowJs=s.default.allowJs,n.checkJs=s.default.checkJs,n.strict=s.default.strict,n.jsx=s.default.jsx,n.jsxFactory=s.default.jsxFactory,n.noImplicitAny=s.default.noImplicitAny,n.strictNullChecks=s.default.strictNullChecks,(s.default.target>re.ES2015||C())&&(n.sourceMap=s.default.sourceMap),n.noImplicitThis=s.default.noImplicitThis,n.noImplicitReturns=s.default.noImplicitReturns,n.noUnusedParameters=s.default.noUnusedParameters,n.noUnusedLocals=s.default.noUnusedLocals,n.noFallthroughCasesInSwitch=s.default.noFallthroughCasesInSwitch,n.linter=s.default.linter,t||(n.declaration=!1),n}return i.jsx=s.default.jsx,i.jsxFactory=s.default.jsxFactory,i.noFallthroughCasesInSwitch=s.default.noFallthroughCasesInSwitch,i.allowUnreachableCode=s.default.allowUnreachableCode,i.module=monaco.languages.typescript.ModuleKind.None,i.noResolve=s.default.noResolve,i.skipLibCheck=s.default.skipLibCheck,i.skipDefaultLibCheck=s.default.skipDefaultLibCheck,i.target=s.default.target,i.noImplicitAny=s.default.noImplicitAny,i.strictNullChecks=s.default.strictNullChecks,i.noImplicitThis=s.default.noImplicitThis,i.noImplicitReturns=s.default.noImplicitReturns,i.experimentalDecorators=s.default.experimentalDecorators,i.noUnusedLocals=s.default.noUnusedLocals,i.noUnusedParameters=s.default.noUnusedParameters,i.declaration=s.default.declaration,i.sourceMap=s.default.sourceMap,i.noEmitHelpers=s.default.noEmitHelpers,i.isolatedModules=s.default.isolatedModules,i.noEmitOnError=s.default.noEmitOnError,i.allowJs=!0,i.strict=s.default.strict,i.stripInternal=s.default.stripInternal,i.linter=s.default.linter,i}function _(){return Se}function E(){return P().isGlobalScope()?ue:ge}function I(){return me}function A(){return fe}function x(){return he}function N(){return E()+j.newline+I()+j.newline+A()+j.newline+x()}function F(){return Te}function v(e,t,s,a){Te=e;var r=i.GLOBAL_SOCPE;if(0!=t.length){var o=t.split(".");r=o[0].trim()}var l={};for(let i of Te)l[i.name]="string"==typeof i.json_value?{api:JSON.parse(i.json_value).api,customization:i.customization}:{api:i.json_value.api,customization:i.customization};for(let i in Se||!l.jsAPI||(Se=l.jsAPI.api),"string"==typeof Se&&(Se=JSON.parse(Se+"")),Se){let e=Se[i];e.forEach((e,t,s)=>{if("undefined"!=typeof e.f){let a=n.SITSFormat.expandMinifiedFormat(e,i);a&&(s[t]=a)}})}let p=n.TSChecker.getTypeDefsAsScopeMap(Se,s),d=n.TSChecker.generateTypedefDeclFromScopemap(p),c=new n.DefinitionEmittor(Se);ue=l.javaGlobalAPI.api+j.newline+l.javaGlobalAPI.customization,ge=l.javaScopedAPI.api+j.newline+l.javaScopedAPI.customization,me=l.tableAPI.api+j.newline+l.tableAPI.customization,fe=c.emit(r,a)+j.newline+l.jsAPI.customization,ye=l.jsAPI.customization;var u=monaco.languages.typescript.typescriptDefaults;(0==R.length||R!=r&&r==i.GLOBAL_SOCPE)&&(0!=R.length&&V.dispose(),V=r==i.GLOBAL_SOCPE?u.addExtraLib(ue,i.JAVA_GLOBAL_API):u.addExtraLib(ge,i.JAVA_SCOPE_API)),R=r,U||(U=u.addExtraLib(me,i.TABLE_API)),B&&B.dispose(),B=null,B=u.addExtraLib(fe,i.JS_API),J&&J.dispose(),J=null,he=d,0<d.length&&(J=u.addExtraLib(d,i.TYPE_DEFS))}function P(){return Ce}function L(){return D()?i.TSX_FILE_NAME:Ce.isJavascript()?"module.js":"module.ts"}function k(e=!1,t){if(!Ce.isTypescript()&&(be&&(be.dispose(),be=null),Ce.canGenerateDeclaration()||C()))if(!window.recordConfig.useTypeChecker){var i=Ce.generateCurrentSIDeclaration(esprima,e||!!window.recordConfig.jsdoc);be=monaco.languages.typescript.typescriptDefaults.addExtraLib(i,"current.d.ts")}else{if(!t)return;if(0<t.tf.length){let e=Ce.formatCurrentSITSFormat(t);be=monaco.languages.typescript.typescriptDefaults.addExtraLib(e,"current.d.ts")}}}function M(){return window.recordConfig?window.recordConfig.libVersions.jsLibState:!!window.snMonacoConfig&&window.snMonacoConfig.libState.jsLibState}function D(){return window.recordConfig&&window.recordConfig.isSeismic}function O(){if(_e)return;_e=!0;const e=["node_modules/@types/react/global.d.ts","node_modules/@types/prop-types/index.d.ts","node_modules/@types/react/index.d.ts","node_modules/csstype/index.d.ts"];const t=window.recordConfig.paths.app.startsWith("http://yln:9090");t?monaco.languages.typescript.typescriptDefaults.addExtraLib(r.seismicDTS,"typings/seismic/index.d.ts"):e.push("typings/seismic/index.d.ts"),e.forEach(e=>{let i="";t||!T()?i+=`${"http://yln:9090"}/${e}`:i=e.replace("node_modules","https://www.unpkg.com/"),fetch(i).then(e=>e.text()).then(t=>{monaco.languages.typescript.typescriptDefaults.addExtraLib(t,e)})})}Object.defineProperty(t,"__esModule",{value:!0}),i=__importStar(i),n=__importStar(n),s=__importDefault(s),a=__importDefault(a),r=__importStar(r);var j=n.TokenType,R="",V,U,B,J,W;(function(e){e[e.THREAD_INITIALIZED=0]="THREAD_INITIALIZED",e[e.SCRIPT_INCLUDE_REQUEST=1]="SCRIPT_INCLUDE_REQUEST",e[e.SCRIPT_INCLUDE_RESPONSE=2]="SCRIPT_INCLUDE_RESPONSE",e[e.SINGLE_SCRIPT_INCLUDE_REQUEST=3]="SINGLE_SCRIPT_INCLUDE_REQUEST",e[e.SINGLE_SCRIPT_INCLUDE_RESPONSE=4]="SINGLE_SCRIPT_INCLUDE_RESPONSE",e[e.UPDATE_LIBS=5]="UPDATE_LIBS",e[e.PROGRESS_MSG=6]="PROGRESS_MSG"})(W||(W={}));class K{constructor(){}static getInstance(e,t,i){return null==K.instance?(K.instance=new K,K.instance.typeInfo=n.TSChecker.initTypeInfoForSingleSI(e,t,i),K.instance):(e&&t&&(K.instance.typeInfo.dispose(),K.instance.typeInfo=n.TSChecker.initTypeInfoForSingleSI(e,t,i)),K.instance)}handleRequest(e){let t=new n.ClientSIRecordData(e.siRecord);return Ce=t,console.log("si reqest parser came"),Ce.isNew()&&2>t.api_name.split(".").length&&(t.api_name="global.Point"),this.typeInfo.getTypeInfo(Ce,e.options)}}t.SingleSIRequestHandler=K;class G{constructor(e){this.sender=e,this.pendingReplies={},this.seqNumber=0,e.onmessage=this.handleMessage.bind(this)}cancelAllExistingPromises(){for(let e in this.pendingReplies)this.pendingReplies[e].reject("Parser thread is too busy for this operation. Please try again or contact yln99517@gmail.com with your SI"),delete this.pendingReplies[e]}sendReplyMsg(e,t){this.sender.postMessage(Object.assign({seqNum:t},e))}sendMsg(e){var t=this.seqNumber++ +"",i=Object.assign({seqNum:t},e),n=new Promise((e,n)=>{this.pendingReplies[t]={resolve:e,reject:n},this.sender.postMessage(i)});return n}isSIProgressMsg(e){return e.cmd==W.PROGRESS_MSG}isSingleSIRequest(e){return e.cmd==W.SINGLE_SCRIPT_INCLUDE_REQUEST}isSIParserRequest(e){return e.cmd==W.SCRIPT_INCLUDE_REQUEST}isSIParserResp(e){return e.cmd==W.SCRIPT_INCLUDE_RESPONSE}isLibUpdateMsg(e){return e.cmd==W.UPDATE_LIBS}handleMessage(t){var e=t.data,i=this.pendingReplies[e.seqNum];if(i){delete this.pendingReplies[e.seqNum];try{e.errorMsg?i.reject(e.errorMsg):i.resolve(e)}catch(t){console.log("error on resolving thread message "+t)}return}if(this.isSIParserRequest(e)){var s=n.TSChecker.generateTypeInfo(e.siRecords,e.lib,e.typeDecl,e=>{var t={seqNum:"-1",cmd:W.PROGRESS_MSG,name:e.name,sysId:e.sysId,percentage:e.percentage,decl:e.decl};this.sendReplyMsg(t,"-1")}),a={seqNum:e.seqNum,cmd:W.SCRIPT_INCLUDE_RESPONSE,formatterResult:s.formatterResult,types:s.types,errors:s.errors};this.sendReplyMsg(a,e.seqNum)}else if(this.isSingleSIRequest(e)){let t=K.getInstance().handleRequest(e);this.sendReplyMsg(t,e.seqNum)}else this.isLibUpdateMsg(e)?(K.getInstance(e.lib,e.typeDecl,e.siRecord),self.recordConfig.isFromScriptRunner=e.isScriptRunner,this.sendReplyMsg({replayMsg:"thank you",cmd:W.SINGLE_SCRIPT_INCLUDE_RESPONSE},e.seqNum)):e.cmd==W.THREAD_INITIALIZED?z=!0:this.isSIProgressMsg(e)&&o()&&(g(!0),Z[e.sysId]=!!e.decl,!e.decl&&console.log("Parser started for => "+e.name),"function"==typeof window.onSIParserProgressEvent&&window.onSIParserProgressEvent(e))}}t.isMainThread=o,t.isWorkerThread=l,t.canWriteSI=d,t.canReadSI=c;var z=!1,H;t.onThreadInitialized=u;var q;let Y=0,Q=-1;t.generateTypeDeclForSingleRecord=m;t.gotoDefintionService={open:function(){var e=arguments[0];if("string"==typeof arguments[0]&&(e=monaco.Uri.parse(arguments[0])),"code.devsnc.com"===e.authority)return void window.open(arguments[0]);let t=e.authority.split(".");const i=_();if(!i||!i[t[0]])return window.open(e.toString(),null),void console.log("invalid scope name when opening file "+e.authority);const n=i[t[0]].find(e=>e.api==t[1]);if(!n)return void console.log("invalid scope name when opening file "+e.authority);var s=e.path.substr(1),a=`./sys_script_include.do?sys_id=${n.id}&gotoLine=${s}`;return window.open(a),console.log(JSON.stringify(arguments)),{catch:function(){console.log("eror callback")}}}};var X={},Z={};t.generateTypeDeclarations=f,t.scopeUpdated=y;var ee=0;t.apiDeclarationUpdated=h,t.siUpdated=S;var te;if(o()&&"undefined"!=typeof BroadcastChannel){var ie=a.default();if(ie){var ne=ie.getChannel("/yln/typedef");ne.subscribe(e=>{S(e.data)})}}t.updateSIDeclListeners=function(e){!te||te.postMessage(JSON.stringify(e))},t.isServiceNow=T;class se{constructor(e="",t="",i="",n="",s,a){this.js=e,this.declaration=t,this.sourceMap=i,this.tsScript=n,this.backEndDecl=s,this.linterErrors=a}}t.TranspilerOutput=se;const ae=e=>t=>{function i(t){if(t=ts.visitEachChild(t,i,e),!ts.isTemplateExpression(t))return t;let s=t.getFullText(),a=n.getDotWalkingRegExp(),r=s.match(a);if(!r)return t;if(0==r.length)return t;var o=r[0].split(".");if(1>=o.length)return t;let l=function(e){let t=e.replace(a,(e,t,i,n)=>{var s=i;i=i.replace(/^\$\${/,""),i=i.replace(/\}$/,"");let a=i.split(".");return 1==a.length?s:(a.splice(0,1),t+a.join(".")+n)});return t.trim()}(s);return ts.createStringLiteral(l)}return ts.visitNode(t,i)};t.isScriptRunner=C;var re;(function(e){e[e.ES3=0]="ES3",e[e.ES5=1]="ES5",e[e.ES2015=2]="ES2015",e[e.ES2016=3]="ES2016",e[e.ES2017=4]="ES2017",e[e.ES2018=5]="ES2018",e[e.ESNext=6]="ESNext",e[e.JSON=100]="JSON",e[e.Latest=6]="Latest"})(re||(re={})),t.getCompilerOptions=b;class oe{constructor(e,t,i,n=ts.ScriptTarget.ES5){this.sourceContent=e,this.libContent=t,this.snLibContent=i,this.SOURCE_PATH="module.ts",this.LIB_PATH="lib.d.ts",this.SN_LIB_PATH="node_modules/@types/snlib/index.d.ts",this.sourceFileMap={},this.fileMap={},t+="\n\n\n"+N(),this.sourceFileMap[this.LIB_PATH]=ts.createSourceFile(this.LIB_PATH,t,n);let s=Ce.isJavascript()?ts.ScriptKind.JS:ts.ScriptKind.TS;Ce.isJavascript()&&(this.SOURCE_PATH="module.js");const a=ts.createSourceFile(this.SOURCE_PATH,Ce.tsscript,ts.ScriptTarget.ES5,!0,s);this.sourceFileMap[this.SOURCE_PATH]=a;const r=ts.transform(a,[ae]),o=r.transformed[0],l=ts.createPrinter();let p=l.printFile(o);ts.disposeEmitNodes(a),r.dispose(),this.sourceFileMap[this.SOURCE_PATH]=a.update(p,{span:{start:0,length:e.length},newLength:p.length})}getFileMap(){return this.fileMap}getSourceFile(e){return this.sourceFileMap[e]}writeFile(e,t){"module.js"==e?this.fileMap.js=t:"module.d.ts"==e?this.fileMap.declaration=t:this.fileMap.sourceMap=t}getDefaultLibFileName(){return"lib.d.ts"}useCaseSensitiveFileNames(){return!1}getCanonicalFileName(e){return e}getCurrentDirectory(){return""}getNewLine(){return"\r\n"}fileExists(e){return!0}readFile(e){return""}directoryExists(){return!0}getDirectories(){return[]}static compile(t=Object.assign({},b(!1)),i=!1){let n=new se,s=e("vs/language/typescript/lib/lib").lib_es5_dts+"\n\n\n"+N();var a=new oe(P().tsscript,s,N());let r=ts.createProgram([i?"module.js":"module.ts"],t,a),o=r.emit(),l=a.getFileMap();for(var d in l)console.log(l[d]);let p=ts.getPreEmitDiagnostics(r).concat(o.diagnostics);p.forEach(e=>{if(e.file){let{line:t,character:i}=e.file.getLineAndCharacterOfPosition(e.start),n=ts.flattenDiagnosticMessageText(e.messageText,"\n");console.log(`${e.file.fileName} (${t+1},${i+1}): ${n}`)}else console.log(`${ts.flattenDiagnosticMessageText(e.messageText,"\n")}`)});let c=o.emitSkipped?1:0;if(console.log(`Process exiting with code '${c}'.`),r.getSourceFiles().forEach(e=>ts.disposeEmitNodes(e)),0!=c)return Promise.reject("Compilation Errros");n.js=l.js,n.tsScript=Ce.tsscript,n.sourceMap=l.sourceMap;var u=Ce.emitTSDeclaration(l.declaration);return n.declaration=Ce.typedeclaration=JSON.stringify(u),Ce.script=n.js,Ce.typesourcemap=n.sourceMap,Promise.resolve(n)}static getModelValueAfterTransform(e){let t=oe.applyTemplateTransformation(e);const i=t.transformed[0],n=ts.createPrinter();let s=n.printFile(i);return t.dispose(),s}static getSourceAfterTransform(e){let t=oe.applyTemplateTransformation(e);return t.transformed[0]}static applyTemplateTransformation(e){let t="proxyModel.js",i=ts.ScriptKind.JS;Ce.isTypescript()&&(t="proxyModel.ts",i=ts.ScriptKind.TS);const s=ts.createSourceFile(t,e,ts.ScriptTarget.ES5,!0,i),a=ts.transform(s,[n.TSChecker.dotWalkingTransformer]);return a}}t.TSCompilerHost=oe,o()&&(window.transform=oe.getModelValueAfterTransform);class le{constructor(e,t=""){this.pathName=e,this.filter=t}fetch(){if(this.fetchPromise)return this.fetchPromise;var e=this;return this.fetchPromise=new Promise(t=>{jQuery.ajax({url:e.pathName,data:{},headers:{"X-UserToken":window.g_ck},success:function(i){e.onFetch(i);try{t(i.result)}catch(e){console.log("error on resolving promise")}console.log("received for path "+e.pathName)}})}),this.fetchPromise}onFetch(e){}}t.RecordFetcher=le;class pe extends le{constructor(e,t=""){super(e,t),this.pathName=e,this.isDataAvailable=!1,(!T()||M())&&(this.isDataAvailable=!0,this.cachedData="string"==typeof window.snLibContent?JSON.parse(window.snLibContent).result:window.snLibContent.result)}fetch(){return this.isDataAvailable?new Promise(e=>{e(this.cachedData)}):super.fetch()}onFetch(e){this.isDataAvailable=!0,this.cachedData=e.result}}t.CachedRecordData=pe;var de=i.DECLARATION_TABLE_PATH;o()&&!T()&&(de=i.DECLARATION_DATA_PATH);var ce=null;o()&&(ce=new pe(de,""),ce.fetch());let ue="",ge="",me="",fe="",ye="",he="",Se;t.getSIMap=_,t.getJavaAPI=E,t.setJavaAPI=function(e){ue=e},t.getTableAPI=I,t.getJSAPI=A,t.getTypedefAPI=x,t.getAllDeclAPI=N;var Te;t.getTypeDeclarations=F,t.internalInitialize=v;let Ce;t.getCurrentSI=P,t.getCurrentModuleName=L;let be;t.updateCurrentSIDeclaration=k,t.isJSCacheReady=M,t.isSeismicComponent=D,t.isNewFiddle=function(){return window.recordConfig&&"-1"===window.recordConfig.uxfRecord.sys_id};let _e=!1;t.loadJSXIntellisense=O,t.initializeWithSIRecord=function(e){Ce=e;var t=new Promise(e=>D()?e():void ce.fetch().then(function(t){let i={};Ce.isNew()||(i[Ce.sys_id]=!0),v(t,Ce.api_name,Ce.sys_id,i),T()&&k(!1),e()}));return t},t.initializeTypeDeclarations=function(e=""){return e=e||"global.",new Promise(t=>{ce.fetch().then(function(i){v(i,e,"-1",{}),t()})})}}),define("fileSearch",["require","exports","siDeclEmittor","siParser"],function(e,t,n,s){"use strict";var o=Math.floor,l=Math.max;function a(e,t){for(var n=-1,s=0,a=0,r=e.length,o=0,p=t.length,d=!1,c=!1,u=!0,g=null,m=null,f=null,y=0,h=[];o!=p;){var S=a==r?null:e.charAt(a),T=t.charAt(o),C=null==S?null:S.toLowerCase(),b=T.toLowerCase(),_=T.toUpperCase(),E=S&&C==b,I=g&&m==b,A=E&&g,x=g&&S&&m==C;if((A||x)&&(s+=y,h.push(f),g=null,m=null,f=null,y=0),E||I){var N=0;if(0==a){var F=l(o*-3,-9);s+=F}d&&(N+=5),u&&(N+=10),c&&T==_&&b!=_&&(N+=10),E&&++a,N>=y&&(null!=g&&(s+=n),g=T,m=g.toLowerCase(),f=o,y=N),d=!0}else v+=T,s+=n,d=!1;c=T==b&&b!=_,u="_"==T||" "==T,++o}g&&(s+=y,h.push(f));for(var v="",P=0,L=0,k;L<h.length;++L){k=h[L];let e=t.substr(P,k-P),i=t.charAt(k);v+=`<span class = "no-match">${e}</span><span class='highlight'>${i}</span>`,P=k+1}0!=t.length-P&&(v+=`<span class="no-match">${t.substr(P,t.length-P)}</span>`);var M=a==r;return[M,s,v]}function r(e,t,s){function r(){clearTimeout(p),p=null;var r=performance.now()+o,d=n.getSIMap();for(var c in d){let i=d[c];for(var u=0;u<i.length;u++){let n=i[u].api.split("."),s=n[0];2==n.length&&i[u].api.split(".")[1];let r=e(t,s);e==a&&!0!=r[0]||l.push({rank:r[1],matchStr:r[2],item:i[u]})}}return s(l),null}var o=1e3/30,l=[],p=null;this.cancel=function(){null!==p&&clearTimeout(p)},this.start=function(){r()},this.flush=function(){o=1/0,r()}}Object.defineProperty(t,"__esModule",{value:!0}),n=__importStar(n);class p{constructor(e){this.domNode=e,this.id="FileSearch"}getId(){return this.id}getDomNode(){return this.domNode}getPosition(){return null}}var d="<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAPCAMAAADXs89aAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAABOFBMVEVCpfX///9CpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfVCpfX///8Jns0AAAAAZnRSTlMAAEx9fn98eAcsiqeURr0SAkTi+HQOmtTTz+ff0Agg6uu25jIWKCYhYSInUvV1Q1kLZD5XbvryVm1ezUkxuu38XwYw7vNjRSOTrBCp+cQ6Kp0Pw7zW/r9yThOHszaIgCQFjqWbaBXwbi/OAAAAAWJLR0QB/wIt3gAAAAd0SU1FB+MCDg4uBi7hZswAAAABb3JOVAHPoneaAAAA2klEQVQY022QaVcBcRTGb/4TlUhkUKSpUGNsMVH2Jdq0b5Rdz/f/CGYmh8nxe3Gf5/ze3HsuGRjjuFXGmNG0RrS+Yd60kIIVM7Zs23YlHDtOIt7l9uwCe163x7fvx4FwCBwRHQeCIQ44ORWDFIYUoSgfi5NGAjhTMwkHR3NSgLZHlHEupGc6M9W2CxmQLrMLmiiXLwDFUnlBE1XMVdSu/ut6QxnXwI1e397dNx98jwLwpL/k+QWwv7694yOn6U/gS81WW1Kf8B36W/PT6fa00q8PhqPxr9JWljIBIUAu3lTAeuwAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTktMDItMTRUMTQ6NDY6MDYrMDA6MDBwkCElAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE5LTAyLTE0VDE0OjQ2OjA2KzAwOjAwAc2ZmQAAAABJRU5ErkJggg==\" alt=\"\" />";class c{constructor(e,t){this.editor=e,this.callback=t,this.id="FileSearch",this.fileSearchWrapper="FileSearch-filesWrapper",this.fileSearchInput="FileSearch-searchInput",this.domNode=document.createElement("div"),this.domNode.setAttribute("id",this.id),this.domNode.setAttribute("class",this.id),this.filterTimerId=-1,this.nextResultTimerId=-1,this.currentIndex=0}getNode(){return this.domNode}close(){}static isActive(){return c.isOpen}dispose(){c.isOpen=!1,this.domNode.removeEventListener("click",this),this.domNode.removeEventListener("keydown",this),this.domNode.removeEventListener("mousewheel",this),document.removeEventListener("keydown",this),this.editor.removeOverlayWidget(this.overlayWidget),this.editor.focus()}handleEvent(t){var e=Math.ceil;if("mousewheel"==t.type)return t.stopImmediatePropagation(),void t.stopPropagation();let i,n;if("keydown"==t.type){var s=t;if(27==s.keyCode||13==s.keyCode){if(13==s.keyCode&&(i=jQuery(this.domNode).find("#FileSearch-filesWrapper"),n=i.children(),this.currentIndex<n.length)){let e=n[this.currentIndex].getAttribute("data-sysid"),t=n[this.currentIndex].getAttribute("data-apiname");this.callback({apiName:t,sysId:e})}return s.stopImmediatePropagation(),s.stopPropagation(),s.preventDefault(),void this.dispose()}if(40==s.keyCode||38==s.keyCode){t.stopImmediatePropagation(),t.stopPropagation(),t.preventDefault(),i=jQuery(this.domNode).find("#FileSearch-filesWrapper"),n=i.children();let a=this.currentIndex;40==s.keyCode?this.currentIndex++:(this.currentIndex--,0>this.currentIndex&&(this.currentIndex=n.length-1)),this.currentIndex%=n.length,0<=a&&jQuery(n[a]).removeClass("selected"),jQuery(n[this.currentIndex]).addClass("selected"),!c.itemHieght&&0<n.length&&(c.itemHieght=n[0].getBoundingClientRect().height);let r=c.itemHieght||23,l=r*this.currentIndex,p=i.height(),d=i.scrollTop();if(38==s.keyCode){if(l=o(l),l>=d&&l<p+d)return;i.scrollTop(l)}else{let t=e(l+r);if(t>=d&&t<p+d)return;i.scrollTop(t-p)}return}let r=s.keyCode;if(!(47<r&&58>r||64<r&&91>r||96<r&&123>r||8==r||13==r))return;var a=this.domNode.querySelector("#"+this.fileSearchInput);return-1!=this.filterTimerId&&(window.clearTimeout(this.filterTimerId),this.filterTimerId=-1),-1!=this.nextResultTimerId&&window.clearTimeout(this.nextResultTimerId),this.nextResultTimerId=-1,void(this.filterTimerId=window.setTimeout(()=>{this.filter(a.value)},100))}var r=t.target,l=r.closest("div.FileSearch-file");if(null!=l){let e=l.dataset.apiname,t=l.dataset.sysid;return this.dispose(),void this.callback({apiName:e,sysId:t})}null==r.closest("div#FileSearch")&&this.dispose()}open(){c.isOpen=!0,this.domNode.innerHTML=this.constructHTML(),this.domNode.addEventListener("click",this),this.domNode.addEventListener("keydown",this),this.domNode.addEventListener("mousewheel",this),document.addEventListener("keydown",this),this.overlayWidget=new p(this.domNode),this.editor.addOverlayWidget(this.overlayWidget),this.domNode.querySelector("#"+this.fileSearchInput).focus()}filter(e){var t=this.domNode.querySelector("#"+this.fileSearchWrapper);let i=this.constructItems(e);this.currentIndex=-1,!i||(t.innerHTML=i)}constructItemsUsingFuzzy(e,t=50){!this.asyncMatcher||(this.asyncMatcher.cancel(),this.asyncMatcher=void 0),this.asyncMatcher=new r(a,e,e=>{e=e.sort(function(e,t){return t.rank-e.rank});let i=0,n="",a="";for(let r of e){let e="<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QA/wD/AP+gvaeTAAAAB3RJTUUH4gcPDwoiWcgyPAAAAh5JREFUSMfV1U2IjWEUB/Df/aDBVVj4mHEZnwmFBVGWdthJESGEUrOSpTWRKERNYqwsSKJ8pGztrCjF1FgIibi5GMPiOdc83ebOZXb+9fae53nOec/X/zkv/zsKI23WB7pbGnRU+0c9b9YdzUEJMzEev/AOtSbVMqqYFTpvMIDBXKEVpqEPi8OgB7ey8yU4gg2hCx/wCMfxvJ2DErrigUnZ2QJcwZommwp2Yzl24nmxTRl/xXsok2Ff9vEaHuIBvsTefCxtl0ErTMS6bN2LoxHAXmzEKTz+GwcjkaCEjmz9BvWQL0Xp/pChXYlGwleJKQ0cwB6p0YP5xzuq/aM6KLTYH8QNfI/1XFzEHRxGZ0OxPtA9pgzgJk7jW6zHYS3O4i52xF5bB3kWOYvqOIb9eGL4YhWwQupFD4pjzUBE3yexZg/uG272BOkSri//7VxpyiDHe1yLsm3DCUzFdGzKM1goNSwvT34+lMmzcQjzsr0aLkfJGugqhreDUnPOSiwoYjVmhOIPfAx5C27jPM5gmdTQElZJt7iBD2VpWJ2UZs1CzMHrUK6EYj+ehbwIK0PeHPJT/AybOXH2GQ/K0gy5Ho0qhMHKLIofuBBO4Zw0ovdF5NV4cgxJTLpXiCZPkS7J9lAeL7HkZSj2GuY8aR5txa4o0eQI7ite4Gr0o1ZoYlFnNK6CT+HgrdaooFtiTEn6H7yKd2LKv/z+GhiLzf+L3xLMgT1r10J2AAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE4LTA3LTE1VDEzOjEwOjM0KzAyOjAwRXld0gAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxOC0wNy0xNVQxMzoxMDozNCswMjowMDQk5W4AAAAASUVORK5CYII=\" alt=\"\" />";s.SITSFormat.isTypescript(r.item.f)&&(e=d);let o=`<div class="FileSearch-file" data-apiname="${r.item.api}" data-sysId="${r.item.id}">
 					${e}<span class="normName">${r.matchStr}</span></div>`;if(i>t){a+=o;continue}i++,n+=o}var r=this.domNode.querySelector("#"+this.fileSearchWrapper);this.currentIndex=-1,r.innerHTML=n;let o=jQuery(this.domNode).find("#FileSearch-filesWrapper");setTimeout(()=>{o.scrollTop(0)},0),this.appendNextResultSet(a)}),this.asyncMatcher.start()}appendNextResultSet(e){if(0!=e.length){var t=this.domNode.querySelector("#"+this.fileSearchWrapper);this.nextResultTimerId=window.setTimeout(()=>{jQuery(e).appendTo(t)},200)}}constructItems(e,t=50){if(0<e.length)return this.constructItemsUsingFuzzy(e);var a="",r=0;0>t&&(t=50),t=l(t,50);var o=new RegExp(e,"gi"),p=n.getSIMap();let c="";for(var u in p)for(var g=p[u],m=0;m<g.length;m++){var f=g[m],y=f.api.split("."),h=y[0];if(1<y.length&&(h=y[1]),!e||null!=h.match(o)){r++;var S="<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QA/wD/AP+gvaeTAAAAB3RJTUUH4gcPDwoiWcgyPAAAAh5JREFUSMfV1U2IjWEUB/Df/aDBVVj4mHEZnwmFBVGWdthJESGEUrOSpTWRKERNYqwsSKJ8pGztrCjF1FgIibi5GMPiOdc83ebOZXb+9fae53nOec/X/zkv/zsKI23WB7pbGnRU+0c9b9YdzUEJMzEev/AOtSbVMqqYFTpvMIDBXKEVpqEPi8OgB7ey8yU4gg2hCx/wCMfxvJ2DErrigUnZ2QJcwZommwp2Yzl24nmxTRl/xXsok2Ff9vEaHuIBvsTefCxtl0ErTMS6bN2LoxHAXmzEKTz+GwcjkaCEjmz9BvWQL0Xp/pChXYlGwleJKQ0cwB6p0YP5xzuq/aM6KLTYH8QNfI/1XFzEHRxGZ0OxPtA9pgzgJk7jW6zHYS3O4i52xF5bB3kWOYvqOIb9eGL4YhWwQupFD4pjzUBE3yexZg/uG272BOkSri//7VxpyiDHe1yLsm3DCUzFdGzKM1goNSwvT34+lMmzcQjzsr0aLkfJGugqhreDUnPOSiwoYjVmhOIPfAx5C27jPM5gmdTQElZJt7iBD2VpWJ2UZs1CzMHrUK6EYj+ehbwIK0PeHPJT/AybOXH2GQ/K0gy5Ho0qhMHKLIofuBBO4Zw0ovdF5NV4cgxJTLpXiCZPkS7J9lAeL7HkZSj2GuY8aR5txa4o0eQI7ite4Gr0o1ZoYlFnNK6CT+HgrdaooFtiTEn6H7yKd2LKv/z+GhiLzf+L3xLMgT1r10J2AAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE4LTA3LTE1VDEzOjEwOjM0KzAyOjAwRXld0gAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxOC0wNy0xNVQxMzoxMDozNCswMjowMDQk5W4AAAAASUVORK5CYII=\" alt=\"\" />";s.SITSFormat.isTypescript(f.f)&&(S=d);let e=`<div class="FileSearch-file" data-apiname="${f.api}" data-sysId="${f.id}">${S}<span class="normName">${h}</span></div>`;r>=t?c+=e:a+=e}}return this.appendNextResultSet(c),a}constructHTML(){var e=this.constructItems("");return`<div class="FileSearch-searchWrapper">
 					<input type="text" class="FileSearch-searchInput" id="FileSearch-searchInput" autocorrect="off" autocapitalize="off" spellcheck="false" autocomplete="off">
 				</div>
@@ -663,9 +2072,9 @@ var __awaiter=this&&this.__awaiter||function(e,t,i,n){function s(e){return e ins
 						stripInternals
 					</li>
 				</ul>
-			</div>`;return p}jQuery("#compiler-settings").popover({html:!0,trigger:"manual",content:function(){return e()},title:"Compiler Settings"}).click(function(t){0==jQuery("#compiler-settings-container > .popover").length?jQuery(this).popover("show"):jQuery(this).popover("hide"),t.stopPropagation(),t.preventDefault()}),jQuery(document).on("click",function(t){var e=jQuery(t.target);e.data&&"undefined"==typeof e.data("original-title")&&!jQuery(t.target).parents().is(".popover.in")&&jQuery("[data-original-title]").popover("hide")})}),window.compileJS=u,window.compileTS=p;var R=!1;class V{constructor(e,t,n,s="",r="/module.ts",o=!1){function l(){if(a.isScriptRunner()){var e=jQuery("#yln-standalone-editor > .navbar-default").height();jQuery("#yln-standalone-editor > .workspace-area").css({top:e})}}function p(){u=L,this.editor&&this.editor.layout(),l()}this.isReadonly=o,this.breakPoints=[],this.existingBreakPoints=[],this.initialModelVersion=-1,this.lastModelVersion=-1,this.gotoDefLine=-1;let d=a.getCurrentSI();window.currentSI=d,s||(s=m("Welcome to ServiceNow Developement IDE! \uD83D\uDE4F"),!D()&&!a.isSeismicComponent()&&(window.recordConfig.isES6?s=d.isTypescript()?i.SAMPLE_TS_CONTENT:i.SAMPLE_JS_CONTENT:s=i.SAMPLE_STANDARD_SI_CONTENT)),0==d.tsscript.length&&D()&&!o&&d.updateTSScript(s),"function"==typeof Array.prototype.include&&(Array.prototype.include=void 0),this.model=monaco.editor.createModel(s,n,monaco.Uri.file(r)),this.model.updateOptions({trimAutoWhitespace:!0,tabSize:4,insertSpaces:!1}),this.initialModelVersion=this.model.getAlternativeVersionId(),this.modelVersion=this.model.getAlternativeVersionId();let c=a.getCurrentSI().isNew();this.editor=monaco.editor.create(e,{model:this.model,language:n,renderWhitespace:o?"none":"all",fontSize:14,formatOnType:!0,formatOnPaste:!0,glyphMargin:!c||window.recordConfig.breakpoints,readOnly:o,renderIndentGuides:!0,lineNumbersMinChars:2,suggestSelection:"recentlyUsed",scrollBeyondLastLine:!1,lightbulb:{enabled:!0},minimap:{enabled:!1},scrollbar:{useShadows:!1,verticalHasArrows:!1,horizontalHasArrows:!1,vertical:"visible",horizontal:"visible",verticalScrollbarSize:7,horizontalScrollbarSize:7,arrowSize:30}},{openerService:a.gotoDefintionService});var u=L;window.addEventListener("resize",()=>{u!=L&&window.clearTimeout(u),u=window.setTimeout(p.bind(this),2000)}),l()}onBreakpoint(e,t){a.isServiceNow()&&!D()?this.toggleBreakPointInServer(e):this.toggleBreakPoint([e])}loadBreakPointsFromServer(e){if(!a.isServiceNow())return;let t=a.getCurrentSI();if(t.canPlaceBreakPoints()){const e={url:"/api/now/js/debugger/scripts",method:"GET",headers:{"X-UserToken":window.g_ck}};jQuery.ajax(e).done(e=>{if(e&&"object"==typeof e){const n=t.sys_class_name+"."+t.sys_id+".script";var i=e.result[n];this.jsBreakPointsState=i,i&&(!i.debugpoints&&(i.debugpoints={BREAKPOINT:{}}),!i.debugpoints.BREAKPOINT&&(i.debugpoints.BREAKPOINT={}),this.updateBreakPoints(i))}})}}updateBreakPoints(e){var t=[];t=Object.keys(e.debugpoints.BREAKPOINT).map(e=>parseInt(e)),0<t.length&&this.toggleBreakPoint(t)}toggleBreakPointInServer(e,t="",i=!1){if(!a.isServiceNow())return;if(D())return;let n=a.getCurrentSI();const s="/api/now/js/debugger/breakpoint/"+n.sys_class_name+"/"+n.sys_id+"/script/"+e;let r={url:s,contentType:"application/json",method:"POST",headers:{"X-UserToken":window.g_ck}};this.jsBreakPointsState&&(this.jsBreakPointsState.debugpoints.BREAKPOINT&&!this.jsBreakPointsState.debugpoints.BREAKPOINT[e]||0<t.length||i)&&(r.data=JSON.stringify({evaluationString:t})),jQuery.ajax(r).done(()=>{this.loadBreakPointsFromServer(n.sys_class_name+".script")})}toggleBreakPoint(e){if(a.isServiceNow()&&!D())this.breakPoints=e;else{var t=this.breakPoints.indexOf(e[0]);-1==t?this.breakPoints.push(e[0]):this.breakPoints.splice(t,1)}let i=[],n=!1;const s=this.editor.getModel().getLineCount();for(let t of this.breakPoints){if(t>s)continue;const e={range:new monaco.Range(t,1,t,1),options:{glyphMarginClassName:"dbg-breakpoint",stickiness:monaco.editor.TrackedRangeStickiness.NeverGrowsWhenTypingAtEdges}};this.gotoDefLine==t&&(n=!0,e.options.isWholeLine=!0,e.options.className="gotoLine"),i.push(e)}if(-1!=this.gotoDefLine&&this.gotoDefLine<=s&&!n){let e={range:new monaco.Range(this.gotoDefLine,1,this.gotoDefLine,1),options:{isWholeLine:!0,className:"gotoLine"}};i.push(e)}this.existingBreakPoints=this.editor.deltaDecorations(this.existingBreakPoints,i)}updateModelContent(e){this.editor.getModel().setValue(e)}}class U extends V{constructor(e,t,n="",s=!1){super(e,t,i.LangType.javascript,n,i.READONLY_OUTPUT_FILE_NAME,s),this.cb=t}onContentChanged(t){}}class B extends V{constructor(t,n,s=!1,r="",l="",p=!1){function d(t){if(t.target.type!=monaco.editor.MouseTargetType.GUTTER_GLYPH_MARGIN)return;let e=t.target.position.lineNumber;if(!f)y=e;else if(y==e)return;y=e,f=!0;let i=t.event.browserEvent.clientX,n=t.event.browserEvent.clientY,s=S.jsBreakPointsState;S.tsBreakPointState&&(s=S.tsBreakPointState);let a=s&&s.debugpoints.BREAKPOINT&&s.debugpoints.BREAKPOINT[e],r=jQuery("#new-breakpoint-menu"),o="";a&&(o=s.debugpoints.BREAKPOINT[e].evaluationString+"");let l=document.getElementById("ts_editor");if(l){let e=l.getBoundingClientRect();n-=e.top-60,0>n&&(n=0),i+=30}r.find("#breakpoint-line-number").text(e);let p=r.find("#breakpoint-condition");p.attr("data-linenumber",e),p.val(o),r.css({display:"block",transform:`translate(${i}px, ${n}px)`}).addClass("show")}function c(){-1!=h&&(clearTimeout(h),h=-1);f&&(jQuery("#new-breakpoint-menu").removeClass("show").hide(),f=!1)}super(t,n,i.LangType.typescript,r,a.getCurrentModuleName(),!a.canWriteSI()),this.cb=n,this.autoCompile=s,this.compileTriggerTimoutID=L,this.isBreakPointsLoaded=!1,this.editorViewMap={},this.tsBreakPointState={debugpoints:{BREAKPOINT:{}}},this.tsFileIndex=1,this.jsFileIndex=1;let u=a.getCurrentSI();u.tsscript;this;if(D()){const t=e(this.model.uri);this.createTab(t,!0),u.setDirtyState(!0),this.selectTab(t),a.isSeismicComponent()&&window.recordConfig.snippets.push({label:"Seismic",doc:"Creates seismic component template",text:i.SAMPLE_SEISMIC_CONTENT});let n=[];for(var g of window.recordConfig.snippets)n.push({range:void 0,label:"yln_"+g.label,kind:monaco.languages.CompletionItemKind.Snippet,documentation:g.doc,insertTextRules:monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,insertText:g.text});0<n.length&&monaco.languages.registerCompletionItemProvider("typescript",{provideCompletionItems:()=>({suggestions:n})}),this.editor.addAction({id:"Run",label:"Run",contextMenuGroupId:"modification",contextMenuOrder:3.5,keybindings:[monaco.KeyMod.CtrlCmd|monaco.KeyCode.KEY_R],run(e){return document.getElementById(i.EL_SCRIPT_RUNNER).click(),null}})}else a.isServiceNow()&&!u.isNew()&&this.editor.addAction({id:"Save",label:"Save",contextMenuGroupId:"modification",contextMenuOrder:2.5,keybindings:[monaco.KeyMod.CtrlCmd|monaco.KeyCode.KEY_S],run:function(){q.saveSI(null)}});this.editor.addAction({id:"FielOpen",label:"FileOpen",keybindings:[monaco.KeyMod.CtrlCmd|monaco.KeyCode.KEY_P],contextMenuGroupId:"navigation",contextMenuOrder:1.5,run:this.openFileSelector.bind(this)});let m=L,f=!1,y=0,h=-1,S=this;this.isReadonly||(this.editor.onDidChangeModel(()=>{this.dispatchCompilation()}),this.editor.onDidChangeModelContent(t=>{v++;const e=this.editor.getModel().uri.path;e.endsWith("css")||e.endsWith("html")||(u.setDirtyState(!0),u.updateTSScript(this.editor.getModel().getValue()),m!=L&&clearTimeout(m),m=window.setTimeout(()=>{m=L,this.onContentChanged(t)},a.isSeismicComponent()?2e3:5e3))}),jQuery(document).on("keyup",t=>{27==t.keyCode&&c()}),jQuery("#ts_editor_container").on("keyup","#breakpoint-condition",t=>{if(27==t.keyCode)return void c();if(13==t.keyCode){let e=jQuery(t.target),i=parseInt(e.attr("data-linenumber")),n=e.val();this.onBreakpoint(i,1,n,!0),c()}}),(!u.isNew()||!!window.recordConfig.breakpoints)&&(this.editor.onMouseDown(t=>{t.target.type==monaco.editor.MouseTargetType.GUTTER_GLYPH_MARGIN&&t.event.leftButton&&(u.isUpToDate()&&u.canPlaceBreakPoints()||!!window.recordConfig.breakpoints)&&this.onBreakpoint(t.target.position.lineNumber,1)}),!D()&&(this.editor.onContextMenu(t=>{d(t)}),this.editor.onMouseMove(t=>t.target.type==monaco.editor.MouseTargetType.GUTTER_GLYPH_MARGIN?f?void d(t):-1==h?void(h=window.setTimeout(()=>{d(t),h=-1},500)):void 0:void(h-1&&(clearTimeout(h),h=-1)))))),this.editor.onDidFocusEditorText(()=>{console.log("focus to editor");-1==this.gotoDefLine||(this.gotoDefLine=-1,this.toggleBreakPoint(this.breakPoints))}),setTimeout(()=>{let e=0;window.recordConfig.gotoLine&&(e=parseInt(window.recordConfig.gotoLine)||0,e&&(this.gotoDefLine=e,this.editor.revealPositionInCenter({lineNumber:e,column:0}),this.toggleBreakPoint(this.breakPoints)))},10),D()?a.isSeismicComponent()&&(o.default.jsx=monaco.languages.typescript.JsxEmit.React,o.default.inlineSourceMap=!0,o.default.inlineSources=!0):o.default.declaration=window.recordConfig.isES6,monaco.languages.typescript.typescriptDefaults.setCompilerOptions(o.default),setTimeout(()=>{this.restorePreviousSessionTabs()},60),setTimeout(()=>this.triggerCompilation(),1e3)}setJSInstance(e){this.jsInstance=e}updateReadonlyModelContent(e){this.jsInstance&&this.jsInstance.updateModelContent(e)}saveToLocalStorage(){if(!a.isScriptRunner())return;const t={};monaco.editor.getModels().forEach(n=>{const s=e(n.uri);s.endsWith(i.READONLY_OUTPUT_FILE_NAME)||(t[s]={source:n.getValue(),active:n===this.editor.getModel()})}),localStorage.setItem(P,JSON.stringify(t))}getPreviousSessionState(){const e={},t=localStorage.getItem(P);if("string"==typeof t&&0<t.length)try{const i=JSON.parse(t);for(const t in i)e[t]=i[t]}catch(t){}return e}restorePreviousSessionTabs(){if(!a.isScriptRunner())return;const t=new Map;monaco.editor.getModels().forEach(i=>{t.set(e(i.uri),i)});const n=this.getPreviousSessionState(),s=Object.keys(n);let r="";for(const e of s){let s=null,o=n[e];o=o||{source:i.SAMPLE_JS_CONTENT},("string"!=typeof o.source||0==o.source.length)&&(o.source=a.isSeismicComponent()?i.SAMPLE_SEISMIC_CONTENT:i.SAMPLE_JS_CONTENT),t.has(e)?(s=t.get(e),s.setValue(o.source)):(s=monaco.editor.createModel(o.source,i.LangType.typescript,monaco.Uri.file(e)),this.createTab(e,!1,!!o.active)),0!==r.length||!o.active||(r=e)}this.selectFile(r),v=0}openFileSelector(){if(n.FileSearch.isActive())return null;var e=new n.FileSearch(this.editor,e=>{var t="./?sys_id="+e.sysId;a.isServiceNow()&&(t="./sys_script_include.do?sys_id="+e.sysId),window.open(t)});e.open()}createTab(e,t=!1,i=!0){const n=e.replace(".","_"),s=`${n} clickable ${i?"active":""} ${t?"home":""}`;let a=`<i class="glyphicon glyphicon-remove close-icon" onclick="javascript: settings.onRemoveTab('${e}')"></i>`;t&&(a="");var r=`<li class= '${s}' onclick='javascript: settings.onSelectTab("${e}")'>
+			</div>`;return p}jQuery("#compiler-settings").popover({html:!0,trigger:"manual",content:function(){return e()},title:"Compiler Settings"}).click(function(t){0==jQuery("#compiler-settings-container > .popover").length?jQuery(this).popover("show"):jQuery(this).popover("hide"),t.stopPropagation(),t.preventDefault()}),jQuery(document).on("click",function(t){var e=jQuery(t.target);e.data&&"undefined"==typeof e.data("original-title")&&!jQuery(t.target).parents().is(".popover.in")&&jQuery("[data-original-title]").popover("hide")})}),window.compileJS=u,window.compileTS=p;var R=!1;class V{constructor(e,t,n,s="",r="/module.ts",o=!1){function l(){if(a.isScriptRunner()){var e=jQuery("#yln-standalone-editor > .navbar-default").height();jQuery("#yln-standalone-editor > .workspace-area").css({top:e})}}function p(){u=L,this.editor&&this.editor.layout(),l()}this.isReadonly=o,this.breakPoints=[],this.existingBreakPoints=[],this.initialModelVersion=-1,this.lastModelVersion=-1,this.gotoDefLine=-1;let d=a.getCurrentSI();window.currentSI=d,s||(s=m("Welcome to ServiceNow Developement IDE! \uD83D\uDE4F"),!D()&&!a.isSeismicComponent()&&(window.recordConfig.isES6?s=d.isTypescript()?i.SAMPLE_TS_CONTENT:i.SAMPLE_JS_CONTENT:s=i.SAMPLE_STANDARD_SI_CONTENT)),0==d.tsscript.length&&D()&&!o&&d.updateTSScript(s),"function"==typeof Array.prototype.include&&(Array.prototype.include=void 0),this.model=monaco.editor.createModel(s,n,monaco.Uri.file(r)),this.model.updateOptions({trimAutoWhitespace:!0,tabSize:4,insertSpaces:!1}),this.initialModelVersion=this.model.getAlternativeVersionId(),this.modelVersion=this.model.getAlternativeVersionId();let c=a.getCurrentSI().isNew();this.editor=monaco.editor.create(e,{model:this.model,language:n,renderWhitespace:o?"none":"all",fontSize:14,formatOnType:!0,formatOnPaste:!0,glyphMargin:!c||window.recordConfig.breakpoints,readOnly:o,renderIndentGuides:!0,lineNumbersMinChars:2,suggestSelection:"recentlyUsed",scrollBeyondLastLine:!1,lightbulb:{enabled:!0},minimap:{enabled:!1},scrollbar:{useShadows:!1,verticalHasArrows:!1,horizontalHasArrows:!1,vertical:"visible",horizontal:"visible",verticalScrollbarSize:7,horizontalScrollbarSize:7,arrowSize:30}},{openerService:a.gotoDefintionService});var u=L;window.addEventListener("resize",()=>{u!=L&&window.clearTimeout(u),u=window.setTimeout(p.bind(this),2000)}),l()}onBreakpoint(e,t){a.isServiceNow()&&!D()?this.toggleBreakPointInServer(e):this.toggleBreakPoint([e])}loadBreakPointsFromServer(e){if(!a.isServiceNow())return;let t=a.getCurrentSI();if(t.canPlaceBreakPoints()){const e={url:"/api/now/js/debugger/scripts",method:"GET",headers:{"X-UserToken":window.g_ck}};jQuery.ajax(e).done(e=>{if(e&&"object"==typeof e){const n=t.sys_class_name+"."+t.sys_id+".script";var i=e.result[n];this.jsBreakPointsState=i,i&&(!i.debugpoints&&(i.debugpoints={BREAKPOINT:{}}),!i.debugpoints.BREAKPOINT&&(i.debugpoints.BREAKPOINT={}),this.updateBreakPoints(i))}})}}updateBreakPoints(e){var t=[];t=Object.keys(e.debugpoints.BREAKPOINT).map(e=>parseInt(e)),0<t.length&&this.toggleBreakPoint(t)}toggleBreakPointInServer(e,t="",i=!1){if(!a.isServiceNow())return;if(D())return;let n=a.getCurrentSI();const s="/api/now/js/debugger/breakpoint/"+n.sys_class_name+"/"+n.sys_id+"/script/"+e;let r={url:s,contentType:"application/json",method:"POST",headers:{"X-UserToken":window.g_ck}};this.jsBreakPointsState&&(this.jsBreakPointsState.debugpoints.BREAKPOINT&&!this.jsBreakPointsState.debugpoints.BREAKPOINT[e]||0<t.length||i)&&(r.data=JSON.stringify({evaluationString:t})),jQuery.ajax(r).done(()=>{this.loadBreakPointsFromServer(n.sys_class_name+".script")})}toggleBreakPoint(e){if(a.isServiceNow()&&!D())this.breakPoints=e;else{var t=this.breakPoints.indexOf(e[0]);-1==t?this.breakPoints.push(e[0]):this.breakPoints.splice(t,1)}let i=[],n=!1;const s=this.editor.getModel().getLineCount();for(let t of this.breakPoints){if(t>s)continue;const e={range:new monaco.Range(t,1,t,1),options:{glyphMarginClassName:"dbg-breakpoint",stickiness:monaco.editor.TrackedRangeStickiness.NeverGrowsWhenTypingAtEdges}};this.gotoDefLine==t&&(n=!0,e.options.isWholeLine=!0,e.options.className="gotoLine"),i.push(e)}if(-1!=this.gotoDefLine&&this.gotoDefLine<=s&&!n){let e={range:new monaco.Range(this.gotoDefLine,1,this.gotoDefLine,1),options:{isWholeLine:!0,className:"gotoLine"}};i.push(e)}this.existingBreakPoints=this.editor.deltaDecorations(this.existingBreakPoints,i)}updateModelContent(e){this.editor.getModel().setValue(e)}}class U extends V{constructor(e,t,n="",s=!1){super(e,t,i.LangType.javascript,n,i.READONLY_OUTPUT_FILE_NAME,s),this.cb=t}onContentChanged(t){}}class B extends V{constructor(t,n,s=!1,r="",l="",p=!1){function d(t){if(t.target.type!=monaco.editor.MouseTargetType.GUTTER_GLYPH_MARGIN)return;let e=t.target.position.lineNumber;if(!f)y=e;else if(y==e)return;y=e,f=!0;let i=t.event.browserEvent.clientX,n=t.event.browserEvent.clientY,s=S.jsBreakPointsState;S.tsBreakPointState&&(s=S.tsBreakPointState);let a=s&&s.debugpoints.BREAKPOINT&&s.debugpoints.BREAKPOINT[e],r=jQuery("#new-breakpoint-menu"),o="";a&&(o=s.debugpoints.BREAKPOINT[e].evaluationString+"");let l=document.getElementById("ts_editor");if(l){let e=l.getBoundingClientRect();n-=e.top-60,0>n&&(n=0),i+=30}r.find("#breakpoint-line-number").text(e);let p=r.find("#breakpoint-condition");p.attr("data-linenumber",e),p.val(o),r.css({display:"block",transform:`translate(${i}px, ${n}px)`}).addClass("show")}function c(){-1!=h&&(clearTimeout(h),h=-1);f&&(jQuery("#new-breakpoint-menu").removeClass("show").hide(),f=!1)}super(t,n,i.LangType.typescript,r,a.getCurrentModuleName(),!a.canWriteSI()),this.cb=n,this.autoCompile=s,this.compileTriggerTimoutID=L,this.isBreakPointsLoaded=!1,this.editorViewMap={},this.tsBreakPointState={debugpoints:{BREAKPOINT:{}}},this.tsFileIndex=1,this.jsFileIndex=1;let u=a.getCurrentSI();u.tsscript;this;if(D()){const t=e(this.model.uri);this.createTab(t,!0),u.setDirtyState(!0),this.selectTab(t),a.isSeismicComponent()&&window.recordConfig.snippets.push({label:"Seismic",doc:"Creates seismic component template",text:i.SAMPLE_SEISMIC_CONTENT});let n=[];for(var g of window.recordConfig.snippets)n.push({range:void 0,label:"yln_"+g.label,kind:monaco.languages.CompletionItemKind.Snippet,documentation:g.doc,insertTextRules:monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,insertText:g.text});0<n.length&&monaco.languages.registerCompletionItemProvider("typescript",{provideCompletionItems:()=>({suggestions:n})}),this.editor.addAction({id:"Run",label:"Run",contextMenuGroupId:"modification",contextMenuOrder:3.5,keybindings:[monaco.KeyMod.CtrlCmd|monaco.KeyCode.KEY_R],run(e){return document.getElementById(i.EL_SCRIPT_RUNNER).click(),null}})}else a.isServiceNow()&&!u.isNew()&&this.editor.addAction({id:"Save",label:"Save",contextMenuGroupId:"modification",contextMenuOrder:2.5,keybindings:[monaco.KeyMod.CtrlCmd|monaco.KeyCode.KEY_S],run:function(){Y.saveSI(null)}});this.editor.addAction({id:"FielOpen",label:"FileOpen",keybindings:[monaco.KeyMod.CtrlCmd|monaco.KeyCode.KEY_P],contextMenuGroupId:"navigation",contextMenuOrder:1.5,run:this.openFileSelector.bind(this)});let m=L,f=!1,y=0,h=-1,S=this;this.isReadonly||(this.editor.onDidChangeModel(()=>{this.dispatchCompilation()}),this.editor.onDidChangeModelContent(t=>{v++;const e=this.editor.getModel().uri.path;e.endsWith("css")||e.endsWith("html")||(u.setDirtyState(!0),u.updateTSScript(this.editor.getModel().getValue()),m!=L&&clearTimeout(m),m=window.setTimeout(()=>{m=L,this.onContentChanged(t)},a.isSeismicComponent()?2e3:5e3))}),jQuery(document).on("keyup",t=>{27==t.keyCode&&c()}),jQuery("#ts_editor_container").on("keyup","#breakpoint-condition",t=>{if(27==t.keyCode)return void c();if(13==t.keyCode){let e=jQuery(t.target),i=parseInt(e.attr("data-linenumber")),n=e.val();this.onBreakpoint(i,1,n,!0),c()}}),(!u.isNew()||!!window.recordConfig.breakpoints)&&(this.editor.onMouseDown(t=>{t.target.type==monaco.editor.MouseTargetType.GUTTER_GLYPH_MARGIN&&t.event.leftButton&&(u.isUpToDate()&&u.canPlaceBreakPoints()||!!window.recordConfig.breakpoints)&&this.onBreakpoint(t.target.position.lineNumber,1)}),!D()&&(this.editor.onContextMenu(t=>{d(t)}),this.editor.onMouseMove(t=>t.target.type==monaco.editor.MouseTargetType.GUTTER_GLYPH_MARGIN?f?void d(t):-1==h?void(h=window.setTimeout(()=>{d(t),h=-1},500)):void 0:void(h-1&&(clearTimeout(h),h=-1)))))),this.editor.onDidFocusEditorText(()=>{console.log("focus to editor");-1==this.gotoDefLine||(this.gotoDefLine=-1,this.toggleBreakPoint(this.breakPoints))}),setTimeout(()=>{let e=0;window.recordConfig.gotoLine&&(e=parseInt(window.recordConfig.gotoLine)||0,e&&(this.gotoDefLine=e,this.editor.revealPositionInCenter({lineNumber:e,column:0}),this.toggleBreakPoint(this.breakPoints)))},10),D()?a.isSeismicComponent()&&(o.default.jsx=monaco.languages.typescript.JsxEmit.React,o.default.inlineSourceMap=!0,o.default.inlineSources=!0):o.default.declaration=window.recordConfig.isES6,monaco.languages.typescript.typescriptDefaults.setCompilerOptions(o.default),setTimeout(()=>{this.restorePreviousSessionTabs()},60),setTimeout(()=>this.triggerCompilation(),1e3)}setJSInstance(e){this.jsInstance=e}updateReadonlyModelContent(e){this.jsInstance&&this.jsInstance.updateModelContent(e)}saveToLocalStorage(){if(!a.isScriptRunner())return;const t={};monaco.editor.getModels().forEach(n=>{const s=e(n.uri);s.endsWith(i.READONLY_OUTPUT_FILE_NAME)||(t[s]={source:n.getValue(),active:n===this.editor.getModel()})}),localStorage.setItem(P,JSON.stringify(t))}getPreviousSessionState(){const e={},t=localStorage.getItem(P);if("string"==typeof t&&0<t.length)try{const i=JSON.parse(t);for(const t in i)e[t]=i[t]}catch(t){}return e}restorePreviousSessionTabs(){if(!a.isScriptRunner())return;const t=new Map;monaco.editor.getModels().forEach(i=>{t.set(e(i.uri),i)});const n=this.getPreviousSessionState(),s=Object.keys(n);let r="";for(const e of s){let s=null,o=n[e];o=o||{source:i.SAMPLE_JS_CONTENT},("string"!=typeof o.source||0==o.source.length)&&(o.source=a.isSeismicComponent()?i.SAMPLE_SEISMIC_CONTENT:i.SAMPLE_JS_CONTENT),t.has(e)?(s=t.get(e),s.setValue(o.source)):(s=monaco.editor.createModel(o.source,i.LangType.typescript,monaco.Uri.file(e)),this.createTab(e,!1,!!o.active)),0!==r.length||!o.active||(r=e)}this.selectFile(r),v=0}openFileSelector(){if(n.FileSearch.isActive())return null;var e=new n.FileSearch(this.editor,e=>{var t="./?sys_id="+e.sysId;a.isServiceNow()&&(t="./sys_script_include.do?sys_id="+e.sysId),window.open(t)});e.open()}createTab(e,t=!1,i=!0){const n=e.replace(".","_"),s=`${n} clickable ${i?"active":""} ${t?"home":""}`;let a=`<i class="glyphicon glyphicon-remove close-icon" onclick="javascript: settings.onRemoveTab('${e}')"></i>`;t&&(a="");var r=`<li class= '${s}' onclick='javascript: settings.onSelectTab("${e}")'>
 				<a href="#">
 					${e}
 					${a}
 				</a>
-			</li>`,o=jQuery("#file-menu-container");i&&o.find(".active").removeClass("active");var l=o.find(".add-file");l.before(r)}removeTab(e){var t=jQuery("#file-menu-container");const i=e.replace(".","_");var n=t.find("."+i);n.remove()}selectTab(e){const t=e.replace(".","_");var i=jQuery(`#file-menu-container`),n=i.find(".active");n.hasClass(t)||(n.removeClass("active"),i.find(`.${t}`).addClass("active"))}addFile(e=!0){let t=`Point${e?this.tsFileIndex+".ts":this.jsFileIndex+".js"}`;a.isSeismicComponent()&&(t+="x");let n=prompt(`Enter your file name e.g ${t}`,t);if("string"==typeof n&&0!==n.length){let o=n.split(".");if(2!==o.length)return void alert("wrong file name, file name should have an valid extension");if(a.isSeismicComponent()&&!/(\.(ts|js)x$)/.test(n))return void alert(`you can only add '.jsx' or '.tsx' files`);const l=o[1];let p=t.split(".");(t===n||o[0]===p[0])&&(e||"ts"===l?this.tsFileIndex++:this.jsFileIndex++);var s=monaco.editor.getModels().find(e=>e.uri.path==="/"+n);if(s)return void alert("Already this file is in workspace");this.createTab(n);var r=m(`"${n}" user 🙏`);let d=monaco.editor.createModel(r,i.LangType.typescript,monaco.Uri.file(n));this.editorViewMap[this.editor.getModel().uri.path]=this.editor.saveViewState(),this.editor.setModel(d);const c=a.getCurrentSI();c.updateScriptType(n),c.updateTSScript(d.getValue()),c.setDirtyState(!0);const u=jQuery("#scope-select").val();c.updateAPIName(u+"."+n),this.dispatchCompilation()}}removeFile(t){let i=monaco.editor.getModels().find(e=>e.uri.path==="/"+t);if(i){const s=e(i.uri).replace(".","_");var n=jQuery(`#file-menu-container`);n.find(".active").hasClass(s)&&this.selectFile(e(this.model.uri)),this.removeTab(t),delete this.editorViewMap[i.uri.path],i.dispose(),this.saveToLocalStorage()}}selectFile(e){let t=monaco.editor.getModels().find(t=>t.uri.path==="/"+e);if(t){let i=this.editor.saveViewState();if(this.editorViewMap[this.editor.getModel().uri.path]=i,this.editor.setModel(t),this.editorViewMap[t.uri.path]&&this.editor.restoreViewState(this.editorViewMap[t.uri.path]),this.selectTab(e),!(a.isSeismicComponent()&&/(\.css|html)$/.test(e))){const i=a.getCurrentSI();i.updateScriptType(e),i.updateTSScript(t.getValue()),i.setDirtyState(!0);const n=jQuery("#scope-select").val();i.updateAPIName(n+"."+e),this.dispatchCompilation()}}}updateBreakPoints(e){var t;if(!D()&&null!==(t=null===e||void 0===e?void 0:e.debugpoints)&&void 0!==t&&t.BREAKPOINT){var i=Object.keys(e.debugpoints.BREAKPOINT).map(e=>parseInt(e));this.convertLineNoFromJSToTS(i).then(e=>{this.toggleBreakPoint(e)})}}onBreakpoint(e,t,i="",n=!1){a.getCurrentSI();this.convertLineNoFromTStoJS([e]).then(e=>{this.jsInstance&&this.jsInstance.toggleBreakPoint(e),!a.isServiceNow()||D()?this.convertLineNoFromJSToTS(e).then(e=>{this.toggleBreakPoint(e)},e=>{console.log(e)}):this.toggleBreakPointInServer(e[0],i,n)},e=>{console.log(e)})}canCurrentModelGetTranspiled(){const e=this.editor.getModel().uri.path;return!/(css|html|scss|saas)$/.test(e)}dispatchCompilation(){if(this.canCurrentModelGetTranspiled()){let i=a.getCurrentSI();i.setDirtyState(!0),i.updateTSScript(this.editor.getModel().getValue()),this.compileTriggerTimoutID!=L&&(clearTimeout(this.compileTriggerTimoutID),this.compileTriggerTimoutID=L);var e="undefined"!=typeof ts,t="undefined"!=typeof monaco;e&&t&&(this.compileTriggerTimoutID=window.setTimeout(this.triggerCompilation.bind(this),5000))}}onContentChanged(t){this.dispatchCompilation()}triggerCompilation(){return __awaiter(this,void 0,void 0,function*(){if(!this.canCurrentModelGetTranspiled())return;const e=a.getCurrentSI();this.compileTriggerTimoutID=L;let t=null;try{t=yield p()}catch(t){return void console.error(t)}if(e.updateScript(t.js),e.setDirtyState(!1),e.updateDeclaration(t.declaration),e.updateSourcemap(t.sourceMap),this.sourcemapConsumer&&this.sourcemapConsumer.destroy(),this.sourcemapConsumer=void 0,this.tsOuput=t,e.isJavascript()){t.linterErrors=t.linterErrors||[];var i=t.linterErrors.map(e=>({startLineNumber:e.line,endLineNumber:e.endLine||e.line,startColumn:e.column,endColumn:e.endColumn||e.column,message:`${e.message} (${e.ruleId})`,severity:monaco.MarkerSeverity.Warning,source:"ESLint"}));monaco.editor.setModelMarkers(this.editor.getModel(),"eslint",i)}if(this.sourcemapConsumer=yield this.applySourcemap(),!!this.isBreakPointsLoaded)this.updateBreakPoints(this.jsBreakPointsState);else if(this.isBreakPointsLoaded=!0,a.getCurrentSI().canPlaceBreakPoints()&&!D()&&this.loadBreakPointsFromServer("sys_script_include.script"),a.isServiceNow()&&!e.isNew()){const t=s.default(),i="script_id="+e.sys_id;let n=-1;t.initChannel("sys_js_breakpoint",i).subscribe(()=>{-1!=n&&clearTimeout(n),n=self.setTimeout(()=>{this.loadBreakPointsFromServer("sys_script_include.script")},5e3)})}this.cb(t)})}convertLineNoFromTStoJS(e){if(!window.recordConfig.isES6)return Promise.resolve(e);if(!this.sourcemapConsumer)return Promise.resolve(e);let t=[];var i=a.getCurrentSI();let n="point.js";i.isTypescript()&&(n="point.ts");for(let i of e){let e=this.sourcemapConsumer.generatedPositionFor({source:n,line:i,column:1,bias:sourceMap.SourceMapConsumer.LEAST_UPPER_BOUND});e&&e.line&&t.push(e.line)}return Promise.resolve(t)}convertLineNoFromJSToTS(e){if(!window.recordConfig.isES6)return Promise.resolve(e);if(!this.sourcemapConsumer)return this.tsBreakPointState=this.jsBreakPointsState,Promise.resolve(e);let t=[],i={debugpoints:{BREAKPOINT:{}},key:this.jsBreakPointsState&&this.jsBreakPointsState.key};for(let n of e){let e=this.sourcemapConsumer.originalPositionFor({line:n,column:1,bias:sourceMap.SourceMapConsumer.LEAST_UPPER_BOUND});e&&e.line&&(i.debugpoints.BREAKPOINT[e.line]=this.jsBreakPointsState&&this.jsBreakPointsState.debugpoints.BREAKPOINT&&this.jsBreakPointsState.debugpoints.BREAKPOINT[n],t.push(e.line))}return this.tsBreakPointState=i,Promise.resolve(t)}applySourcemap(){if("undefined"==typeof sourceMap)return Promise.resolve(void 0);if(!this.tsOuput.sourceMap)return Promise.resolve(void 0);var e=new sourceMap.SourceMapConsumer(JSON.parse(this.tsOuput.sourceMap));return e}}const J=i.CSS_FILE_NAME,W=i.HTML_FILE_NAME,K=i.TSX_FILE_NAME;class G extends B{constructor(e,t,i=!1,n="",s="",r=!1){super(e,t,i,n,s,r),this.jsxUpdateTimerId=-1,this.registerForRun(),a.loadJSXIntellisense(),this.addSeismicCSSAndHTML()}openFileSelector(){var e=jQuery("#fiddle_select");const t=()=>{e.off("hidden.bs.modal",t)};e.on("show",()=>{$(".modal-body",this).css({width:"auto",height:"auto","max-height":"100%"})}),e.on("hidden.bs.modal",t),window.changeFiddle=function(t){e.modal("hide");const i=new URL(location.href),n=i.searchParams;n.set("fid",t),location.href=i.toString()},e.modal()}getPreviousSessionState(){return window.recordConfig.uxfRecord.payload}addSeismicCSSAndHTML(){const e=window.recordConfig.uxfRecord.payload;this.cssModel=monaco.editor.createModel(e[J].source,i.LangType.css,monaco.Uri.file(J)),this.htmlModel=monaco.editor.createModel(e[W].source,i.LangType.html,monaco.Uri.file(W)),this.createTab(J,!0,!1),this.createTab(W,!0,!1)}share(){return __awaiter(this,void 0,void 0,function*(){const t={[W]:{source:this.htmlModel.getValue(),active:this.htmlModel===this.editor.getModel()},[J]:{source:this.cssModel.getValue(),active:this.cssModel===this.editor.getModel()}};let n=monaco.editor.getModels();const s=window.recordConfig.uxfRecord;n=n.filter(e=>0<e.uri.path.search(/((js|ts)x)$/g)),n.forEach((r,o)=>__awaiter(this,void 0,void 0,function*(){const p=e(r.uri),d=yield monaco.languages.typescript.getTypeScriptWorker(),c=yield d(r.uri),u=yield c.getEmitOutput(r.uri.toString());if(t[p]={source:r.getValue(),transpiledValue:u.outputFiles[0].text,active:r===this.editor.getModel()},o!==n.length-1)return;let g=i.FIDDLE_TABLE_URL;const m=a.isNewFiddle(),f={payload:JSON.stringify(t)},y=prompt("Enter short description for fiddle",s.short_description?s.short_description:"Super feature demo");if(y){f.short_description=y,m||(g+=`/${s.sys_id}`);const e=document.getElementById(i.EL_SCRIPT_RUNNER);e.innerText="Updating ...";let n=yield l.CodeNowUtils.snFetch(g,{body:JSON.stringify(f),method:a.isNewFiddle()?"POST":"PATCH"},!0);const r=n.result;for(const i in Object.assign(s,r),s.payload=JSON.parse(s.payload),e.innerText="Update",t)delete t[i].transpiledValue;if(localStorage.setItem(P,JSON.stringify(t)),v=0,console.log(r),m){const e=new URL(location.href);e.searchParams.set("fid",r.sys_id),history.pushState({sysId:r.sys_id},document.title,e.href)}}}))})}registerForRun(){var e=document.getElementById(i.EL_SCRIPT_RUNNER);e.innerText=a.isNewFiddle()?"Share":"Update",e.addEventListener("click",()=>{this.share()})}onContentChanged(t){return this.handleJSXChanges()}triggerCompilation(){return a.isSeismicComponent()?Promise.resolve(this.handleJSXChanges()):Promise.resolve()}renderOutput(){let e=this.jsxValue,t=this.cssModel.getValue(),n=this.htmlModel.getValue();if(window.getComponent=function(){return{jsx:e,style:t,html:n}},jQuery("a[href=\"#script-output\"]").tab("show"),this.outputWindow)return void this.outputWindow.postMessage({cmd:"codenowSeismicUpdated"},location.href);var s=jQuery("#"+i.EL_SCRIPT_OUTPUT),r=document.createElement("iframe");r.id="seismic_host",r.style.width="100%",r.style.height="100%",r.style.border="1px solid darkgray",r.src=a.isServiceNow()?`seismic_playground.do?sysparm_nostack=true&cache=${Date.now()}`:`./PluginLoader/index.html?cache=${Date.now()}`,r.onload=()=>{this.outputWindow=r.contentWindow},s.html(r)}handleJSXChanges(){return __awaiter(this,void 0,void 0,function*(){const e=this.editor.getModel();if(!this.canCurrentModelGetTranspiled())return;const t=yield monaco.languages.typescript.getTypeScriptWorker(),i=yield t(e.uri),n=yield i.getEmitOutput(e.uri.toString());if(!n.emitSkipped){const e=n.outputFiles.find(e=>/(\.js)$/.test(e.name));this.jsxValue=e.text,this.updateReadonlyModelContent(e.text),-1!==this.jsxUpdateTimerId&&(window.clearTimeout(this.jsxUpdateTimerId),this.jsxUpdateTimerId=-1),this.jsxUpdateTimerId=setTimeout(()=>{this.renderOutput()},1e3)}})}}let z=document.getElementById(i.EL_THEME_SELECT);var H=!0;let Y=-1;var q={startDebugger:function(){var e;return"undefined"==typeof window.top.launchScriptDebugger?window.top.opener&&window.top.opener.top.launchScriptDebugger&&(e=window.top.opener.top.launchScriptDebugger):e=window.top.launchScriptDebugger,"undefined"!=typeof e&&"undefined"!=typeof g_form?void e(g_form.getUniqueValue(),g_form.getTableName()):"undefined"==typeof g_form?void I():void I(g_form.getUniqueValue(),g_form.getTableName())},saveSI:function(e){-1==Y&&e&&(Y=self.setTimeout(()=>{Y=-1},60000),N("You can use ` CMD/CTRL + s ` keyboard shorcut to save the script. It's pretty handy!","info",1e4)),e||(e=document.getElementById("codenow.savesi"));var t=jQuery(e),i=t.find(">i");return t.attr("disabled","disabled"),i.removeClass("hide"),p(!0).then(e=>{let n=r.ClientSIRecordData.getClassConstructorFormat(a.getCurrentSI()),s={js:n,decl:e.backEndDecl,esNext:e.tsScript,sourceMap:e.sourceMap};var o={contentType:"application/json",data:JSON.stringify(s),headers:{X_UserToken:window.g_ck},method:"POST",type:"POST",url:"/api/now/typescript_helpers/UpdateSI"};jQuery.ajax(o).done(()=>{t.removeAttr("disabled"),i.addClass("hide"),v=0,N("Updated successfully","info")}).fail(()=>{x(t,i,jQuery("#fail_modal"))})},e=>{N(e,"error"),t.removeAttr("disabled"),i.addClass("hide")}),!1},toggleLinter:function(){o.default.linter=!o.default.linter,monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({noSemanticValidation:o.default.linter,noSyntaxValidation:o.default.linter}),A()},updateAllSIDeclaration:function(e,t=!1){function i(e){if(0==e.length)return void x(n,s,jQuery("#success_modal"));if(a.isServiceNow()){let i={url:"/api/now/typescript_helpers/updateMultiSIDecl",type:"POST",data:e,headers:{"X-UserToken":window.g_ck},contentType:"application/json",success:function(e){console.log(e)}};t&&(i.url="/api/now/table/ts_definition/b4c6d3500ba213008e64aabcb4673a6c",i.type="put",i.data=JSON.stringify({json_value:e})),jQuery.ajax(i).done(e=>{x(n,s,jQuery("#success_modal")),console.log(e)}).fail(()=>{x(n,s,jQuery("#fail_modal"))})}}var n=jQuery(e),s=n.find(">i");n.attr("disabled","disabled"),s.removeClass("hide");let o="";o=t?"/api/now/table/sys_script_include?&sysparm_query=active=true":"/api/now/typescript_helpers/getOutOfSyncSI",a.isServiceNow()||(o="/metadata/sys_script_include.json");var l=new a.RecordFetcher(o);l.fetch().then(e=>{var t=jQuery("#UpdateSI");if(0==e.length)return x(n,s,jQuery("#success_modal")),void t.text("Update Scripts");if(!window.recordConfig.useTypeChecker){var o=r.parseSI(e,esprima),l=JSON.stringify({api:JSON.parse(o.getFormat(!0))}),p=o.getParsingErrors(),d=o.getEmptyDeclarations();p.forEach(e=>{console.error("Parsing error for => "+e)}),d.forEach(e=>{console.error("empty declaration for "+e)}),i(l)}else{window.onSIParserProgressEvent=function(e){t.text("Updating ... "+e.percentage+" %")};let s=a.generateTypeDeclarations(e);s.then(e=>{var n=JSON.stringify({api:e.formatterResult});i(n),console.log("type checker parser results came "),e.errors&&0<e.errors.length&&e.errors.forEach(e=>{console.log("parsing error "+e)}),t.text("Update Scripts")},()=>{n.removeAttr("disabled"),t.text("Try again")}),console.log("parsing done")}},e=>{alert("unable to fetch the script include with error "+e)})},updateTableDeclarations:function(e){var t=jQuery(e),i=t.find(">i");t.attr("disabled","disabled"),i.removeClass("hide");jQuery.ajax({url:"/api/now/typescript_helpers/updatetabledefinition",type:"post",data:JSON.stringify({}),headers:{"X-UserToken":window.g_ck},contentType:"application/json",success:function(e){console.log(e)}}).done(e=>{x(t,i,jQuery("#success_modal")),console.log(e)}).fail(()=>{x(t,i,jQuery("#fail_modal"))})},openNewWindow:function(){window.open(location.href)},updateOnSave:function(){return window.recordConfig.isES6?("undefined"!=typeof g_form&&g_form.addErrorMessage("With ES6, save is not possible use \"CMD + s\" keyboard short cut","error_message_es6_save"),!1):g(!1,window.recordConfig.useTypeChecker,!0,function(){let e=window.recordConfig;e.isNewRecord?gsftSubmit(void 0,void 0,"sysverb_insert"):gsftSubmit(void 0,void 0,g_form.getActionName())},function(){})},updateDecl:function(e,t){var i=jQuery(e),n=i.find(">i");return i.attr("disabled","disabled"),n.removeClass("hide"),g(t,!0,!1,function(){x(i,n,jQuery("#success_modal"))},function(){x(i,n,jQuery("#fail_modal"))})},onCompilerSettingsChange(e){var t=e.closest("li");let i=t.dataset.key;i&&(O[i]=!O[i],O[i]?jQuery(t).find(".state-icon").removeClass("glyphicon-unchecked").addClass("glyphicon-check"):jQuery(t).find(".state-icon").removeClass("glyphicon-check").addClass("glyphicon-unchecked"),A())},onTargetChange:function(e,t){let i=parseInt(t);O.target=i,A()},onJSXFactoryChange(e,t){O.jsxFactory=t.trim(),A()},onJSXChange:function(e,t){let i=parseInt(t);return O.jsx=i,a.loadJSXIntellisense(),A()},onAddTab:function(e=!0){w.addFile(e)},onRemoveTab:function(e){w.removeFile(e),console.log(`${e} removed`)},onSelectTab:function(e){w.selectFile(e)},initialize:function(){b()}};return q}Object.defineProperty(t,"__esModule",{value:!0}),i=__importStar(i),s=__importDefault(s),a=__importStar(a),r=__importStar(r),o=__importDefault(o);var c=a.TranspilerOutput;t.initMainEditor=p,a.isMainThread()&&window.recordConfig&&(window.settings=p())});
+			</li>`,o=jQuery("#file-menu-container");i&&o.find(".active").removeClass("active");var l=o.find(".add-file");l.before(r)}removeTab(e){var t=jQuery("#file-menu-container");const i=e.replace(".","_");var n=t.find("."+i);n.remove()}selectTab(e){const t=e.replace(".","_");var i=jQuery(`#file-menu-container`),n=i.find(".active");n.hasClass(t)||(n.removeClass("active"),i.find(`.${t}`).addClass("active"))}addFile(e=!0){let t=`Point${e?this.tsFileIndex+".ts":this.jsFileIndex+".js"}`;a.isSeismicComponent()&&(t+="x");let n=prompt(`Enter your file name e.g ${t}`,t);if("string"==typeof n&&0!==n.length){let o=n.split(".");if(2!==o.length)return void alert("wrong file name, file name should have an valid extension");if(a.isSeismicComponent()&&!/(\.(ts|js)x$)/.test(n))return void alert(`you can only add '.jsx' or '.tsx' files`);const l=o[1];let p=t.split(".");(t===n||o[0]===p[0])&&(e||"ts"===l?this.tsFileIndex++:this.jsFileIndex++);var s=monaco.editor.getModels().find(e=>e.uri.path==="/"+n);if(s)return void alert("Already this file is in workspace");this.createTab(n);var r=m(`"${n}" user 🙏`);let d=monaco.editor.createModel(r,i.LangType.typescript,monaco.Uri.file(n));this.editorViewMap[this.editor.getModel().uri.path]=this.editor.saveViewState(),this.editor.setModel(d);const c=a.getCurrentSI();c.updateScriptType(n),c.updateTSScript(d.getValue()),c.setDirtyState(!0);const u=jQuery("#scope-select").val();c.updateAPIName(u+"."+n),this.dispatchCompilation()}}removeFile(t){let i=monaco.editor.getModels().find(e=>e.uri.path==="/"+t);if(i){const s=e(i.uri).replace(".","_");var n=jQuery(`#file-menu-container`);n.find(".active").hasClass(s)&&this.selectFile(e(this.model.uri)),this.removeTab(t),delete this.editorViewMap[i.uri.path],i.dispose(),this.saveToLocalStorage()}}selectFile(e){let t=monaco.editor.getModels().find(t=>t.uri.path==="/"+e);if(t){let i=this.editor.saveViewState();if(this.editorViewMap[this.editor.getModel().uri.path]=i,this.editor.setModel(t),this.editorViewMap[t.uri.path]&&this.editor.restoreViewState(this.editorViewMap[t.uri.path]),this.selectTab(e),!(a.isSeismicComponent()&&/(\.css|html)$/.test(e))){const i=a.getCurrentSI();i.updateScriptType(e),i.updateTSScript(t.getValue()),i.setDirtyState(!0);const n=jQuery("#scope-select").val();i.updateAPIName(n+"."+e),this.dispatchCompilation()}}}updateBreakPoints(e){var t;if(!D()&&null!==(t=null===e||void 0===e?void 0:e.debugpoints)&&void 0!==t&&t.BREAKPOINT){var i=Object.keys(e.debugpoints.BREAKPOINT).map(e=>parseInt(e));this.convertLineNoFromJSToTS(i).then(e=>{this.toggleBreakPoint(e)})}}onBreakpoint(e,t,i="",n=!1){a.getCurrentSI();this.convertLineNoFromTStoJS([e]).then(e=>{this.jsInstance&&this.jsInstance.toggleBreakPoint(e),!a.isServiceNow()||D()?this.convertLineNoFromJSToTS(e).then(e=>{this.toggleBreakPoint(e)},e=>{console.log(e)}):this.toggleBreakPointInServer(e[0],i,n)},e=>{console.log(e)})}canCurrentModelGetTranspiled(){const e=this.editor.getModel().uri.path;return!/(css|html|scss|saas)$/.test(e)}dispatchCompilation(){if(this.canCurrentModelGetTranspiled()){let i=a.getCurrentSI();i.setDirtyState(!0),i.updateTSScript(this.editor.getModel().getValue()),this.compileTriggerTimoutID!=L&&(clearTimeout(this.compileTriggerTimoutID),this.compileTriggerTimoutID=L);var e="undefined"!=typeof ts,t="undefined"!=typeof monaco;e&&t&&(this.compileTriggerTimoutID=window.setTimeout(this.triggerCompilation.bind(this),5000))}}onContentChanged(t){this.dispatchCompilation()}triggerCompilation(){return __awaiter(this,void 0,void 0,function*(){if(!this.canCurrentModelGetTranspiled())return;const e=a.getCurrentSI();this.compileTriggerTimoutID=L;let t=null;try{t=yield p()}catch(t){return void console.error(t)}if(e.updateScript(t.js),e.setDirtyState(!1),e.updateDeclaration(t.declaration),e.updateSourcemap(t.sourceMap),this.sourcemapConsumer&&this.sourcemapConsumer.destroy(),this.sourcemapConsumer=void 0,this.tsOuput=t,e.isJavascript()){t.linterErrors=t.linterErrors||[];var i=t.linterErrors.map(e=>({startLineNumber:e.line,endLineNumber:e.endLine||e.line,startColumn:e.column,endColumn:e.endColumn||e.column,message:`${e.message} (${e.ruleId})`,severity:monaco.MarkerSeverity.Warning,source:"ESLint"}));monaco.editor.setModelMarkers(this.editor.getModel(),"eslint",i)}if(this.sourcemapConsumer=yield this.applySourcemap(),!!this.isBreakPointsLoaded)this.updateBreakPoints(this.jsBreakPointsState);else if(this.isBreakPointsLoaded=!0,a.getCurrentSI().canPlaceBreakPoints()&&!D()&&this.loadBreakPointsFromServer("sys_script_include.script"),a.isServiceNow()&&!e.isNew()){const t=s.default(),i="script_id="+e.sys_id;let n=-1;t.initChannel("sys_js_breakpoint",i).subscribe(()=>{-1!=n&&clearTimeout(n),n=self.setTimeout(()=>{this.loadBreakPointsFromServer("sys_script_include.script")},5e3)})}this.cb(t)})}convertLineNoFromTStoJS(e){if(!window.recordConfig.isES6)return Promise.resolve(e);if(!this.sourcemapConsumer)return Promise.resolve(e);let t=[];var i=a.getCurrentSI();let n="point.js";i.isTypescript()&&(n="point.ts");for(let i of e){let e=this.sourcemapConsumer.generatedPositionFor({source:n,line:i,column:1,bias:sourceMap.SourceMapConsumer.LEAST_UPPER_BOUND});e&&e.line&&t.push(e.line)}return Promise.resolve(t)}convertLineNoFromJSToTS(e){if(!window.recordConfig.isES6)return Promise.resolve(e);if(!this.sourcemapConsumer)return this.tsBreakPointState=this.jsBreakPointsState,Promise.resolve(e);let t=[],i={debugpoints:{BREAKPOINT:{}},key:this.jsBreakPointsState&&this.jsBreakPointsState.key};for(let n of e){let e=this.sourcemapConsumer.originalPositionFor({line:n,column:1,bias:sourceMap.SourceMapConsumer.LEAST_UPPER_BOUND});e&&e.line&&(i.debugpoints.BREAKPOINT[e.line]=this.jsBreakPointsState&&this.jsBreakPointsState.debugpoints.BREAKPOINT&&this.jsBreakPointsState.debugpoints.BREAKPOINT[n],t.push(e.line))}return this.tsBreakPointState=i,Promise.resolve(t)}applySourcemap(){if("undefined"==typeof sourceMap)return Promise.resolve(void 0);if(!this.tsOuput.sourceMap)return Promise.resolve(void 0);var e=new sourceMap.SourceMapConsumer(JSON.parse(this.tsOuput.sourceMap));return e}}const J=i.CSS_FILE_NAME,W=i.HTML_FILE_NAME,K=i.TSX_FILE_NAME;class G extends B{constructor(e,t,i=!1,n="",s="",r=!1){super(e,t,i,n,s,r),this.jsxUpdateTimerId=-1,this.registerForRun(),a.loadJSXIntellisense(),this.addSeismicCSSAndHTML()}openFileSelector(){var e=jQuery("#fiddle_select");const t=()=>{e.off("hidden.bs.modal",t)};e.on("show",()=>{$(".modal-body",this).css({width:"auto",height:"auto","max-height":"100%"})}),e.on("hidden.bs.modal",t),window.changeFiddle=function(t){e.modal("hide");const i=new URL(location.href),n=i.searchParams;n.set("fid",t),location.href=i.toString()},e.modal()}getPreviousSessionState(){return window.recordConfig.uxfRecord.payload}addSeismicCSSAndHTML(){const e=window.recordConfig.uxfRecord.payload;this.cssModel=monaco.editor.createModel(e[J].source,i.LangType.css,monaco.Uri.file(J)),this.htmlModel=monaco.editor.createModel(e[W].source,i.LangType.html,monaco.Uri.file(W)),this.createTab(J,!0,!1),this.createTab(W,!0,!1)}share(){return __awaiter(this,void 0,void 0,function*(){const t={[W]:{source:this.htmlModel.getValue(),active:this.htmlModel===this.editor.getModel()},[J]:{source:this.cssModel.getValue(),active:this.cssModel===this.editor.getModel()}};let n=monaco.editor.getModels();const s=window.recordConfig.uxfRecord;n=n.filter(e=>0<e.uri.path.search(/((js|ts)x)$/g)),n.forEach((r,o)=>__awaiter(this,void 0,void 0,function*(){const p=e(r.uri),d=yield monaco.languages.typescript.getTypeScriptWorker(),c=yield d(r.uri),u=yield c.getEmitOutput(r.uri.toString());if(t[p]={source:r.getValue(),transpiledValue:u.outputFiles[0].text,active:r===this.editor.getModel()},o!==n.length-1)return;let g=i.FIDDLE_TABLE_URL;const m=a.isNewFiddle(),f={payload:JSON.stringify(t)},y=prompt("Enter short description for fiddle",s.short_description?s.short_description:"Super feature demo");if(y){f.short_description=y,m||(g+=`/${s.sys_id}`);const e=document.getElementById(i.EL_SCRIPT_RUNNER);e.innerText="Updating ...";let n=yield l.CodeNowUtils.snFetch(g,{body:JSON.stringify(f),method:a.isNewFiddle()?"POST":"PATCH"},!0);const r=n.result;for(const i in Object.assign(s,r),s.payload=JSON.parse(s.payload),e.innerText="Update",t)delete t[i].transpiledValue;if(localStorage.setItem(P,JSON.stringify(t)),v=0,console.log(r),m){const e=new URL(location.href);e.searchParams.set("fid",r.sys_id),history.pushState({sysId:r.sys_id},document.title,e.href)}}}))})}registerForRun(){var e=document.getElementById(i.EL_SCRIPT_RUNNER);e.innerText=a.isNewFiddle()?"Share":"Update",e.addEventListener("click",()=>{this.share()})}onContentChanged(t){return this.handleJSXChanges()}triggerCompilation(){return a.isSeismicComponent()?Promise.resolve(this.handleJSXChanges()):Promise.resolve()}renderOutput(){let e=this.jsxValue,t=this.cssModel.getValue(),n=this.htmlModel.getValue();if(window.getComponent=function(){return{jsx:e,style:t,html:n}},jQuery("a[href=\"#script-output\"]").tab("show"),this.outputWindow)return void this.outputWindow.postMessage({cmd:"codenowSeismicUpdated"},location.href);var s=jQuery("#"+i.EL_SCRIPT_OUTPUT),r=document.createElement("iframe");r.id="seismic_host",r.style.width="100%",r.style.height="100%",r.style.border="1px solid darkgray",r.src=a.isServiceNow()?`seismic_playground.do?sysparm_nostack=true&cache=${Date.now()}`:`./PluginLoader/index.html?cache=${Date.now()}`,r.onload=()=>{this.outputWindow=r.contentWindow},s.html(r)}handleJSXChanges(){return __awaiter(this,void 0,void 0,function*(){const e=this.editor.getModel();if(!this.canCurrentModelGetTranspiled())return;const t=yield monaco.languages.typescript.getTypeScriptWorker(),i=yield t(e.uri),n=yield i.getEmitOutput(e.uri.toString());if(!n.emitSkipped){const e=n.outputFiles.find(e=>/(\.js)$/.test(e.name));this.jsxValue=e.text,this.updateReadonlyModelContent(e.text),-1!==this.jsxUpdateTimerId&&(window.clearTimeout(this.jsxUpdateTimerId),this.jsxUpdateTimerId=-1),this.jsxUpdateTimerId=setTimeout(()=>{this.renderOutput()},1e3)}})}}let z=document.getElementById(i.EL_THEME_SELECT);var H=!0;let q=-1;var Y={startDebugger:function(){var e;return"undefined"==typeof window.top.launchScriptDebugger?window.top.opener&&window.top.opener.top.launchScriptDebugger&&(e=window.top.opener.top.launchScriptDebugger):e=window.top.launchScriptDebugger,"undefined"!=typeof e&&"undefined"!=typeof g_form?void e(g_form.getUniqueValue(),g_form.getTableName()):"undefined"==typeof g_form?void I():void I(g_form.getUniqueValue(),g_form.getTableName())},saveSI:function(e){-1==q&&e&&(q=self.setTimeout(()=>{q=-1},60000),N("You can use ` CMD/CTRL + s ` keyboard shorcut to save the script. It's pretty handy!","info",1e4)),e||(e=document.getElementById("codenow.savesi"));var t=jQuery(e),i=t.find(">i");return t.attr("disabled","disabled"),i.removeClass("hide"),p(!0).then(e=>{let n=r.ClientSIRecordData.getClassConstructorFormat(a.getCurrentSI()),s={js:n,decl:e.backEndDecl,esNext:e.tsScript,sourceMap:e.sourceMap};var o={contentType:"application/json",data:JSON.stringify(s),headers:{X_UserToken:window.g_ck},method:"POST",type:"POST",url:"/api/now/typescript_helpers/UpdateSI"};jQuery.ajax(o).done(()=>{t.removeAttr("disabled"),i.addClass("hide"),v=0,N("Updated successfully","info")}).fail(()=>{x(t,i,jQuery("#fail_modal"))})},e=>{N(e,"error"),t.removeAttr("disabled"),i.addClass("hide")}),!1},toggleLinter:function(){o.default.linter=!o.default.linter,monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({noSemanticValidation:o.default.linter,noSyntaxValidation:o.default.linter}),A()},updateAllSIDeclaration:function(e,t=!1){function i(e){if(0==e.length)return void x(n,s,jQuery("#success_modal"));if(a.isServiceNow()){let i={url:"/api/now/typescript_helpers/updateMultiSIDecl",type:"POST",data:e,headers:{"X-UserToken":window.g_ck},contentType:"application/json",success:function(e){console.log(e)}};t&&(i.url="/api/now/table/ts_definition/b4c6d3500ba213008e64aabcb4673a6c",i.type="put",i.data=JSON.stringify({json_value:e})),jQuery.ajax(i).done(e=>{x(n,s,jQuery("#success_modal")),console.log(e)}).fail(()=>{x(n,s,jQuery("#fail_modal"))})}}var n=jQuery(e),s=n.find(">i");n.attr("disabled","disabled"),s.removeClass("hide");let o="";o=t?"/api/now/table/sys_script_include?&sysparm_query=active=true":"/api/now/typescript_helpers/getOutOfSyncSI",a.isServiceNow()||(o="/metadata/sys_script_include.json");var l=new a.RecordFetcher(o);l.fetch().then(e=>{var t=jQuery("#UpdateSI");if(0==e.length)return x(n,s,jQuery("#success_modal")),void t.text("Update Scripts");if(!window.recordConfig.useTypeChecker){var o=r.parseSI(e,esprima),l=JSON.stringify({api:JSON.parse(o.getFormat(!0))}),p=o.getParsingErrors(),d=o.getEmptyDeclarations();p.forEach(e=>{console.error("Parsing error for => "+e)}),d.forEach(e=>{console.error("empty declaration for "+e)}),i(l)}else{window.onSIParserProgressEvent=function(e){t.text("Updating ... "+e.percentage+" %")};let s=a.generateTypeDeclarations(e);s.then(e=>{var n=JSON.stringify({api:e.formatterResult});i(n),console.log("type checker parser results came "),e.errors&&0<e.errors.length&&e.errors.forEach(e=>{console.log("parsing error "+e)}),t.text("Update Scripts")},()=>{n.removeAttr("disabled"),t.text("Try again")}),console.log("parsing done")}},e=>{alert("unable to fetch the script include with error "+e)})},updateTableDeclarations:function(e){var t=jQuery(e),i=t.find(">i");t.attr("disabled","disabled"),i.removeClass("hide");jQuery.ajax({url:"/api/now/typescript_helpers/updatetabledefinition",type:"post",data:JSON.stringify({}),headers:{"X-UserToken":window.g_ck},contentType:"application/json",success:function(e){console.log(e)}}).done(e=>{x(t,i,jQuery("#success_modal")),console.log(e)}).fail(()=>{x(t,i,jQuery("#fail_modal"))})},openNewWindow:function(){window.open(location.href)},updateOnSave:function(){return window.recordConfig.isES6?("undefined"!=typeof g_form&&g_form.addErrorMessage("With ES6, save is not possible use \"CMD + s\" keyboard short cut","error_message_es6_save"),!1):g(!1,window.recordConfig.useTypeChecker,!0,function(){let e=window.recordConfig;e.isNewRecord?gsftSubmit(void 0,void 0,"sysverb_insert"):gsftSubmit(void 0,void 0,g_form.getActionName())},function(){})},updateDecl:function(e,t){var i=jQuery(e),n=i.find(">i");return i.attr("disabled","disabled"),n.removeClass("hide"),g(t,!0,!1,function(){x(i,n,jQuery("#success_modal"))},function(){x(i,n,jQuery("#fail_modal"))})},onCompilerSettingsChange(e){var t=e.closest("li");let i=t.dataset.key;i&&(O[i]=!O[i],O[i]?jQuery(t).find(".state-icon").removeClass("glyphicon-unchecked").addClass("glyphicon-check"):jQuery(t).find(".state-icon").removeClass("glyphicon-check").addClass("glyphicon-unchecked"),A())},onTargetChange:function(e,t){let i=parseInt(t);O.target=i,A()},onJSXFactoryChange(e,t){O.jsxFactory=t.trim(),A()},onJSXChange:function(e,t){let i=parseInt(t);return O.jsx=i,a.loadJSXIntellisense(),A()},onAddTab:function(e=!0){w.addFile(e)},onRemoveTab:function(e){w.removeFile(e),console.log(`${e} removed`)},onSelectTab:function(e){w.selectFile(e)},initialize:function(){b()}};return Y}Object.defineProperty(t,"__esModule",{value:!0}),i=__importStar(i),s=__importDefault(s),a=__importStar(a),r=__importStar(r),o=__importDefault(o);var c=a.TranspilerOutput;t.initMainEditor=p,a.isMainThread()&&window.recordConfig&&(window.settings=p())});
